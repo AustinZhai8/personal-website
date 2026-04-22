@@ -487,19 +487,24 @@ function ExperienceCard({ company, role, dates, tag, description, index }) {
 }
 
 function ExperiencePage({ onNavigate }) {
+  const containerRef = useRef(null)
+  useScrollFade(containerRef)
+
   return (
     <PageWrapper pageKey="experience">
-      <div className="pt-28 pb-4 px-6">
+      <div ref={containerRef} className="pt-28 pb-4 px-6">
         <div className="max-w-4xl mx-auto">
-          <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
-            Where I&apos;ve been
-          </p>
-          <h1
-            className="text-4xl md:text-5xl font-extrabold mb-8"
-            style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}
-          >
-            Experience
-          </h1>
+          <div className="fade-section">
+            <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
+              Where I&apos;ve been
+            </p>
+            <h1
+              className="text-4xl md:text-5xl font-extrabold mb-8"
+              style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}
+            >
+              Experience
+            </h1>
+          </div>
 
           <div className="flex flex-col gap-6 mt-4">
             {EXPERIENCE.map((exp, i) => (
@@ -516,22 +521,27 @@ function ExperiencePage({ onNavigate }) {
 // ─── Projects Page ─────────────────────────────────────────────────────────────
 
 function ProjectsPage({ onNavigate }) {
+  const containerRef = useRef(null)
+  useScrollFade(containerRef)
+
   return (
     <PageWrapper pageKey="projects">
-      <div className="pt-28 pb-4 px-6">
+      <div ref={containerRef} className="pt-28 pb-4 px-6">
         <div className="max-w-4xl mx-auto">
-          <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
-            What I&apos;ve built
-          </p>
-          <h1
-            className="text-4xl md:text-5xl font-extrabold mb-8"
-            style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}
-          >
-            Projects
-          </h1>
+          <div className="fade-section">
+            <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
+              What I&apos;ve built
+            </p>
+            <h1
+              className="text-4xl md:text-5xl font-extrabold mb-8"
+              style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}
+            >
+              Projects
+            </h1>
+          </div>
 
           <div
-            className="rounded-2xl flex flex-col items-center justify-center text-center"
+            className="rounded-2xl flex flex-col items-center justify-center text-center fade-section"
             style={{
               background: 'var(--bg-secondary)',
               border: '1px solid var(--card-border)',
@@ -556,11 +566,14 @@ function ProjectsPage({ onNavigate }) {
 // ─── Resume Page ───────────────────────────────────────────────────────────────
 
 function ResumePage() {
+  const containerRef = useRef(null)
+  useScrollFade(containerRef)
+
   return (
     <PageWrapper pageKey="resume">
-      <div className="pt-28 pb-16 px-6">
+      <div ref={containerRef} className="pt-28 pb-16 px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="flex flex-wrap items-start justify-between gap-4 mb-2">
+          <div className="flex flex-wrap items-start justify-between gap-4 mb-2 fade-section">
             <div>
               <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
                 Full history
@@ -585,7 +598,7 @@ function ResumePage() {
               Download PDF
             </a>
           </div>
-          <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid var(--card-border)' }}>
+          <div className="rounded-2xl overflow-hidden fade-section" style={{ border: '1px solid var(--card-border)' }}>
             <iframe
               src="/Austin Zhai Resume - Google Docs.pdf"
               className="w-full"
