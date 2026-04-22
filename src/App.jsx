@@ -437,28 +437,14 @@ const EXPERIENCE = [
 ]
 
 function ExperienceCard({ company, role, dates, tag, description, index }) {
-  const ref = useRef(null)
-
-  useEffect(() => {
-    if (!ref.current) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          ref.current.classList.add('visible')
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-    observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [])
-
   return (
     <div
-      ref={ref}
-      className="fade-section exp-card rounded-2xl p-7 md:p-10"
-      style={{ transitionDelay: `${index * 0.08}s` }}
+      className="exp-card rounded-2xl p-7 md:p-10"
+      style={{
+        opacity: 0,
+        animation: `fadeUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards`,
+        animationDelay: `${0.1 + index * 0.12}s`,
+      }}
     >
       <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
         <div>
@@ -487,14 +473,11 @@ function ExperienceCard({ company, role, dates, tag, description, index }) {
 }
 
 function ExperiencePage({ onNavigate }) {
-  const containerRef = useRef(null)
-  useScrollFade(containerRef)
-
   return (
     <PageWrapper pageKey="experience">
-      <div ref={containerRef} className="pt-28 pb-4 px-6">
+      <div className="pt-28 pb-4 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="fade-section">
+          <div style={{ opacity: 0, animation: 'fadeUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards' }}>
             <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
               Where I&apos;ve been
             </p>
@@ -521,14 +504,11 @@ function ExperiencePage({ onNavigate }) {
 // ─── Projects Page ─────────────────────────────────────────────────────────────
 
 function ProjectsPage({ onNavigate }) {
-  const containerRef = useRef(null)
-  useScrollFade(containerRef)
-
   return (
     <PageWrapper pageKey="projects">
-      <div ref={containerRef} className="pt-28 pb-4 px-6">
+      <div className="pt-28 pb-4 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="fade-section">
+          <div style={{ opacity: 0, animation: 'fadeUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards' }}>
             <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
               What I&apos;ve built
             </p>
@@ -541,12 +521,14 @@ function ProjectsPage({ onNavigate }) {
           </div>
 
           <div
-            className="rounded-2xl flex flex-col items-center justify-center text-center fade-section"
+            className="rounded-2xl flex flex-col items-center justify-center text-center"
             style={{
               background: 'var(--bg-secondary)',
               border: '1px solid var(--card-border)',
               minHeight: '300px',
               padding: '4rem 2rem',
+              opacity: 0,
+              animation: 'fadeUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.18s forwards',
             }}
           >
             <p className="text-2xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
