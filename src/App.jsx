@@ -38,6 +38,7 @@ function Navbar({ activePage, onNavigate }) {
   const navLinks = [
     { label: 'About', id: 'about' },
     { label: 'Experience', id: 'experience' },
+    { label: 'Projects', id: 'projects' },
     { label: 'Resume', id: 'resume' },
   ]
 
@@ -193,7 +194,7 @@ function HomePage({ loaded, onNavigate }) {
             }}
             aria-label="Go to About"
           >
-            <span className="text-xs tracking-widest uppercase font-semibold group-hover:text-accent" style={{ color: 'inherit' }}>Explore my story</span>
+            <span className="text-xs tracking-widest uppercase font-semibold group-hover:text-accent" style={{ color: 'inherit' }}>Explore</span>
             <ArrowDownIcon />
           </button>
         </div>
@@ -505,34 +506,45 @@ function ExperiencePage({ onNavigate }) {
               <ExperienceCard key={exp.company} {...exp} index={i} />
             ))}
           </div>
+        </div>
+      </div>
+      <NextPageButton label="View Projects" onClick={() => onNavigate('projects')} />
+    </PageWrapper>
+  )
+}
 
-          <div style={{ marginTop: '6rem' }}>
-            <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
-              What I&apos;ve built
+// ─── Projects Page ─────────────────────────────────────────────────────────────
+
+function ProjectsPage({ onNavigate }) {
+  return (
+    <PageWrapper pageKey="projects">
+      <div className="pt-28 pb-4 px-6">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
+            What I&apos;ve built
+          </p>
+          <h1
+            className="text-4xl md:text-5xl font-extrabold mb-8"
+            style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}
+          >
+            Projects
+          </h1>
+
+          <div
+            className="rounded-2xl flex flex-col items-center justify-center text-center"
+            style={{
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--card-border)',
+              minHeight: '300px',
+              padding: '4rem 2rem',
+            }}
+          >
+            <p className="text-2xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+              Coming soon.
             </p>
-            <h2
-              className="text-4xl md:text-5xl font-extrabold mb-8"
-              style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}
-            >
-              Projects
-            </h2>
-
-            <div
-              className="rounded-2xl flex flex-col items-center justify-center text-center"
-              style={{
-                background: 'var(--bg-secondary)',
-                border: '1px solid var(--card-border)',
-                minHeight: '300px',
-                padding: '4rem 2rem',
-              }}
-            >
-              <p className="text-2xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
-                Coming soon.
-              </p>
-              <p className="text-sm max-w-xs leading-6" style={{ color: 'var(--text-muted)' }}>
-                Projects are in the works. Check back soon.
-              </p>
-            </div>
+            <p className="text-sm max-w-xs leading-6" style={{ color: 'var(--text-muted)' }}>
+              Projects are in the works. Check back soon.
+            </p>
           </div>
         </div>
       </div>
@@ -637,6 +649,7 @@ export default function App() {
     home: <HomePage loaded={mainLoaded} onNavigate={navigate} />,
     about: <AboutPage onNavigate={navigate} />,
     experience: <ExperiencePage onNavigate={navigate} />,
+    projects: <ProjectsPage onNavigate={navigate} />,
     resume: <ResumePage />,
   }
 
