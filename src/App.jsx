@@ -275,7 +275,7 @@ function AboutPage({ onNavigate }) {
         </div>
 
         {/* ── SCREEN 1: The Idea ── */}
-        <div className="fade-section" style={screenBase}>
+        <div className="fade-section" style={{ ...screenBase, opacity: 0, transform: 'translateY(36px)', transition: 'opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1)' }}>
           <p className="text-xs tracking-[0.28em] uppercase font-semibold mb-10" style={{ color: 'var(--text-muted)' }}>
             The Idea
           </p>
@@ -299,7 +299,7 @@ function AboutPage({ onNavigate }) {
         </div>
 
         {/* ── SCREEN 2: Middle thought ── */}
-        <div className="fade-section" style={screenBase}>
+        <div className="fade-section" style={{ ...screenBase, opacity: 0, transform: 'translateY(36px)', transition: 'opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1)' }}>
           <p
             className="font-medium max-w-3xl mx-auto"
             style={{
@@ -314,7 +314,7 @@ function AboutPage({ onNavigate }) {
         </div>
 
         {/* ── SCREEN 3: Closing ── */}
-        <div className="fade-section" style={screenBase}>
+        <div className="fade-section" style={{ ...screenBase, opacity: 0, transform: 'translateY(36px)', transition: 'opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1)' }}>
           <p
             className="font-bold max-w-3xl mx-auto mb-4"
             style={{
