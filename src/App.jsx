@@ -21,6 +21,16 @@ function LinkedInIcon() {
   )
 }
 
+function InstagramIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+    </svg>
+  )
+}
+
 function ArrowDownIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -170,7 +180,7 @@ function HomePage({ loaded, onNavigate }) {
             </p>
           </div>
 
-          <a href="mailto:austinhzhai@gmail.com" className="btn-primary mt-1">
+          <a href="https://www.linkedin.com/in/austin-zhai/" target="_blank" rel="noopener noreferrer" className="btn-primary mt-1">
             Let&apos;s connect!
           </a>
 
@@ -182,6 +192,10 @@ function HomePage({ loaded, onNavigate }) {
             <a href="https://www.linkedin.com/in/austin-zhai/" target="_blank" rel="noopener noreferrer" className="btn-social">
               <LinkedInIcon />
               LinkedIn
+            </a>
+            <a href="https://www.instagram.com/austin_zhai/" target="_blank" rel="noopener noreferrer" className="btn-social">
+              <InstagramIcon />
+              Instagram
             </a>
           </div>
 
@@ -357,13 +371,70 @@ function AboutPage({ onNavigate }) {
           </p>
         </div>
 
+        {/* ── INVESTING ── */}
+        <div className="fade-section flex items-center gap-6 px-6 max-w-3xl mx-auto py-8">
+          <div className="flex-1 h-px" style={{ background: 'var(--card-border)' }} />
+          <span className="text-xs tracking-widest uppercase" style={{ color: 'var(--text-muted)' }}>Investing</span>
+          <div className="flex-1 h-px" style={{ background: 'var(--card-border)' }} />
+        </div>
+
+        <div className="fade-section max-w-4xl mx-auto px-6 py-12">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-5" style={{ color: 'var(--text-muted)' }}>
+              Where it all started
+            </p>
+            <h2
+              className="text-3xl md:text-4xl font-extrabold mb-6"
+              style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.15 }}
+            >
+              Investing isn&apos;t just a hobby, it&apos;s the thread that ties everything together.
+            </h2>
+            <p className="text-base md:text-lg leading-relaxed mb-5" style={{ color: 'var(--text-muted)' }}>
+              I spend a lot of time on fundamentals research: reading 10-Ks, digging into unit economics, pulling apart business models, and building conviction one company at a time. The analytical side, the patient, evidence-based kind of investing, is what I love. Every position I hold is a thesis I can defend.
+            </p>
+            <p className="text-base md:text-lg leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+              That obsession is actually what pulled me into Computer Engineering. The dream is simple: one day, I want to work for a company I invest in, to build the products I believe in from the inside.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {['wealthsimple', 'blossom'].map((name) => (
+              <div
+                key={name}
+                className="rounded-2xl overflow-hidden"
+                style={{ border: '1px solid var(--card-border)', background: 'var(--bg-secondary)' }}
+              >
+                <img
+                  src={`/${name}.png`}
+                  alt={`${name} portfolio screenshot`}
+                  loading="lazy"
+                  style={{ display: 'block', width: '100%', maxHeight: '420px', objectFit: 'contain', background: 'var(--bg-secondary)' }}
+                />
+              </div>
+            ))}
+          </div>
+
+          <p className="text-sm md:text-base text-center mt-8" style={{ color: 'var(--text-muted)' }}>
+            Here&apos;s my{' '}
+            <a
+              href="https://link.blossomsocial.com/7uYa/kos58964"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'var(--accent)', fontWeight: 600 }}
+            >
+              Blossom
+            </a>
+            {' '}if you have it and want to connect.
+          </p>
+        </div>
+
         {/* ── HOBBIES ── */}
         <div className="fade-section max-w-3xl mx-auto px-6 pb-16">
           <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-8 text-center" style={{ color: 'var(--text-muted)' }}>
             Hobbies
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            {['Finance / Investing', 'Basketball', 'Gym', 'Piano'].map((label) => (
+            {['Basketball', 'Gym', 'Piano'].map((label) => (
               <span
                 key={label}
                 className="text-sm font-medium"
@@ -392,8 +463,8 @@ function AboutPage({ onNavigate }) {
           >
             {[
               '3.5 languages: English, French, Chinese, and a little Spanish',
-              'Newjeans is tuff',
-              'Lanzhou noodles are the best',
+              'Newjeans and Laroi are tuff',
+              'Lanzhou handpulled noodles are my all time favorite dish',
               'Mavericks and Patriots fan',
             ].map((fact) => (
               <div key={fact} className="flex items-start gap-4 py-3" style={{ borderBottom: '1px solid var(--card-border)' }}>
@@ -432,7 +503,7 @@ const EXPERIENCE = [
     role: 'Founder & Operator',
     dates: 'August 2024 – December 2025',
     tag: 'Entrepreneurship',
-    description: `I started this business because I saw a convex opportunity: low startup cost, immediate market (friends, then referrals), and the chance to learn how to actually run something. I handled everything: client acquisition, pricing, scheduling, payments, hygiene standards, and follow-up. I built a digital management system to handle bookings and track clients, which brought my retention rate to 85% and let the referral loop run on autopilot. By the time I wrapped up to focus on school, I had served 50+ clients and generated over $7,000 in revenue. More than the money, it proved to me that the scariest part of starting something is usually just starting.`,
+    description: `I started this purely for fun, but once I noticed how often my friends were walking around with bad haircuts, the scale and demand of the industry clicked. I took advantage of that gap and turned it into a real business. I handled everything: client acquisition, pricing, scheduling, payments, hygiene standards, and follow-up. I built a digital management system to handle bookings and track clients, which brought my retention rate to 85% and let the referral loop run on autopilot. By the time I wrapped up to focus on school, I had served 50+ clients and generated over $7,000 in revenue. More than the money, it proved to me that the scariest part of starting something is usually just starting.`,
   },
 ]
 
