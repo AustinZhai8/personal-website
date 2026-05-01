@@ -46,6 +46,7 @@ Deployed automatically on Vercel when pushing to `main` branch.
 - App.jsx          # Main component
 - index.css        # Global styles
 - main.jsx         # Entry point
+
 **public**
 - favicon.png      # Site icon
 - headshot.jpg     # Profile photo
