@@ -42,14 +42,14 @@ npm run build
 Deployed automatically on Vercel when pushing to `main` branch.
 
 ## Project Structure
-src/
-├── App.jsx          # Main component
-├── index.css        # Global styles
-└── main.jsx         # Entry point
+src
+App.jsx          # Main component
+index.css        # Global styles
+main.jsx         # Entry point
 public/
-├── favicon.png      # Site icon
-├── headshot.jpg     # Profile photo
-└── resume.pdf       # Resume file
+favicon.png      # Site icon
+headshot.jpg     # Profile photo
+resume.pdf       # Resume file
 
 ## License
 MIT
