@@ -1,16 +1,55 @@
-# React + Vite
+# Austin Zhai Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal portfolio website built with React, Vite, and Tailwind CSS.
 
-Currently, two official plugins are available:
+## Live Site
+[austinzhai.com](https://austinzhai.com)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
+- **Frontend**: React + Vite
+- **Styling**: Tailwind CSS
+- **Hosting**: Vercel
+- **Domain**: Namecheap
 
-## React Compiler
+## Features
+- Responsive design
+- Smooth scroll animations
+- Embedded resume PDF
+- Mobile-friendly
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Local Development
 
-## Expanding the ESLint configuration
+### Prerequisites
+- Node.js v24+
+- Git
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Setup
+```bash
+git clone https://github.com/AustinZhai8/personal-website.git
+cd personal-website
+npm install
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+
+### Build for Production
+```bash
+npm run build
+```
+
+## Deployment
+Deployed automatically on Vercel when pushing to `main` branch.
+
+## Project Structure
+src/
+├── App.jsx          # Main component
+├── index.css        # Global styles
+└── main.jsx         # Entry point
+public/
+├── favicon.png      # Site icon
+├── headshot.jpg     # Profile photo
+└── resume.pdf       # Resume file
+
+## License
+MIT
