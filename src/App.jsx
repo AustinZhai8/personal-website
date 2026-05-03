@@ -258,7 +258,7 @@ function AboutPage({ onNavigate }) {
       <div ref={containerRef}>
 
         {/* ── SCREEN 0: Convexity hero ── */}
-        <div style={screenBase}>
+        <div className="fade-section" style={screenBase}>
           <p
             className="text-xs tracking-[0.3em] uppercase font-semibold mb-8"
             style={{ color: 'var(--text-muted)' }}
@@ -312,48 +312,7 @@ function AboutPage({ onNavigate }) {
           </p>
         </div>
 
-        {/* ── SCREEN 2: Middle thought ── */}
-        <div className="fade-section" style={screenBase}>
-          <p
-            className="font-medium max-w-3xl mx-auto"
-            style={{
-              fontSize: 'clamp(1.5rem, 4vw, 3rem)',
-              letterSpacing: '-0.01em',
-              lineHeight: 1.3,
-              color: 'var(--text-primary)',
-            }}
-          >
-            Where small risks in your decision making can lead to immense upside.
-          </p>
-        </div>
-
-        {/* ── SCREEN 3: Closing ── */}
-        <div className="fade-section" style={screenBase}>
-          <p
-            className="font-bold max-w-3xl mx-auto mb-4"
-            style={{
-              fontSize: 'clamp(2rem, 5.5vw, 4rem)',
-              letterSpacing: '-0.02em',
-              lineHeight: 1.15,
-              color: 'var(--text-primary)',
-            }}
-          >
-            I would always take that risk
-          </p>
-          <p
-            className="font-bold"
-            style={{
-              fontSize: 'clamp(2rem, 5.5vw, 4rem)',
-              letterSpacing: '-0.02em',
-              lineHeight: 1.15,
-              color: 'var(--accent)',
-            }}
-          >
-            and choose the convex path.
-          </p>
-        </div>
-
-        {/* ── DIVIDER ── */}
+{/* ── DIVIDER ── */}
         <div className="fade-section flex items-center gap-6 px-6 max-w-3xl mx-auto py-8">
           <div className="flex-1 h-px" style={{ background: 'var(--card-border)' }} />
           <span className="text-xs tracking-widest uppercase" style={{ color: 'var(--text-muted)' }}>About Me</span>
