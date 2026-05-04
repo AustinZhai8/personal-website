@@ -533,40 +533,302 @@ function ExperiencePage({ onNavigate }) {
 
 // ─── Projects Page ─────────────────────────────────────────────────────────────
 
+const GithubIcon = ({ size = 11 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.92.58.11.79-.25.79-.56 0-.27-.01-1-.02-1.96-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.68-1.27-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.16 1.18.92-.26 1.9-.39 2.88-.39.98 0 1.96.13 2.88.39 2.2-1.49 3.16-1.18 3.16-1.18.62 1.59.23 2.76.11 3.05.74.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56C20.21 21.39 23.5 17.07 23.5 12 23.5 5.65 18.35.5 12 .5z" />
+  </svg>
+)
+
+const ExternalLinkIcon = ({ size = 11 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+    <polyline points="15 3 21 3 21 9" />
+    <line x1="10" y1="14" x2="21" y2="3" />
+  </svg>
+)
+
+function ProjectChip({ label }) {
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center',
+      padding: '3px 9px', borderRadius: '999px',
+      fontSize: '11px', fontWeight: 500,
+      border: '1px solid var(--card-border)',
+      background: 'var(--bg-primary)',
+      color: 'var(--text-primary)',
+      whiteSpace: 'nowrap',
+    }}>
+      {label}
+    </span>
+  )
+}
+
 function ProjectsPage({ onNavigate }) {
+  const containerRef = useRef(null)
+  useScrollFade(containerRef)
+
+  const accentBlue = '#6db8f0'
+
   return (
     <PageWrapper pageKey="projects">
-      <div className="pt-28 pb-4 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div style={{ opacity: 0, animation: 'fadeUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards' }}>
+      <div ref={containerRef} className="pt-28 pb-4 px-6">
+        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+
+          {/* Header */}
+          <div style={{ opacity: 0, animation: 'fadeUp 0.85s cubic-bezier(0.22,1,0.36,1) 0.05s forwards', marginBottom: '40px' }}>
             <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
               What I&apos;ve built
             </p>
-            <h1
-              className="text-4xl md:text-5xl font-extrabold mb-8"
-              style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}
-            >
+            <h1 className="text-4xl md:text-5xl font-extrabold" style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}>
               Projects
             </h1>
           </div>
 
-          <div
-            className="rounded-2xl flex flex-col items-center justify-center text-center"
-            style={{
-              background: 'var(--bg-secondary)',
+          {/* ── MAIN PROJECTS ── */}
+          <div className="fade-section" style={{ marginBottom: '16px' }}>
+            <p style={{ fontSize: '11px', letterSpacing: '0.3em', textTransform: 'uppercase', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '20px' }}>
+              Main Projects
+            </p>
+
+            {/* Personal Website card */}
+            <div style={{
               border: '1px solid var(--card-border)',
-              minHeight: '300px',
-              padding: '4rem 2rem',
-              opacity: 0,
-              animation: 'fadeUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.18s forwards',
-            }}
-          >
-            <p className="text-2xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
-              Coming soon.
+              borderRadius: '18px',
+              overflow: 'hidden',
+              background: 'var(--bg-secondary)',
+            }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }} className="max-md:flex max-md:flex-col">
+
+                {/* Visual */}
+                <div style={{
+                  background: 'var(--bg-secondary)',
+                  padding: '24px',
+                  borderRight: '1px solid var(--card-border)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  minHeight: '340px',
+                }}>
+                  <div style={{
+                    width: '100%', borderRadius: '9px', overflow: 'hidden',
+                    border: '1px solid var(--card-border)',
+                    background: 'var(--bg-primary)',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+                  }}>
+                    <div style={{
+                      height: '26px', background: 'var(--bg-secondary)',
+                      borderBottom: '1px solid var(--card-border)',
+                      display: 'flex', alignItems: 'center', padding: '0 10px', gap: '5px',
+                    }}>
+                      <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#ff5f57', display: 'inline-block' }} />
+                      <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#febc2e', display: 'inline-block' }} />
+                      <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#28c840', display: 'inline-block' }} />
+                      <span style={{
+                        marginLeft: '10px', flex: 1, maxWidth: '170px', height: '14px',
+                        borderRadius: '3px', background: 'var(--bg-primary)', border: '1px solid var(--card-border)',
+                        fontSize: '8px', color: 'var(--text-muted)',
+                        display: 'flex', alignItems: 'center', padding: '0 6px',
+                      }}>austinzhai.com</span>
+                    </div>
+                    <div style={{
+                      padding: '24px 20px 28px',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px',
+                      textAlign: 'center', minHeight: '220px', justifyContent: 'center',
+                    }}>
+                      <div style={{ fontSize: '20px', fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
+                        Hi, I&apos;m <span style={{ color: accentBlue }}>Austin</span>!
+                      </div>
+                      <div style={{ fontSize: '10px', color: 'var(--text-muted)', maxWidth: '200px', lineHeight: 1.5 }}>
+                        Computer Engineering Student at UBC that likes to build stuff.
+                      </div>
+                      <div style={{ background: accentBlue, color: '#fff', fontSize: '9px', fontWeight: 600, padding: '5px 12px', borderRadius: '999px' }}>
+                        Let&apos;s connect!
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Info */}
+                <div style={{ padding: '28px 30px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>2026</span>
+                      <span style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '4px',
+                        padding: '3px 9px', borderRadius: '999px',
+                        fontSize: '10px', fontWeight: 600, letterSpacing: '0.03em',
+                        background: '#e8f4fd', color: '#2d7abf', border: '1px solid #b8d9f5',
+                      }}>Software</span>
+                    </div>
+                    <h2 style={{ fontSize: '24px', fontWeight: 800, letterSpacing: '-0.025em', marginBottom: '8px', color: 'var(--text-primary)' }}>
+                      Personal Website
+                    </h2>
+                    <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '18px' }}>
+                      Designed, built, and deployed austinzhai.com end-to-end. A Vite + React SPA with custom CSS animations, scroll-triggered fades, and a full CI/CD pipeline via GitHub and Vercel. Set up the custom domain and DNS configuration from scratch.
+                    </p>
+
+                    {/* Skills */}
+                    <div style={{ marginBottom: '18px' }}>
+                      <div style={{ fontSize: '9px', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '10px' }}>Skills used</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {[
+                          { label: 'Languages', chips: ['JavaScript', 'HTML', 'CSS'] },
+                          { label: 'Frameworks', chips: ['React', 'Tailwind CSS', 'Vite'] },
+                          { label: 'Tools', chips: ['Git', 'GitHub', 'VS Code', 'Vercel', 'Domain Setup'] },
+                        ].map(({ label, chips }) => (
+                          <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
+                            <span style={{ fontSize: '9px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', width: '68px', flexShrink: 0 }}>{label}</span>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                              {chips.map(c => <ProjectChip key={c} label={c} />)}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Highlights */}
+                    <div>
+                      <div style={{ fontSize: '9px', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '8px' }}>Highlights</div>
+                      {[
+                        'End-to-end ownership: design, build, deploy, domain setup',
+                        'Sub-100KB JS bundle, <1s LCP on cold load',
+                        'Continuous deployment via GitHub → Vercel pipeline',
+                      ].map((h, i, arr) => (
+                        <div key={h} style={{ display: 'flex', gap: '8px', padding: '6px 0', borderBottom: i < arr.length - 1 ? '1px solid var(--card-border)' : 'none', fontSize: '12px', lineHeight: 1.45, color: 'var(--text-primary)' }}>
+                          <span style={{ color: accentBlue, fontWeight: 700, flexShrink: 0 }}>→</span>
+                          {h}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Links */}
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <a href="https://austinzhai.com" target="_blank" rel="noopener noreferrer" style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '5px',
+                      background: accentBlue, color: '#fff',
+                      padding: '8px 16px', borderRadius: '999px', fontSize: '12px', fontWeight: 600,
+                    }}>
+                      <ExternalLinkIcon /> austinzhai.com
+                    </a>
+                    <a href="https://github.com/AustinZhai8/personal-website" target="_blank" rel="noopener noreferrer" style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '5px',
+                      background: 'var(--bg-primary)', color: 'var(--text-primary)',
+                      padding: '8px 16px', borderRadius: '999px', fontSize: '12px', fontWeight: 600,
+                      border: '1px solid var(--card-border)',
+                    }}>
+                      <GithubIcon /> GitHub
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="fade-section" style={{ height: '1px', background: 'var(--card-border)', margin: '40px 0' }} />
+
+          {/* ── MINOR PROJECTS ── */}
+          <div className="fade-section">
+            <p style={{ fontSize: '11px', letterSpacing: '0.3em', textTransform: 'uppercase', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '32px' }}>
+              Minor Projects
             </p>
-            <p className="text-sm max-w-xs leading-6" style={{ color: 'var(--text-muted)' }}>
-              Projects are in the works. Check back soon.
+
+            {/* Hardware / Firmware sub-section */}
+            <p style={{ fontSize: '9px', letterSpacing: '0.25em', textTransform: 'uppercase', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '4px' }}>
+              Hardware / Firmware
             </p>
+            <div style={{ height: '1px', background: 'var(--card-border)', marginBottom: '2px' }} />
+
+            {/* Servo Sonar Scanner */}
+            <div style={{ padding: '20px 0', borderBottom: '1px solid var(--card-border)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                <img src="/projects/sonar-square.jpg" alt="Servo Sonar Scanner close-up" style={{ width: '300px', height: '300px', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--card-border)', flexShrink: 0 }} />
+                <img src="/projects/sonar-wide.jpg" alt="Servo Sonar Scanner with radar display" style={{ width: '350px', height: '300px', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--card-border)', flexShrink: 0 }} />
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', marginBottom: '7px' }}>
+                  <span style={{ fontSize: '15px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--text-primary)' }}>Servo Sonar Scanner</span>
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>2026</span>
+                </div>
+                <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.55, marginBottom: '10px' }}>
+                  A servo-mounted ultrasonic sensor sweeps 180° to detect objects across three modes: continuous sweep, detection-triggered pause, and manual joystick control. Detected objects are visualized on a real-time radar display rendered in Processing.
+                </p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
+                  {['Arduino', 'Servo Control', 'Ultrasonic Sensing', 'Serial Communication', 'Processing'].map(c => <ProjectChip key={c} label={c} />)}
+                </div>
+                <div style={{ display: 'flex', gap: '14px', fontSize: '12px', fontWeight: 600 }}>
+                  <a href="https://github.com/AustinZhai8/Sonar-Servo-Scanner" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: accentBlue }}>
+                    <GithubIcon /> GitHub
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* LED Mode Controller */}
+            <div style={{ padding: '20px 0', borderBottom: '1px solid var(--card-border)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <img src="/projects/led-mode-controller.jpg" alt="LED Mode Controller breadboard" style={{ width: '300px', height: '300px', borderRadius: '16px', objectFit: 'cover', objectPosition: 'center', border: '1px solid var(--card-border)', display: 'block' }} />
+              <div>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', marginBottom: '7px' }}>
+                  <span style={{ fontSize: '15px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--text-primary)' }}>LED Mode Controller</span>
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>2026</span>
+                </div>
+                <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.55, marginBottom: '10px' }}>
+                  A button cycles an LED through off, on, and blink modes, with the current mode shown on a 7-segment display. Two potentiometers control brightness and blink speed independently using PWM output.
+                </p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
+                  {['Arduino', 'PWM', 'State Machine', 'Non-blocking Timing'].map(c => <ProjectChip key={c} label={c} />)}
+                </div>
+                <div style={{ display: 'flex', gap: '14px', fontSize: '12px', fontWeight: 600 }}>
+                  <a href="https://github.com/AustinZhai8/LED-Dimmer-with-Button-Modes" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: accentBlue }}>
+                    <GithubIcon /> GitHub
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Software sub-section */}
+            <p style={{ fontSize: '9px', letterSpacing: '0.25em', textTransform: 'uppercase', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '4px', marginTop: '36px' }}>
+              Software
+            </p>
+            <div style={{ height: '1px', background: 'var(--card-border)', marginBottom: '2px' }} />
+
+            {/* Hangman */}
+            <div style={{ padding: '20px 0', borderBottom: '1px solid var(--card-border)' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', marginBottom: '7px' }}>
+                <span style={{ fontSize: '15px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--text-primary)' }}>Hangman</span>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>2026</span>
+              </div>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.55, marginBottom: '10px' }}>
+                A command-line implementation of the classic Hangman word-guessing game. Players choose a difficulty (easy, medium, or hard), then guess letters or the full word with 6 lives. Draws from a curated word list per difficulty and tracks guessed letters to prevent duplicates.
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
+                {['Python', 'CLI', 'Game Logic'].map(c => <ProjectChip key={c} label={c} />)}
+              </div>
+              <div style={{ display: 'flex', gap: '14px', fontSize: '12px', fontWeight: 600 }}>
+                <a href="https://github.com/AustinZhai8/Hangman" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: accentBlue }}>
+                  <GithubIcon /> GitHub
+                </a>
+              </div>
+            </div>
+
+            {/* Random Password Generator */}
+            <div style={{ padding: '20px 0' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', marginBottom: '7px' }}>
+                <span style={{ fontSize: '15px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--text-primary)' }}>Random Password Generator</span>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>2026</span>
+              </div>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.55, marginBottom: '10px' }}>
+                A command-line Python script that generates cryptographically varied passwords of any user-specified length. Draws from a pool of uppercase, lowercase, digits, and symbols using Python&apos;s <code style={{ fontFamily: 'Menlo, Consolas, monospace', background: 'var(--bg-secondary)', padding: '1px 5px', borderRadius: '4px' }}>random</code> module to produce a shuffled character string on every run.
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
+                {['Python', 'CLI', 'random'].map(c => <ProjectChip key={c} label={c} />)}
+              </div>
+              <div style={{ display: 'flex', gap: '14px', fontSize: '12px', fontWeight: 600 }}>
+                <a href="https://github.com/AustinZhai8/Random-Password-Generator" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: accentBlue }}>
+                  <GithubIcon /> GitHub
+                </a>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
