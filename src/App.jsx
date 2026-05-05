@@ -349,10 +349,10 @@ function AboutPage({ onNavigate }) {
               Investing isn&apos;t just a hobby, it&apos;s the thread that ties everything together.
             </h2>
             <p className="text-base md:text-lg leading-relaxed mb-5" style={{ color: 'var(--text-muted)' }}>
-              I spend a lot of time on fundamentals research: reading 10-Ks, digging into unit economics, pulling apart business models, and building conviction one company at a time. The analytical side, the patient, evidence-based kind of investing, is what I love. Every position I hold is a thesis I can defend.
+              I spend a lot of time on fundamentals research: tracking key metrics, waiting on earnings, checking year-over-year growth, pulling apart business models, and building conviction one company at a time. The analytical side, the patient, evidence-based kind of investing, is what I love. Every position I hold is a thesis I can defend.
             </p>
             <p className="text-base md:text-lg leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-              That obsession is actually what pulled me into Computer Engineering. The dream is simple: one day, I want to work for a company I invest in, to build the products I believe in from the inside.
+              That passion is actually what pulled me toward Computer Engineering. The goal is straightforward: work for a company I believe in enough to own, and build the products from the inside.
             </p>
           </div>
 
@@ -445,7 +445,7 @@ function AboutPage({ onNavigate }) {
 const EXPERIENCE = [
   {
     company: 'TELUS Digital',
-    role: 'Bilingual Online Data Analyst',
+    role: 'Bilingual Data Analyst',
     dates: 'March 2026 – Present',
     tag: 'Data & AI',
     description: `I work with TELUS Digital evaluating AI-generated geolocation data across English and French, helping train the models that power mapping products used by millions of people. Day to day, that means assessing search result relevance, POI accuracy, routing quality, and autocomplete suggestions, applying structured rubrics to catch what models miss. The bilingual angle is a real differentiator: I flag multilingual discrepancies that monolingual reviewers can't catch, feeding those signals back into model retraining cycles. It's precise, pattern-heavy work that's taught me a lot about how large-scale AI systems actually get refined.`,
@@ -840,47 +840,18 @@ function ProjectsPage({ onNavigate }) {
 // ─── Resume Page ───────────────────────────────────────────────────────────────
 
 function ResumePage() {
-  const containerRef = useRef(null)
-  useScrollFade(containerRef)
-
   return (
     <PageWrapper pageKey="resume">
-      <div ref={containerRef} className="pt-28 pb-16 px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-wrap items-start justify-between gap-4 mb-2 fade-section">
-            <div>
-              <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
-                Full history
-              </p>
-              <h1
-                className="text-4xl md:text-5xl font-extrabold mb-8"
-                style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}
-              >
-                Resume
-              </h1>
-            </div>
-            <a
-              href="/Austin Zhai Resume - Google Docs.pdf"
-              download
-              className="btn-social mt-10"
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              Download PDF
-            </a>
-          </div>
-          <div className="rounded-2xl overflow-hidden fade-section" style={{ border: '1px solid var(--card-border)' }}>
-            <iframe
-              src="/Austin Zhai Resume - Google Docs.pdf"
-              className="w-full"
-              style={{ height: '88vh', display: 'block' }}
-              title="Austin Zhai Resume"
-            />
-          </div>
-        </div>
+      <div className="min-h-screen flex flex-col items-center justify-center text-center px-6">
+        <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-6" style={{ color: 'var(--text-muted)' }}>
+          Resume
+        </p>
+        <p className="text-2xl md:text-3xl font-bold mb-4" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+          Currently undergoing updates.
+        </p>
+        <p className="text-base" style={{ color: 'var(--text-muted)' }}>
+          Check back soon.
+        </p>
       </div>
     </PageWrapper>
   )
