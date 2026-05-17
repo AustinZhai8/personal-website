@@ -21,12 +21,10 @@ function LinkedInIcon() {
   )
 }
 
-function InstagramIcon() {
+function GithubIconNav() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.92.58.11.79-.25.79-.56 0-.27-.01-1-.02-1.96-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.68-1.27-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.16 1.18.92-.26 1.9-.39 2.88-.39.98 0 1.96.13 2.88.39 2.2-1.49 3.16-1.18 3.16-1.18.62 1.59.23 2.76.11 3.05.74.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56C20.21 21.39 23.5 17.07 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
     </svg>
   )
 }
@@ -193,9 +191,9 @@ function HomePage({ loaded, onNavigate }) {
               <LinkedInIcon />
               LinkedIn
             </a>
-            <a href="https://www.instagram.com/austin_zhai/" target="_blank" rel="noopener noreferrer" className="btn-social">
-              <InstagramIcon />
-              Instagram
+            <a href="https://github.com/AustinZhai8" target="_blank" rel="noopener noreferrer" className="btn-social">
+              <GithubIconNav />
+              GitHub
             </a>
           </div>
 
@@ -448,21 +446,28 @@ const EXPERIENCE = [
     role: 'Bilingual Data Analyst',
     dates: 'March 2026 – Present',
     tag: 'Data & AI',
-    description: `I work with TELUS Digital evaluating AI-generated geolocation data across English and French, helping train the models that power mapping products used by millions of people. Day to day, that means assessing search result relevance, POI accuracy, routing quality, and autocomplete suggestions, applying structured rubrics to catch what models miss. The bilingual angle is a real differentiator: I flag multilingual discrepancies that monolingual reviewers can't catch, feeding those signals back into model retraining cycles. It's precise, pattern-heavy work that's taught me a lot about how large-scale AI systems actually get refined.`,
+    description: `I work with TELUS Digital evaluating AI-generated geolocation data across English and French, helping train the models that power mapping products used by millions of people. Day to day, that means assessing 80+ search queries weekly across POI accuracy, search result relevance, routing quality, and autocomplete suggestions, applying structured rubrics to catch what models miss while maintaining a 90% accuracy rate. The bilingual angle is a real differentiator: I flag multilingual discrepancies that monolingual reviewers can't catch, feeding those signals back into model retraining cycles. It's precise, pattern-heavy work that's taught me a lot about how large-scale AI systems actually get refined.`,
+  },
+  {
+    company: 'Hydroficient',
+    role: 'IoT Cyber Defense Extern',
+    dates: 'April 2026 – Present',
+    tag: 'Cybersecurity',
+    description: `I worked with Hydroficient securing an IoT sensor pipeline for a simulated 500-room hotel water management system. That meant designing and stress-testing a 5-layer defense stack — TLS encryption, mutual TLS device authentication, HMAC message signing, timestamp validation, and sequence counters — against live attack classes I built myself: eavesdropping, sensor spoofing, and replay attacks. I reduced unauthorized broker access to zero by configuring per-device certificates and producing a formal provisioning policy. On top of that, I trained an Isolation Forest anomaly detection model on live telemetry and wired it into a real-time Streamlit dashboard so non-technical staff could monitor system security without touching a terminal. It's the most end-to-end security work I've done, and it changed how I think about trust in connected systems.`,
   },
   {
     company: 'UBC Sailbot',
     role: 'Operations Team Member',
-    dates: 'September 2025 – Present',
+    dates: 'September 2025 – April 2026',
     tag: 'Business Operations',
-    description: `UBC Sailbot builds a fully autonomous sailing robot: no remote control, no crew. My role is on the operations side, which means connecting across electrical, mechanical, and software subteams to keep the project moving. I manage timelines, organize technical documentation for cross-subteam integration, and handle the outward-facing side: sponsor packages, website content, graphic design, and video production. I took ownership of our social media presence and grew average engagement by 50 to 100% through a campaign I planned and executed end-to-end. It's taught me that engineering teams run on communication just as much as code.`,
+    description: `UBC Sailbot builds a fully autonomous sailing robot: no remote control, no crew. My role is on the operations side, which means connecting across electrical, mechanical, and software subteams to keep the project moving. I manage timelines, organize technical documentation for cross-subteam integration, and handle the outward-facing side: sponsor packages, website content, graphic design, and video production. I took ownership of our social media presence and grew average engagement by 50 to 100% through a campaign I planned and executed end-to-end, contributing to a sponsorship roster of 18 active partners. It's taught me that engineering teams run on communication just as much as code.`,
   },
   {
     company: 'Independent Haircutting Business',
     role: 'Founder & Operator',
     dates: 'August 2024 – December 2025',
     tag: 'Entrepreneurship',
-    description: `I started this purely for fun, but once I noticed how often my friends were walking around with bad haircuts, the scale and demand of the industry clicked. I took advantage of that gap and turned it into a real business. I handled everything: client acquisition, pricing, scheduling, payments, hygiene standards, and follow-up. I built a digital management system to handle bookings and track clients, which brought my retention rate to 85% and let the referral loop run on autopilot. By the time I wrapped up to focus on school, I had served 50+ clients and generated over $7,000 in revenue. More than the money, it proved to me that the scariest part of starting something is usually just starting.`,
+    description: `I started this purely for fun, but once I noticed how often my friends were walking around with bad haircuts, the scale and demand of the industry clicked. I took advantage of that gap and turned it into a real business. I handled everything: client acquisition, pricing, scheduling, payments, hygiene standards, and follow-up. I built an Excel-based management system to handle bookings and track clients, which brought my retention rate to 85% and let the referral loop run on autopilot. By the time I wrapped up to focus on school, I had served 50+ clients across 350+ appointments and generated over $7,000 in revenue. More than the money, it proved to me that the scariest part of starting something is usually just starting.`,
   },
 ]
 
@@ -563,11 +568,89 @@ function ProjectChip({ label }) {
   )
 }
 
+const ACCENT_BLUE = '#6db8f0'
+
+function CategoryChip({ label }) {
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: '4px',
+      padding: '3px 9px', borderRadius: '999px',
+      fontSize: '10px', fontWeight: 600, letterSpacing: '0.03em',
+      background: '#e8f4fd', color: '#2d7abf', border: '1px solid #b8d9f5',
+    }}>{label}</span>
+  )
+}
+
+function HighlightList({ items }) {
+  return (
+    <div>
+      <div style={{ fontSize: '9px', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '8px' }}>Highlights</div>
+      {items.map((h, i) => (
+        <div key={i} style={{ display: 'flex', gap: '8px', padding: '6px 0', borderBottom: i < items.length - 1 ? '1px solid var(--card-border)' : 'none', fontSize: '12px', lineHeight: 1.45, color: 'var(--text-primary)' }}>
+          <span style={{ color: ACCENT_BLUE, fontWeight: 700, flexShrink: 0 }}>→</span>
+          {h}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function ActionPill({ href, primary, children }) {
+  const base = {
+    display: 'inline-flex', alignItems: 'center', gap: '5px',
+    padding: '8px 16px', borderRadius: '999px', fontSize: '12px', fontWeight: 600,
+  }
+  const style = primary
+    ? { ...base, background: ACCENT_BLUE, color: '#fff' }
+    : { ...base, background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--card-border)' }
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" style={style}>{children}</a>
+  )
+}
+
+function MainCardShell({ children }) {
+  return (
+    <div style={{
+      border: '1px solid var(--card-border)',
+      borderRadius: '18px',
+      overflow: 'hidden',
+      background: 'var(--bg-secondary)',
+      display: 'flex',
+      flexDirection: 'column',
+    }}>
+      {children}
+    </div>
+  )
+}
+
+function MinorProjectEntry({ title, year, description, chips, links, children, isLast }) {
+  return (
+    <div style={{ padding: '20px 0', borderBottom: isLast ? 'none' : '1px solid var(--card-border)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      {children}
+      <div>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', marginBottom: '7px' }}>
+          <span style={{ fontSize: '15px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--text-primary)' }}>{title}</span>
+          <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>{year}</span>
+        </div>
+        <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.55, marginBottom: '10px' }}>{description}</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
+          {chips.map(c => <ProjectChip key={c} label={c} />)}
+        </div>
+        <div style={{ display: 'flex', gap: '14px', fontSize: '12px', fontWeight: 600 }}>
+          {links.map(l => (
+            <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: ACCENT_BLUE }}>
+              <GithubIcon /> {l.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ProjectsPage({ onNavigate }) {
   const containerRef = useRef(null)
   useScrollFade(containerRef)
-
-  const accentBlue = '#6db8f0'
 
   return (
     <PageWrapper pageKey="projects">
@@ -590,137 +673,190 @@ function ProjectsPage({ onNavigate }) {
               Main Projects
             </p>
 
-            {/* Personal Website card */}
-            <div style={{
-              border: '1px solid var(--card-border)',
-              borderRadius: '18px',
-              overflow: 'hidden',
-              background: 'var(--bg-secondary)',
-            }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }} className="max-md:flex max-md:flex-col">
-
-                {/* Visual */}
-                <div style={{
-                  background: 'var(--bg-secondary)',
-                  padding: '24px',
-                  borderRight: '1px solid var(--card-border)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  minHeight: '340px',
-                }}>
-                  <div style={{
-                    width: '100%', borderRadius: '9px', overflow: 'hidden',
-                    border: '1px solid var(--card-border)',
-                    background: 'var(--bg-primary)',
-                    boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-                  }}>
-                    <div style={{
-                      height: '26px', background: 'var(--bg-secondary)',
-                      borderBottom: '1px solid var(--card-border)',
-                      display: 'flex', alignItems: 'center', padding: '0 10px', gap: '5px',
-                    }}>
-                      <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#ff5f57', display: 'inline-block' }} />
-                      <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#febc2e', display: 'inline-block' }} />
-                      <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#28c840', display: 'inline-block' }} />
-                      <span style={{
-                        marginLeft: '10px', flex: 1, maxWidth: '170px', height: '14px',
-                        borderRadius: '3px', background: 'var(--bg-primary)', border: '1px solid var(--card-border)',
-                        fontSize: '8px', color: 'var(--text-muted)',
-                        display: 'flex', alignItems: 'center', padding: '0 6px',
-                      }}>austinzhai.com</span>
-                    </div>
-                    <div style={{
-                      padding: '24px 20px 28px',
-                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px',
-                      textAlign: 'center', minHeight: '220px', justifyContent: 'center',
-                    }}>
-                      <div style={{ fontSize: '20px', fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
-                        Hi, I&apos;m <span style={{ color: accentBlue }}>Austin</span>!
-                      </div>
-                      <div style={{ fontSize: '10px', color: 'var(--text-muted)', maxWidth: '200px', lineHeight: 1.5 }}>
-                        Computer Engineering Student at UBC that likes to build stuff.
-                      </div>
-                      <div style={{ background: accentBlue, color: '#fff', fontSize: '9px', fontWeight: 600, padding: '5px 12px', borderRadius: '999px' }}>
-                        Let&apos;s connect!
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Info */}
+            {/* ── Portfolio Vision card ── */}
+            <div style={{ marginBottom: '24px' }}>
+              <MainCardShell>
+                {/* Info (top) */}
                 <div style={{ padding: '28px 30px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                       <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>2026</span>
-                      <span style={{
-                        display: 'inline-flex', alignItems: 'center', gap: '4px',
-                        padding: '3px 9px', borderRadius: '999px',
-                        fontSize: '10px', fontWeight: 600, letterSpacing: '0.03em',
-                        background: '#e8f4fd', color: '#2d7abf', border: '1px solid #b8d9f5',
-                      }}>Software</span>
+                      <CategoryChip label="Software" />
                     </div>
                     <h2 style={{ fontSize: '24px', fontWeight: 800, letterSpacing: '-0.025em', marginBottom: '8px', color: 'var(--text-primary)' }}>
-                      Personal Website
+                      Portfolio Vision
                     </h2>
                     <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '18px' }}>
-                      Designed, built, and deployed austinzhai.com end-to-end. A Vite + React SPA with custom CSS animations, scroll-triggered fades, and a full CI/CD pipeline via GitHub and Vercel. Set up the custom domain and DNS configuration from scratch.
+                      A full-stack ETF portfolio decomposer that recursively breaks down any portfolio of ETFs and stocks into underlying holdings, with real-time price data, sector and geographic exposure breakdowns, and persistent user accounts. Built first as a Python CLI, then rebuilt entirely as a production web application.
                     </p>
 
-                    {/* Skills */}
-                    <div style={{ marginBottom: '18px' }}>
-                      <div style={{ fontSize: '9px', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '10px' }}>Skills used</div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        {[
-                          { label: 'Languages', chips: ['JavaScript', 'HTML', 'CSS'] },
-                          { label: 'Frameworks', chips: ['React', 'Tailwind CSS', 'Vite'] },
-                          { label: 'Tools', chips: ['Git', 'GitHub', 'VS Code', 'Vercel', 'Domain Setup'] },
-                        ].map(({ label, chips }) => (
-                          <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
-                            <span style={{ fontSize: '9px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', width: '68px', flexShrink: 0 }}>{label}</span>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                              {chips.map(c => <ProjectChip key={c} label={c} />)}
-                            </div>
+                    {/* Two parts */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '18px' }}>
+                      {[
+                        {
+                          tag: 'Part 1 — Python CLI',
+                          body: 'Full-featured terminal decomposer with recursive ETF unwrapping, mixed USD/CAD currency detection, tabular holdings output with sector and geographic breakdowns, and a captured/untracked coverage summary. Handles circular references and depth capping.',
+                          chips: ['Python', 'CLI', 'JSON'],
+                        },
+                        {
+                          tag: 'Part 2 — Web App',
+                          body: 'Production web application with live stock price integration via Twelve Data API, Google OAuth and OTP email authentication via Supabase, saved and loadable portfolios with per-user row-level security, USD/CAD display toggle with real-time Frankfurter API conversion, and Logo.dev company logo resolution. Deployed on Vercel with Vercel Analytics.',
+                          chips: ['Python', 'React', 'Vite', 'Tailwind CSS', 'Supabase', 'Google Cloud', 'Twelve Data API', 'Vercel'],
+                        },
+                      ].map(part => (
+                        <div key={part.tag} style={{ background: 'var(--bg-primary)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '12px 14px' }}>
+                          <div style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-muted)', marginBottom: '6px' }}>{part.tag}</div>
+                          <div style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.5, marginBottom: '8px' }}>{part.body}</div>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                            {part.chips.map(c => <ProjectChip key={c} label={c} />)}
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
 
-                    {/* Highlights */}
-                    <div>
-                      <div style={{ fontSize: '9px', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '8px' }}>Highlights</div>
+                    <HighlightList items={[
+                      'Recursive ETF decomposition across 500+ tickers with configurable depth cap and circular reference protection',
+                      'Live stock prices via Twelve Data API with 24-hour client-side caching to minimize API consumption',
+                      'Google OAuth + OTP email auth via Supabase with row-level security policies per user',
+                      'Google Cloud OAuth 2.0 project with authorized domain configuration and test user management',
+                      'Real-time USD/CAD conversion via Frankfurter API with per-position and display-level currency toggling',
+                      '400+ page views within the first week of launch, tracked via Vercel Analytics',
+                      'Deployed end-to-end on Vercel with custom domain, analytics, and environment-based secrets management',
+                    ]} />
+                  </div>
+
+                  {/* Links */}
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <ActionPill href="https://www.portfoliovision.online/" primary>
+                      <ExternalLinkIcon /> portfoliovision.online
+                    </ActionPill>
+                    <ActionPill href="https://github.com/AustinZhai8/Portfolio-Vision-Web">
+                      <GithubIcon /> Web App
+                    </ActionPill>
+                    <ActionPill href="https://github.com/AustinZhai8/Portfolio-Vision-Py">
+                      <GithubIcon /> Python CLI
+                    </ActionPill>
+                  </div>
+                </div>
+
+                {/* Visual (bottom) */}
+                <div style={{
+                  background: 'var(--bg-primary)',
+                  padding: '16px',
+                  borderTop: '1px solid var(--card-border)',
+                  display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+                  gap: '16px',
+                  flexWrap: 'wrap',
+                }}>
+                  <div style={{ height: '320px', borderRadius: '8px', overflow: 'hidden', flex: '1 1 240px', minWidth: 0 }}>
+                    <img src="/projects/pv-cli.png" alt="Portfolio Vision Python CLI" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }} />
+                  </div>
+                  <div style={{ height: '320px', borderRadius: '8px', overflow: 'hidden', flex: '1 1 240px', minWidth: 0 }}>
+                    <img src="/projects/pv-web.png" alt="Portfolio Vision Web App" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }} />
+                  </div>
+                </div>
+              </MainCardShell>
+            </div>
+
+            {/* ── Personal Website card ── */}
+            <MainCardShell>
+              {/* Info (top) */}
+              <div style={{ padding: '28px 30px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>2026</span>
+                    <CategoryChip label="Software" />
+                  </div>
+                  <h2 style={{ fontSize: '24px', fontWeight: 800, letterSpacing: '-0.025em', marginBottom: '8px', color: 'var(--text-primary)' }}>
+                    Personal Website
+                  </h2>
+                  <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '18px' }}>
+                    Designed, built, and deployed austinzhai.com end-to-end. A Vite + React SPA with custom CSS animations, scroll-triggered fades, and a full CI/CD pipeline via GitHub and Vercel. Set up the custom domain and DNS configuration from scratch.
+                  </p>
+
+                  {/* Skills */}
+                  <div style={{ marginBottom: '18px' }}>
+                    <div style={{ fontSize: '9px', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '10px' }}>Skills used</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       {[
-                        'End-to-end ownership: design, build, deploy, domain setup',
-                        'Sub-100KB JS bundle, <1s LCP on cold load',
-                        'Continuous deployment via GitHub → Vercel pipeline',
-                      ].map((h, i, arr) => (
-                        <div key={h} style={{ display: 'flex', gap: '8px', padding: '6px 0', borderBottom: i < arr.length - 1 ? '1px solid var(--card-border)' : 'none', fontSize: '12px', lineHeight: 1.45, color: 'var(--text-primary)' }}>
-                          <span style={{ color: accentBlue, fontWeight: 700, flexShrink: 0 }}>→</span>
-                          {h}
+                        { label: 'Languages', chips: ['JavaScript', 'HTML', 'CSS'] },
+                        { label: 'Frameworks', chips: ['React', 'Tailwind CSS', 'Vite'] },
+                        { label: 'Tools', chips: ['Git', 'GitHub', 'VS Code', 'Vercel', 'Domain Setup'] },
+                      ].map(({ label, chips }) => (
+                        <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
+                          <span style={{ fontSize: '9px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', width: '68px', flexShrink: 0 }}>{label}</span>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                            {chips.map(c => <ProjectChip key={c} label={c} />)}
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Links */}
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    <a href="https://austinzhai.com" target="_blank" rel="noopener noreferrer" style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '5px',
-                      background: accentBlue, color: '#fff',
-                      padding: '8px 16px', borderRadius: '999px', fontSize: '12px', fontWeight: 600,
-                    }}>
-                      <ExternalLinkIcon /> austinzhai.com
-                    </a>
-                    <a href="https://github.com/AustinZhai8/personal-website" target="_blank" rel="noopener noreferrer" style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '5px',
-                      background: 'var(--bg-primary)', color: 'var(--text-primary)',
-                      padding: '8px 16px', borderRadius: '999px', fontSize: '12px', fontWeight: 600,
-                      border: '1px solid var(--card-border)',
-                    }}>
-                      <GithubIcon /> GitHub
-                    </a>
+                  <HighlightList items={[
+                    'End-to-end ownership: design, build, deploy, domain setup',
+                    'Sub-100KB JS bundle, <1s LCP on cold load',
+                    'Continuous deployment via GitHub → Vercel pipeline',
+                  ]} />
+                </div>
+
+                {/* Links */}
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  <ActionPill href="https://austinzhai.com" primary>
+                    <ExternalLinkIcon /> austinzhai.com
+                  </ActionPill>
+                  <ActionPill href="https://github.com/AustinZhai8/personal-website">
+                    <GithubIcon /> GitHub
+                  </ActionPill>
+                </div>
+              </div>
+
+              {/* Visual (bottom) — browser frame mock */}
+              <div style={{
+                background: 'var(--bg-primary)',
+                padding: '24px',
+                borderTop: '1px solid var(--card-border)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <div style={{
+                  width: '100%', maxWidth: '380px', borderRadius: '9px', overflow: 'hidden',
+                  border: '1px solid var(--card-border)',
+                  background: 'var(--bg-primary)',
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+                }}>
+                  <div style={{
+                    height: '26px', background: 'var(--bg-secondary)',
+                    borderBottom: '1px solid var(--card-border)',
+                    display: 'flex', alignItems: 'center', padding: '0 10px', gap: '5px',
+                  }}>
+                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#ff5f57', display: 'inline-block' }} />
+                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#febc2e', display: 'inline-block' }} />
+                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#28c840', display: 'inline-block' }} />
+                    <span style={{
+                      marginLeft: '10px', flex: 1, maxWidth: '170px', height: '14px',
+                      borderRadius: '3px', background: 'var(--bg-primary)', border: '1px solid var(--card-border)',
+                      fontSize: '8px', color: 'var(--text-muted)',
+                      display: 'flex', alignItems: 'center', padding: '0 6px',
+                    }}>austinzhai.com</span>
+                  </div>
+                  <div style={{
+                    padding: '24px 20px 28px',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px',
+                    textAlign: 'center', minHeight: '220px', justifyContent: 'center',
+                  }}>
+                    <div style={{ fontSize: '20px', fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
+                      Hi, I&apos;m <span style={{ color: ACCENT_BLUE }}>Austin</span>!
+                    </div>
+                    <div style={{ fontSize: '10px', color: 'var(--text-muted)', maxWidth: '200px', lineHeight: 1.5 }}>
+                      Computer Engineering Student at UBC that likes to build stuff.
+                    </div>
+                    <div style={{ background: ACCENT_BLUE, color: '#fff', fontSize: '9px', fontWeight: 600, padding: '5px 12px', borderRadius: '999px' }}>
+                      Let&apos;s connect!
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </MainCardShell>
           </div>
 
           {/* Divider */}
@@ -738,52 +874,41 @@ function ProjectsPage({ onNavigate }) {
             </p>
             <div style={{ height: '1px', background: 'var(--card-border)', marginBottom: '2px' }} />
 
-            {/* Servo Sonar Scanner */}
-            <div style={{ padding: '20px 0', borderBottom: '1px solid var(--card-border)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <MinorProjectEntry
+              title="Servo Sonar Radar"
+              year="2026"
+              description="A servo-mounted ultrasonic sensor sweeps 180° to detect objects across three modes: continuous sweep, detection-triggered pause, and manual joystick control. Detected objects are visualized on a real-time radar display rendered in Processing."
+              chips={['Arduino', 'Servo Control', 'Ultrasonic Sensing', 'Serial Communication', 'Processing']}
+              links={[{ href: 'https://github.com/AustinZhai8/Sonar-Servo-Radar', label: 'GitHub' }]}
+            >
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-                <img src="/projects/sonar-square.jpg" alt="Servo Sonar Scanner close-up" style={{ width: '300px', height: '300px', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--card-border)', flexShrink: 0 }} />
-                <img src="/projects/sonar-wide.jpg" alt="Servo Sonar Scanner with radar display" style={{ width: '350px', height: '300px', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--card-border)', flexShrink: 0 }} />
+                <img src="/projects/sonar-square.jpg" alt="Servo Sonar Radar close-up" style={{ width: '300px', height: '300px', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--card-border)', flexShrink: 0 }} />
+                <img src="/projects/sonar-wide.jpg" alt="Servo Sonar Radar with radar display" style={{ width: '350px', height: '300px', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--card-border)', flexShrink: 0 }} />
               </div>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', marginBottom: '7px' }}>
-                  <span style={{ fontSize: '15px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--text-primary)' }}>Servo Sonar Scanner</span>
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>2026</span>
-                </div>
-                <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.55, marginBottom: '10px' }}>
-                  A servo-mounted ultrasonic sensor sweeps 180° to detect objects across three modes: continuous sweep, detection-triggered pause, and manual joystick control. Detected objects are visualized on a real-time radar display rendered in Processing.
-                </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
-                  {['Arduino', 'Servo Control', 'Ultrasonic Sensing', 'Serial Communication', 'Processing'].map(c => <ProjectChip key={c} label={c} />)}
-                </div>
-                <div style={{ display: 'flex', gap: '14px', fontSize: '12px', fontWeight: 600 }}>
-                  <a href="https://github.com/AustinZhai8/Sonar-Servo-Scanner" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: accentBlue }}>
-                    <GithubIcon /> GitHub
-                  </a>
-                </div>
-              </div>
-            </div>
+            </MinorProjectEntry>
 
-            {/* LED Mode Controller */}
-            <div style={{ padding: '20px 0', borderBottom: '1px solid var(--card-border)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <img src="/projects/led-mode-controller.jpg" alt="LED Mode Controller breadboard" style={{ width: '300px', height: '300px', borderRadius: '16px', objectFit: 'cover', objectPosition: 'center', border: '1px solid var(--card-border)', display: 'block' }} />
-              <div>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', marginBottom: '7px' }}>
-                  <span style={{ fontSize: '15px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--text-primary)' }}>LED Mode Controller</span>
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>2026</span>
-                </div>
-                <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.55, marginBottom: '10px' }}>
-                  A button cycles an LED through off, on, and blink modes, with the current mode shown on a 7-segment display. Two potentiometers control brightness and blink speed independently using PWM output.
-                </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
-                  {['Arduino', 'PWM', 'State Machine', 'Non-blocking Timing'].map(c => <ProjectChip key={c} label={c} />)}
-                </div>
-                <div style={{ display: 'flex', gap: '14px', fontSize: '12px', fontWeight: 600 }}>
-                  <a href="https://github.com/AustinZhai8/LED-Dimmer-with-Button-Modes" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: accentBlue }}>
-                    <GithubIcon /> GitHub
-                  </a>
-                </div>
+            <MinorProjectEntry
+              title="Smart Gate Access System"
+              year="2026"
+              description="An ESP32-based access control system combining RFID card scanning and keypad password entry to control a servo-actuated gate, with an I2C LCD display for real-time status feedback and LED/buzzer alerts for granted and denied access events."
+              chips={['ESP32', 'RFID', 'SPI', 'I2C', 'Servo Control', 'Embedded Systems']}
+              links={[{ href: 'https://github.com/AustinZhai8/Smart-Gate-Access-System', label: 'GitHub' }]}
+            >
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                <img src="/projects/smart-gate-2.jpg" alt="Smart Gate Access System wide view" style={{ height: '300px', width: 'auto', maxWidth: '100%', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--card-border)', flexShrink: 0 }} />
               </div>
-            </div>
+            </MinorProjectEntry>
+
+            <MinorProjectEntry
+              title="LED Mode Controller"
+              year="2026"
+              description="A button cycles an LED through off, on, and blink modes, with the current mode shown on a 7-segment display. Two potentiometers control brightness and blink speed independently using PWM output."
+              chips={['Arduino', 'PWM', 'State Machine', 'Non-blocking Timing']}
+              links={[{ href: 'https://github.com/AustinZhai8/LED-Dimmer-with-Button-Modes', label: 'GitHub' }]}
+              isLast
+            >
+              <img src="/projects/led-mode-controller.jpg" alt="LED Mode Controller breadboard" style={{ width: '300px', height: '300px', borderRadius: '16px', objectFit: 'cover', objectPosition: 'center', border: '1px solid var(--card-border)', display: 'block' }} />
+            </MinorProjectEntry>
 
             {/* Software sub-section */}
             <p style={{ fontSize: '9px', letterSpacing: '0.25em', textTransform: 'uppercase', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '4px', marginTop: '36px' }}>
@@ -791,43 +916,22 @@ function ProjectsPage({ onNavigate }) {
             </p>
             <div style={{ height: '1px', background: 'var(--card-border)', marginBottom: '2px' }} />
 
-            {/* Hangman */}
-            <div style={{ padding: '20px 0', borderBottom: '1px solid var(--card-border)' }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', marginBottom: '7px' }}>
-                <span style={{ fontSize: '15px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--text-primary)' }}>Hangman</span>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>2026</span>
-              </div>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.55, marginBottom: '10px' }}>
-                A command-line implementation of the classic Hangman word-guessing game. Players choose a difficulty (easy, medium, or hard), then guess letters or the full word with 6 lives. Draws from a curated word list per difficulty and tracks guessed letters to prevent duplicates.
-              </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
-                {['Python', 'CLI', 'Game Logic'].map(c => <ProjectChip key={c} label={c} />)}
-              </div>
-              <div style={{ display: 'flex', gap: '14px', fontSize: '12px', fontWeight: 600 }}>
-                <a href="https://github.com/AustinZhai8/Hangman" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: accentBlue }}>
-                  <GithubIcon /> GitHub
-                </a>
-              </div>
-            </div>
+            <MinorProjectEntry
+              title="Hangman"
+              year="2026"
+              description="A command-line implementation of the classic Hangman word-guessing game. Players choose a difficulty (easy, medium, or hard), then guess letters or the full word with 6 lives. Draws from a curated word list per difficulty and tracks guessed letters to prevent duplicates."
+              chips={['Python', 'CLI', 'Game Logic']}
+              links={[{ href: 'https://github.com/AustinZhai8/Hangman', label: 'GitHub' }]}
+            />
 
-            {/* Random Password Generator */}
-            <div style={{ padding: '20px 0' }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', marginBottom: '7px' }}>
-                <span style={{ fontSize: '15px', fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--text-primary)' }}>Random Password Generator</span>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>2026</span>
-              </div>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.55, marginBottom: '10px' }}>
-                A command-line Python script that generates cryptographically varied passwords of any user-specified length. Draws from a pool of uppercase, lowercase, digits, and symbols using Python&apos;s <code style={{ fontFamily: 'Menlo, Consolas, monospace', background: 'var(--bg-secondary)', padding: '1px 5px', borderRadius: '4px' }}>random</code> module to produce a shuffled character string on every run.
-              </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
-                {['Python', 'CLI', 'random'].map(c => <ProjectChip key={c} label={c} />)}
-              </div>
-              <div style={{ display: 'flex', gap: '14px', fontSize: '12px', fontWeight: 600 }}>
-                <a href="https://github.com/AustinZhai8/Random-Password-Generator" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: accentBlue }}>
-                  <GithubIcon /> GitHub
-                </a>
-              </div>
-            </div>
+            <MinorProjectEntry
+              title="Random Password Manager"
+              year="2026"
+              description="A command-line Python password manager that stores, retrieves, and deletes credentials locally. Features a built-in password generator that guarantees cryptographic variety across uppercase, lowercase, digits, and symbols on every run. Data persists across sessions via a local JSON file."
+              chips={['Python', 'CLI', 'random', 'json', 'os']}
+              links={[{ href: 'https://github.com/AustinZhai8/Random-Password-Manager', label: 'GitHub' }]}
+              isLast
+            />
 
           </div>
         </div>
@@ -840,18 +944,83 @@ function ProjectsPage({ onNavigate }) {
 // ─── Resume Page ───────────────────────────────────────────────────────────────
 
 function ResumePage() {
+  const pdfHref = '/AZ_Resume.pdf'
   return (
     <PageWrapper pageKey="resume">
-      <div className="min-h-screen flex flex-col items-center justify-center text-center px-6">
-        <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-6" style={{ color: 'var(--text-muted)' }}>
-          Resume
-        </p>
-        <p className="text-2xl md:text-3xl font-bold mb-4" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-          Currently undergoing updates.
-        </p>
-        <p className="text-base" style={{ color: 'var(--text-muted)' }}>
-          Check back soon.
-        </p>
+      <div className="pt-28 pb-16 px-6">
+        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+          <div style={{ opacity: 0, animation: 'fadeUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards' }}>
+            <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
+              Resume
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: '16px', marginBottom: '24px' }}>
+              <h1 className="text-4xl md:text-5xl font-extrabold" style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}>
+                Resume
+              </h1>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                <a
+                  href={pdfHref}
+                  download="AZ_Resume.pdf"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '6px',
+                    background: '#6db8f0', color: '#fff',
+                    padding: '9px 18px', borderRadius: '999px',
+                    fontSize: '13px', fontWeight: 600,
+                  }}
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  Download PDF
+                </a>
+                <a
+                  href={pdfHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '6px',
+                    background: 'var(--bg-primary)', color: 'var(--text-primary)',
+                    padding: '9px 18px', borderRadius: '999px',
+                    fontSize: '13px', fontWeight: 600,
+                    border: '1px solid var(--card-border)',
+                  }}
+                >
+                  <ExternalLinkIcon size={13} />
+                  Open in new tab
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div
+            style={{
+              opacity: 0,
+              animation: 'fadeUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards',
+              border: '1px solid var(--card-border)',
+              borderRadius: '14px',
+              overflow: 'hidden',
+              background: 'var(--bg-secondary)',
+            }}
+          >
+            <object
+              data={`${pdfHref}#view=FitH`}
+              type="application/pdf"
+              style={{ display: 'block', width: '100%', height: '85vh', minHeight: '720px', border: 'none' }}
+            >
+              <iframe
+                src={`${pdfHref}#view=FitH`}
+                title="Austin Zhai resume"
+                style={{ display: 'block', width: '100%', height: '85vh', minHeight: '720px', border: 'none' }}
+              />
+              <p style={{ padding: '24px', fontSize: '14px', color: 'var(--text-muted)' }}>
+                Your browser can&apos;t display this PDF inline.{' '}
+                <a href={pdfHref} style={{ color: 'var(--accent)', fontWeight: 600 }}>Download it here</a>.
+              </p>
+            </object>
+          </div>
+        </div>
       </div>
     </PageWrapper>
   )
