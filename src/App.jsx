@@ -446,28 +446,28 @@ const EXPERIENCE = [
     role: 'Bilingual Data Analyst',
     dates: 'March 2026 – Present',
     tag: 'Data & AI',
-    description: `I work with TELUS Digital evaluating AI-generated geolocation data across English and French, helping train the models that power mapping products used by millions of people. Day to day, that means assessing 80+ search queries weekly across POI accuracy, search result relevance, routing quality, and autocomplete suggestions, applying structured rubrics to catch what models miss while maintaining a 90% accuracy rate. The bilingual angle is a real differentiator: I flag multilingual discrepancies that monolingual reviewers can't catch, feeding those signals back into model retraining cycles. It's precise, pattern-heavy work that's taught me a lot about how large-scale AI systems actually get refined.`,
+    description: `I work with TELUS Digital evaluating AI-generated geolocation data across English and French, helping train the models that power mapping products used by millions of people. Day to day, that means assessing 80+ search queries weekly across POI accuracy, search result relevance, routing quality, and autocomplete suggestions, applying structured rubrics to catch what models miss while maintaining a ~90% accuracy rate. The bilingual angle is a real differentiator: I flag multilingual discrepancies that monolingual reviewers can't catch, feeding those signals back into model retraining cycles. It's precise, pattern-heavy work that's taught me a lot about how large-scale AI systems actually get refined.`,
   },
   {
     company: 'Hydroficient',
     role: 'IoT Cyber Defense Extern',
     dates: 'April 2026 – Present',
     tag: 'Cybersecurity',
-    description: `I worked with Hydroficient securing an IoT sensor pipeline for a simulated 500-room hotel water management system. That meant designing and stress-testing a 5-layer defense stack — TLS encryption, mutual TLS device authentication, HMAC message signing, timestamp validation, and sequence counters — against live attack classes I built myself: eavesdropping, sensor spoofing, and replay attacks. I reduced unauthorized broker access to zero by configuring per-device certificates and producing a formal provisioning policy. On top of that, I trained an Isolation Forest anomaly detection model on live telemetry and wired it into a real-time Streamlit dashboard so non-technical staff could monitor system security without touching a terminal. It's the most end-to-end security work I've done, and it changed how I think about trust in connected systems.`,
+    description: `I worked with Hydroficient securing an IoT sensor pipeline for a simulated 500-room hotel water management system. That meant designing and stress-testing a 5-layer defense stack (TLS encryption, mutual TLS device authentication, HMAC message signing, timestamp validation, and sequence counters) against live attack classes I built myself: eavesdropping, sensor spoofing, and replay attacks. I reduced unauthorized broker access to zero by configuring per-device certificates and producing a formal provisioning policy. On top of that, I trained an Isolation Forest anomaly detection model on live telemetry and wired it into a real-time Streamlit dashboard so non-technical staff could monitor system security without touching a terminal. It's the most end-to-end security work I've done, and it changed how I think about trust in connected systems.`,
   },
   {
     company: 'UBC Sailbot',
     role: 'Operations Team Member',
     dates: 'September 2025 – April 2026',
     tag: 'Business Operations',
-    description: `UBC Sailbot builds a fully autonomous sailing robot: no remote control, no crew. My role is on the operations side, which means connecting across electrical, mechanical, and software subteams to keep the project moving. I manage timelines, organize technical documentation for cross-subteam integration, and handle the outward-facing side: sponsor packages, website content, graphic design, and video production. I took ownership of our social media presence and grew average engagement by 50 to 100% through a campaign I planned and executed end-to-end, contributing to a sponsorship roster of 18 active partners. It's taught me that engineering teams run on communication just as much as code.`,
+    description: `UBC Sailbot builds a fully autonomous sailing robot: no remote control, no crew. My role is on the operations side, which means connecting across electrical, mechanical, and software subteams to keep the project moving. I manage timelines, organize technical documentation for cross-subteam integration, and handle the outward-facing side: sponsor packages, website content, graphic design, and video production. I took ownership of our social media presence and grew average engagement by ~80% through a campaign I planned and executed end-to-end, contributing to a sponsorship roster of 18 active partners. It's taught me that engineering teams run on communication just as much as code.`,
   },
   {
     company: 'Independent Haircutting Business',
     role: 'Founder & Operator',
     dates: 'August 2024 – December 2025',
     tag: 'Entrepreneurship',
-    description: `I started this purely for fun, but once I noticed how often my friends were walking around with bad haircuts, the scale and demand of the industry clicked. I took advantage of that gap and turned it into a real business. I handled everything: client acquisition, pricing, scheduling, payments, hygiene standards, and follow-up. I built an Excel-based management system to handle bookings and track clients, which brought my retention rate to 85% and let the referral loop run on autopilot. By the time I wrapped up to focus on school, I had served 50+ clients across 350+ appointments and generated over $7,000 in revenue. More than the money, it proved to me that the scariest part of starting something is usually just starting.`,
+    description: `I started this purely for fun, but once I noticed how often my friends were walking around with bad haircuts, the scale and demand of the industry clicked. I took advantage of that gap and turned it into a real business. I handled everything: client acquisition, pricing, scheduling, payments, hygiene standards, and follow-up. I built an Excel-based management system to handle bookings and track clients, which brought my retention rate to ~85% and let the referral loop run on autopilot. By the time I wrapped up to focus on school, I had served 50+ clients across 350+ appointments and generated over $7,000 in revenue. More than the money, it proved to me that the scariest part of starting something is usually just starting.`,
   },
 ]
 
@@ -716,7 +716,7 @@ function ProjectsPage({ onNavigate }) {
 
                     <HighlightList items={[
                       'Recursive ETF decomposition across 500+ tickers with configurable depth cap and circular reference protection',
-                      'Live stock prices via Twelve Data API with 24-hour client-side caching to minimize API consumption',
+                      'Enabled live price fetching across US and Canadian exchanges (TSX, NEO, CSE) by building a Vercel serverless proxy to Yahoo Finance, eliminating API key requirements and exchange restrictions',
                       'Google OAuth + OTP email auth via Supabase with row-level security policies per user',
                       'Google Cloud OAuth 2.0 project with authorized domain configuration and test user management',
                       'Real-time USD/CAD conversion via Frankfurter API with per-position and display-level currency toggling',
