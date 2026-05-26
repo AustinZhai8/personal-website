@@ -391,7 +391,7 @@ function AboutPage({ onNavigate }) {
             Hobbies
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            {['Basketball', 'Gym', 'Piano'].map((label) => (
+            {['Basketball', 'Gym', 'Piano', 'Video Games'].map((label) => (
               <span
                 key={label}
                 className="text-sm font-medium"
@@ -420,9 +420,11 @@ function AboutPage({ onNavigate }) {
           >
             {[
               '3.5 languages: English, French, Chinese, and a little Spanish',
-              'Newjeans and Laroi are tuff',
+              'Newjeans and Laroi are fire',
               'Lanzhou handpulled noodles are my all time favorite dish',
               'Mavericks and Patriots fan',
+              'Hit top 2% in League and top 1% in Valorant',
+              'Top 1% performing TFSA',
             ].map((fact) => (
               <div key={fact} className="flex items-start gap-4 py-3" style={{ borderBottom: '1px solid var(--card-border)' }}>
                 <span style={{ color: 'var(--accent)', fontSize: '1.3rem', fontWeight: '700', marginTop: '0px', flexShrink: 0, lineHeight: '1' }}>→</span>
@@ -441,6 +443,13 @@ function AboutPage({ onNavigate }) {
 // ─── Experience Page ───────────────────────────────────────────────────────────
 
 const EXPERIENCE = [
+  {
+    company: 'Galaxy Instrumentation',
+    role: 'Operational Technology Engineering Intern',
+    dates: 'May 2026 – Present',
+    tag: 'Engineering',
+    description: `I joined Galaxy Instrumentation supporting CHEP's Perfect Plant initiative, a global rollout of upgraded Factory Management Systems across 750+ manufacturing sites. My job is to audit the OT infrastructure at each plant before and after migration, which means remotely connecting to FMS servers and verifying the network state of every device on site: Allen-Bradley PLCs, HMIs, ADI data integration units, and the underlying SQL databases that tie it all together. I work through roughly 25 sites a week, using RSLinx Classic Lite, AVEVA SCADA, ThinManager, Radmin, and SQL Server Management Studio to document configurations and flag anything that looks off. I also built a Python script integrated with Power Automate to automate the repetitive file navigation that comes with auditing at this scale, cutting setup time by about 15%. It is the first role where I have worked directly with industrial automation systems, and the gap between what gets taught in first-year engineering and what actually runs factory floors is larger than I expected.`,
+  },
   {
     company: 'TELUS Digital',
     role: 'Bilingual Data Analyst',
@@ -1005,12 +1014,12 @@ function ResumePage() {
             }}
           >
             <object
-              data={`${pdfHref}#view=FitH`}
+              data={`${pdfHref}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
               type="application/pdf"
               style={{ display: 'block', width: '100%', height: '85vh', minHeight: '720px', border: 'none' }}
             >
               <iframe
-                src={`${pdfHref}#view=FitH`}
+                src={`${pdfHref}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
                 title="Austin Zhai resume"
                 style={{ display: 'block', width: '100%', height: '85vh', minHeight: '720px', border: 'none' }}
               />
