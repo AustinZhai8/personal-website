@@ -444,23 +444,30 @@ function AboutPage({ onNavigate }) {
 
 const EXPERIENCE = [
   {
-    company: 'Galaxy Instrumentation',
+    company: 'AdvancedUAV Tech',
+    role: 'Electronics Engineering Intern',
+    dates: 'June 2026 – Present',
+    tag: 'Hardware Engineering',
+    description: `drone.`,
+  },
+  {
+    company: 'Galaxy Instrumentation and Controls Inc',
     role: 'Operational Technology Engineering Intern',
-    dates: 'May 2026 – Present',
+    dates: 'May 2026 – June 2026',
     tag: 'Engineering',
     description: `I joined Galaxy Instrumentation supporting CHEP's Perfect Plant initiative, a global rollout of upgraded Factory Management Systems across 750+ manufacturing sites. My job is to audit the OT infrastructure at each plant before and after migration, which means remotely connecting to FMS servers and verifying the network state of every device on site: Allen-Bradley PLCs, HMIs, ADI data integration units, and the underlying SQL databases that tie it all together. I work through roughly 25 sites a week, using RSLinx Classic Lite, AVEVA SCADA, ThinManager, Radmin, and SQL Server Management Studio to document configurations and flag anything that looks off. I also built a Python script integrated with Power Automate to automate the repetitive file navigation that comes with auditing at this scale, cutting setup time by about 15%. It is the first role where I have worked directly with industrial automation systems, and the gap between what gets taught in first-year engineering and what actually runs factory floors is larger than I expected.`,
   },
   {
     company: 'TELUS Digital',
     role: 'Bilingual Data Analyst',
-    dates: 'March 2026 – Present',
+    dates: 'March 2026 – June 2026',
     tag: 'Data & AI',
     description: `I work with TELUS Digital evaluating AI-generated geolocation data across English and French, helping train the models that power mapping products used by millions of people. Day to day, that means assessing 80+ search queries weekly across POI accuracy, search result relevance, routing quality, and autocomplete suggestions, applying structured rubrics to catch what models miss while maintaining a ~90% accuracy rate. The bilingual angle is a real differentiator: I flag multilingual discrepancies that monolingual reviewers can't catch, feeding those signals back into model retraining cycles. It's precise, pattern-heavy work that's taught me a lot about how large-scale AI systems actually get refined.`,
   },
   {
     company: 'Hydroficient',
     role: 'IoT Cyber Defense Extern',
-    dates: 'April 2026 – Present',
+    dates: 'April 2026 – June 2026',
     tag: 'Cybersecurity',
     description: `I worked with Hydroficient securing an IoT sensor pipeline for a simulated 500-room hotel water management system. That meant designing and stress-testing a 5-layer defense stack (TLS encryption, mutual TLS device authentication, HMAC message signing, timestamp validation, and sequence counters) against live attack classes I built myself: eavesdropping, sensor spoofing, and replay attacks. I reduced unauthorized broker access to zero by configuring per-device certificates and producing a formal provisioning policy. On top of that, I trained an Isolation Forest anomaly detection model on live telemetry and wired it into a real-time Streamlit dashboard so non-technical staff could monitor system security without touching a terminal. It's the most end-to-end security work I've done, and it changed how I think about trust in connected systems.`,
   },
