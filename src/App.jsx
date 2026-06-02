@@ -161,7 +161,7 @@ function HomePage({ loaded, onNavigate }) {
             <img
               src="/Headshot.JPG"
               alt="Austin Zhai"
-              className="w-36 h-36 md:w-44 md:h-44 rounded-full object-cover object-top"
+              className="rounded-full object-cover object-top w-[194px] h-[194px] md:w-[238px] md:h-[238px]"
               style={{ border: '2px solid var(--card-border)' }}
             />
           </div>
@@ -424,7 +424,7 @@ function AboutPage({ onNavigate }) {
               'Lanzhou handpulled noodles are my all time favorite dish',
               'Mavericks and Patriots fan',
               'Hit top 2% in League and top 1% in Valorant',
-              'Top 1% performing TFSA',
+              'Top 0.7% performing TFSA',
             ].map((fact) => (
               <div key={fact} className="flex items-start gap-4 py-3" style={{ borderBottom: '1px solid var(--card-border)' }}>
                 <span style={{ color: 'var(--accent)', fontSize: '1.3rem', fontWeight: '700', marginTop: '0px', flexShrink: 0, lineHeight: '1' }}>→</span>
