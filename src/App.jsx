@@ -47,7 +47,6 @@ function Navbar({ activePage, onNavigate }) {
     { label: 'About', id: 'about' },
     { label: 'Experience', id: 'experience' },
     { label: 'Projects', id: 'projects' },
-    { label: 'Resume', id: 'resume' },
   ]
 
   const handleNav = (id) => {
@@ -909,21 +908,11 @@ function ProjectsPage({ onNavigate }) {
               description="An ESP32-based access control system combining RFID card scanning and keypad password entry to control a servo-actuated gate, with an I2C LCD display for real-time status feedback and LED/buzzer alerts for granted and denied access events."
               chips={['ESP32', 'RFID', 'SPI', 'I2C', 'Servo Control', 'Embedded Systems']}
               links={[{ href: 'https://github.com/AustinZhai8/Smart-Gate-Access-System', label: 'GitHub' }]}
+              isLast
             >
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
                 <img src="/projects/smart-gate-2.jpg" alt="Smart Gate Access System wide view" style={{ height: '300px', width: 'auto', maxWidth: '100%', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--card-border)', flexShrink: 0 }} />
               </div>
-            </MinorProjectEntry>
-
-            <MinorProjectEntry
-              title="LED Mode Controller"
-              year="2026"
-              description="A button cycles an LED through off, on, and blink modes, with the current mode shown on a 7-segment display. Two potentiometers control brightness and blink speed independently using PWM output."
-              chips={['Arduino', 'PWM', 'State Machine', 'Non-blocking Timing']}
-              links={[{ href: 'https://github.com/AustinZhai8/LED-Dimmer-with-Button-Modes', label: 'GitHub' }]}
-              isLast
-            >
-              <img src="/projects/led-mode-controller.jpg" alt="LED Mode Controller breadboard" style={{ width: '300px', height: '300px', borderRadius: '16px', objectFit: 'cover', objectPosition: 'center', border: '1px solid var(--card-border)', display: 'block' }} />
             </MinorProjectEntry>
 
             {/* Software sub-section */}
@@ -949,92 +938,6 @@ function ProjectsPage({ onNavigate }) {
               isLast
             />
 
-          </div>
-        </div>
-      </div>
-      <NextPageButton label="View Resume" onClick={() => onNavigate('resume')} />
-    </PageWrapper>
-  )
-}
-
-// ─── Resume Page ───────────────────────────────────────────────────────────────
-
-function ResumePage() {
-  const pdfHref = '/AZ_Resume.pdf'
-  return (
-    <PageWrapper pageKey="resume">
-      <div className="pt-28 pb-16 px-6">
-        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
-          <div style={{ opacity: 0, animation: 'fadeUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards' }}>
-            <p className="text-xs tracking-[0.3em] uppercase font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
-              Resume
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: '16px', marginBottom: '24px' }}>
-              <h1 className="text-4xl md:text-5xl font-extrabold" style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}>
-                Resume
-              </h1>
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                <a
-                  href={pdfHref}
-                  download="AZ_Resume.pdf"
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: '6px',
-                    background: '#6db8f0', color: '#fff',
-                    padding: '9px 18px', borderRadius: '999px',
-                    fontSize: '13px', fontWeight: 600,
-                  }}
-                >
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                  </svg>
-                  Download PDF
-                </a>
-                <a
-                  href={pdfHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: '6px',
-                    background: 'var(--bg-primary)', color: 'var(--text-primary)',
-                    padding: '9px 18px', borderRadius: '999px',
-                    fontSize: '13px', fontWeight: 600,
-                    border: '1px solid var(--card-border)',
-                  }}
-                >
-                  <ExternalLinkIcon size={13} />
-                  Open in new tab
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div
-            style={{
-              opacity: 0,
-              animation: 'fadeUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards',
-              border: '1px solid var(--card-border)',
-              borderRadius: '14px',
-              overflow: 'hidden',
-              background: 'var(--bg-secondary)',
-            }}
-          >
-            <object
-              data={`${pdfHref}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
-              type="application/pdf"
-              style={{ display: 'block', width: '100%', height: '85vh', minHeight: '720px', border: 'none' }}
-            >
-              <iframe
-                src={`${pdfHref}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
-                title="Austin Zhai resume"
-                style={{ display: 'block', width: '100%', height: '85vh', minHeight: '720px', border: 'none' }}
-              />
-              <p style={{ padding: '24px', fontSize: '14px', color: 'var(--text-muted)' }}>
-                Your browser can&apos;t display this PDF inline.{' '}
-                <a href={pdfHref} style={{ color: 'var(--accent)', fontWeight: 600 }}>Download it here</a>.
-              </p>
-            </object>
           </div>
         </div>
       </div>
@@ -1093,7 +996,6 @@ export default function App() {
     about: <AboutPage onNavigate={navigate} />,
     experience: <ExperiencePage onNavigate={navigate} />,
     projects: <ProjectsPage onNavigate={navigate} />,
-    resume: <ResumePage />,
   }
 
   return (
