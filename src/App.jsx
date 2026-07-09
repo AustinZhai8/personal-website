@@ -176,7 +176,7 @@ function HomePage({ onNavigate }) {
           <img src="/Headshot.JPG" alt="Austin Zhai" className="headshot" />
           <div>
             <h1 className="hero-title">Hi, I&apos;m <span style={{ color: 'var(--accent)' }}>Austin</span>.</h1>
-            <p className="hero-sub">Computer Engineering student at UBC who likes to build things.</p>
+            <p className="hero-sub">Computer Engineering student at UBC.</p>
           </div>
           <a href="https://www.linkedin.com/in/austin-zhai/" target="_blank" rel="noopener noreferrer" className="btn-primary">Let&apos;s connect</a>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px' }}>
@@ -664,7 +664,7 @@ function ProjectsPage({ onNavigate }) {
               ))}
             </div>
 
-            <p className="sub-sub-heading" style={{ marginTop: '2.2rem' }}>Minor Software Projects</p>
+            <p className="sub-sub-heading" style={{ marginTop: '2.2rem' }}>Software</p>
             <div className="minor-group">
               {MINOR_SOFTWARE.map((p, i) => (
                 <MinorEntry key={p.id} p={p} open={!!openIds[p.id]} onToggle={() => toggle(p.id)} isLast={i === MINOR_SOFTWARE.length - 1} />
