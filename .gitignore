@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Claude Code
+CLAUDE.md
+.claude
+
+# Loose resume/headshot copies at repo root (site serves the public/ copies)
+/Headshot.JPG
+/Austin Zhai Resume - Google Docs.pdf
