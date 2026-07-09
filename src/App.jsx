@@ -630,7 +630,7 @@ function MinorEntry({ p, open, onToggle, isLast }) {
 // ─── Projects page ───────────────────────────────────────────────────────
 
 function ProjectsPage({ onNavigate }) {
-  const [openIds, setOpenIds] = useState({ 'portfolio-vision': true })
+  const [openIds, setOpenIds] = useState({})
   const toggle = (id) => setOpenIds((s) => ({ ...s, [id]: !s[id] }))
   const ref = useRef(null)
   useScrollReveal(ref)
