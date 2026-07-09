@@ -414,7 +414,7 @@ const MAIN_PROJECTS = [
     ],
     images: [
       { src: '/projects/pv-cli.png', alt: 'Portfolio Vision Python CLI' },
-      { src: '/projects/pv-web.png', alt: 'Portfolio Vision web app' },
+      { src: '/screenshot.png', alt: 'Portfolio Vision web app' },
     ],
   },
   {
