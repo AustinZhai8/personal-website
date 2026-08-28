@@ -43,15 +43,6 @@ function IconChevron({ open }) {
     </svg>
   )
 }
-function IconArrowDown() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="12" y1="5" x2="12" y2="19" />
-      <polyline points="19 12 12 19 5 12" />
-    </svg>
-  )
-}
-
 // ─── Hooks ───────────────────────────────────────────────────────────────
 
 function useScrollReveal(ref, deps) {
@@ -357,9 +348,9 @@ function HomeSection() {
           <a href="https://www.linkedin.com/in/austin-zhai/" target="_blank" rel="noopener noreferrer" className="btn-social"><IconLinkedIn /> LinkedIn</a>
           <a href="https://github.com/AustinZhai8" target="_blank" rel="noopener noreferrer" className="btn-social"><IconGithub /> GitHub</a>
         </div>
-        <button className="explore-btn" onClick={() => scrollToSection('about')} aria-label="Skip to About">
-          <span>Explore</span>
-          <IconArrowDown />
+        <button className="scroll-cue" onClick={() => scrollToSection('about')} aria-label="Scroll to About">
+          <span className="scroll-cue-label">Scroll</span>
+          <span className="scroll-cue-track"><span className="scroll-cue-dot" /></span>
         </button>
       </div>
     </section>
@@ -694,7 +685,7 @@ const EXPERIENCE = [
 function ExperienceCard({ exp, open, onToggle }) {
   const expandable = exp.parts && exp.parts.length > 0
   return (
-    <div className={'exp-card reveal' + (open ? ' open' : '')} data-card-id={exp.company}>
+    <div className={'exp-card' + (open ? ' open' : '')} data-card-id={exp.company}>
       <div className="exp-head">
         <div>
           <h3>{exp.company}</h3>
@@ -742,7 +733,7 @@ function ExperienceSection({ cards }) {
   return (
     <section id="experience" className="section-pad">
       <SectionHeading eyebrow="Where I&apos;ve been" title="Experience" />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="reveal" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {EXPERIENCE.map((exp) => (
           <ExperienceCard key={exp.company} exp={exp}
             open={!!cards.openIds[exp.company]} onToggle={() => cards.toggle(exp.company)} />

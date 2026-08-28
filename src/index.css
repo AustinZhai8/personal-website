@@ -207,13 +207,27 @@ section[id] { scroll-margin-top: 60px; }
   transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 .btn-social:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
-.explore-btn {
-  margin-top: 2rem; display: flex; flex-direction: column; align-items: center; gap: 8px;
-  padding: 14px 26px; border-radius: 14px; border: 1.5px solid var(--border);
-  color: var(--text3); transition: border-color 0.2s ease, color 0.2s ease;
+.scroll-cue {
+  margin-top: 2.25rem; display: flex; flex-direction: column; align-items: center; gap: 13px;
+  color: var(--text3); transition: color 0.2s ease;
 }
-.explore-btn span { font-size: 10.5px; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 600; }
-.explore-btn:hover { border-color: var(--border2); color: var(--text2); }
+.scroll-cue:hover { color: var(--text2); }
+.scroll-cue-label { font-size: 10.5px; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 600; }
+.scroll-cue-track {
+  position: relative; display: block; width: 1px; height: 54px;
+  background: linear-gradient(to bottom, var(--border2), transparent);
+}
+.scroll-cue-dot {
+  position: absolute; left: -1.5px; top: 0;
+  width: 4px; height: 4px; border-radius: 50%; background: var(--accent);
+  animation: scrollCue 2.2s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+@keyframes scrollCue {
+  0%   { transform: translateY(0);    opacity: 0; }
+  20%  { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: translateY(48px); opacity: 0; }
+}
 
 /* ─── About sections ────────────────────────────────────── */
 .section-rule {
@@ -409,9 +423,12 @@ section[id] { scroll-margin-top: 60px; }
   opacity: 0; transform: translateY(30px);
   transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.reveal.visible { opacity: 1; transform: translateY(0); }
+/* settle to `none`, not translateY(0): a lingering transform on a container that can
+   expand to many thousands of px makes it a composited layer and can render blank */
+.reveal.visible { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .reveal, .stagger > *, .exp-card { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
+  .scroll-cue-dot { animation: none !important; }
 }
 
 /* ─── Print: resume-style projects ──────────────────────── */
