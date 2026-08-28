@@ -198,37 +198,6 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 .explore-btn span { font-size: 10.5px; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 600; }
 .explore-btn:hover { border-color: var(--border2); color: var(--text2); }
 
-/* ─── Convexity ─────────────────────────────────────────── */
-.convexity-screen {
-  min-height: 92vh; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; text-align: center;
-  padding: 7rem 1.5rem 4rem; position: relative;
-}
-.convexity-word {
-  font-size: clamp(3.8rem, 14vw, 12rem); font-weight: 900;
-  letter-spacing: -0.045em; line-height: 0.95;
-  background: linear-gradient(180deg, var(--text) 55%, var(--text3));
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.convexity-idea { margin-top: 3rem; max-width: 560px; }
-.idea-label {
-  display: block; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
-  font-weight: 600; color: var(--accent); margin-bottom: 14px;
-}
-.idea-line {
-  font-size: clamp(20px, 3.4vw, 28px); font-weight: 700;
-  letter-spacing: -0.015em; line-height: 1.3; margin-bottom: 8px;
-}
-.idea-tail { font-size: 17px; font-weight: 500; color: var(--text2); }
-.scroll-hint {
-  position: absolute; bottom: 34px; left: 50%; transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.4;
-}
-@media (max-height: 760px) { .scroll-hint { display: none; } }
-.scroll-hint span { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text3); }
-.scroll-line { width: 1px; height: 44px; background: linear-gradient(to bottom, var(--accent), transparent); }
-
 /* ─── About sections ────────────────────────────────────── */
 .section-rule {
   display: flex; align-items: center; gap: 20px;
@@ -459,10 +428,6 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
   .proj-summary, .minor-head { padding-left: 0; padding-right: 0; cursor: default; }
   .proj-summary { padding: 1.1rem 1.2rem 0.4rem; }
   .proj-body-inner { padding-left: 1.2rem; padding-right: 1.2rem; }
-  .convexity-word {
-    -webkit-text-fill-color: initial; background: none;
-    -webkit-background-clip: initial; background-clip: initial; color: #111111;
-  }
   .proj-img-frame, .minor-img { height: 220px; }
   .stat-block { break-inside: avoid; border: 1px solid #d5d5d5 !important; }
   .stat-row { border-bottom-color: #d5d5d5 !important; }

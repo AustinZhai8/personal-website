@@ -339,22 +339,8 @@ function AboutPage({ onNavigate }) {
 
   return (
     <Page pageKey="about">
-      <div ref={ref}>
-
-        {/* Convexity */}
-        <section className="convexity-screen reveal" style={{ maxWidth: '960px', margin: '0 auto' }}>
-          <Eyebrow>One word that describes my mindset</Eyebrow>
-          <h1 className="convexity-word">Convexity</h1>
-          <div className="convexity-idea">
-            <span className="idea-label">The Idea</span>
-            <p className="idea-line">The more you put in, the faster the returns grow.</p>
-            <p className="idea-tail">Effort compounds.</p>
-          </div>
-          <div className="scroll-hint">
-            <span>scroll</span>
-            <div className="scroll-line" />
-          </div>
-        </section>
+      {/* paddingTop replaces the clearance the removed hero section used to provide */}
+      <div ref={ref} style={{ paddingTop: '6rem' }}>
 
         {/* Bio */}
         <SectionRule label="About Me" />
