@@ -126,9 +126,42 @@ function useCollapsibleCards() {
   return { openIds, toggle, collapse, activeId }
 }
 
+const SECTION_IDS = ['home', 'about', 'experience', 'projects']
+
+function scrollToSection(id) {
+  const el = document.getElementById(id)
+  if (!el) return
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  try { history.replaceState(null, '', '#' + id) } catch { /* no-op */ }
+}
+
+// Which section currently owns the top of the viewport, for the nav underline.
+function useScrollSpy() {
+  const [active, setActive] = useState(SECTION_IDS[0])
+  useEffect(() => {
+    const check = () => {
+      let current = SECTION_IDS[0]
+      SECTION_IDS.forEach((id) => {
+        const el = document.getElementById(id)
+        if (el && el.getBoundingClientRect().top <= 140) current = id
+      })
+      setActive(current)
+    }
+    const raf = requestAnimationFrame(check)
+    window.addEventListener('scroll', check, { passive: true })
+    window.addEventListener('resize', check)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', check)
+      window.removeEventListener('resize', check)
+    }
+  }, [])
+  return active
+}
+
 // ─── Nav ─────────────────────────────────────────────────────────────────
 
-function Nav({ page, onNavigate }) {
+function Nav({ active, onNavigate }) {
   const links = [
     { id: 'about', label: 'About' },
     { id: 'experience', label: 'Experience' },
@@ -144,7 +177,7 @@ function Nav({ page, onNavigate }) {
           {links.map((l) => (
             <button
               key={l.id}
-              className={'nav-link' + (page === l.id ? ' active' : '')}
+              className={'nav-link' + (active === l.id ? ' active' : '')}
               onClick={() => onNavigate(l.id)}
             >
               {l.label}
@@ -156,28 +189,40 @@ function Nav({ page, onNavigate }) {
   )
 }
 
-// ─── Page transition wrapper ────────────────────────────────────────────
+// ─── Small shared pieces ─────────────────────────────────────────────────
 
-function Page({ pageKey, children }) {
-  const [on, setOn] = useState(false)
+// Thin reading-progress line: the main cue that this is one continuous page.
+function ScrollProgress() {
+  const [pct, setPct] = useState(0)
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' })
-    const t = setTimeout(() => setOn(true), 30)
-    return () => clearTimeout(t)
-  }, [pageKey])
+    const check = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      setPct(max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0)
+    }
+    const raf = requestAnimationFrame(check)
+    window.addEventListener('scroll', check, { passive: true })
+    window.addEventListener('resize', check)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', check)
+      window.removeEventListener('resize', check)
+    }
+  }, [])
   return (
-    <div style={{
-      opacity: on ? 1 : 0,
-      transform: on ? 'none' : 'translateY(16px)',
-      transition: 'opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1)',
-      minHeight: '100vh',
-    }}>
-      {children}
+    <div className="scroll-progress no-print" aria-hidden="true">
+      <div style={{ width: pct + '%' }} />
     </div>
   )
 }
 
-// ─── Small shared pieces ─────────────────────────────────────────────────
+function SectionHeading({ eyebrow, title }) {
+  return (
+    <div className="reveal section-heading">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 className="page-title">{title}</h2>
+    </div>
+  )
+}
 
 function Eyebrow({ children, style }) {
   return <p className="eyebrow" style={style}>{children}</p>
@@ -282,14 +327,6 @@ function SectionRule({ label }) {
   )
 }
 
-function NextPage({ label, onClick }) {
-  return (
-    <div className="no-print" style={{ textAlign: 'center', padding: '2.5rem 0 5rem' }}>
-      <button className="btn-primary" onClick={onClick}>{label}</button>
-    </div>
-  )
-}
-
 function Footer() {
   return (
     <footer className="site-footer no-print">
@@ -305,111 +342,99 @@ function Footer() {
 
 // ─── Home ────────────────────────────────────────────────────────────────
 
-function HomePage({ onNavigate }) {
+function HomeSection() {
   return (
-    <Page pageKey="home">
-      <section className="hero-screen">
-        <div className="stagger" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
-          <img src="/Headshot.JPG" alt="Austin Zhai" className="headshot" />
-          <div>
-            <h1 className="hero-title">Hi, I&apos;m <span style={{ color: 'var(--accent)' }}>Austin</span>.</h1>
-            <p className="hero-sub">Computer Engineering student at UBC.</p>
-          </div>
-          <a href="https://www.linkedin.com/in/austin-zhai/" target="_blank" rel="noopener noreferrer" className="btn-primary">Let&apos;s connect</a>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px' }}>
-            <a href="mailto:austinhzhai@gmail.com" className="btn-social"><IconMail /> austinhzhai@gmail.com</a>
-            <a href="https://www.linkedin.com/in/austin-zhai/" target="_blank" rel="noopener noreferrer" className="btn-social"><IconLinkedIn /> LinkedIn</a>
-            <a href="https://github.com/AustinZhai8" target="_blank" rel="noopener noreferrer" className="btn-social"><IconGithub /> GitHub</a>
-          </div>
-          <button className="explore-btn" onClick={() => onNavigate('about')} aria-label="Go to About">
-            <span>Explore</span>
-            <IconArrowDown />
-          </button>
+    <section id="home" className="hero-screen">
+      <div className="stagger" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
+        <img src="/Headshot.JPG" alt="Austin Zhai" className="headshot" />
+        <div>
+          <h1 className="hero-title">Hi, I&apos;m <span style={{ color: 'var(--accent)' }}>Austin</span>.</h1>
+          <p className="hero-sub">Computer Engineering student at UBC.</p>
         </div>
-      </section>
-    </Page>
+        <a href="https://www.linkedin.com/in/austin-zhai/" target="_blank" rel="noopener noreferrer" className="btn-primary">Let&apos;s connect</a>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px' }}>
+          <a href="mailto:austinhzhai@gmail.com" className="btn-social"><IconMail /> austinhzhai@gmail.com</a>
+          <a href="https://www.linkedin.com/in/austin-zhai/" target="_blank" rel="noopener noreferrer" className="btn-social"><IconLinkedIn /> LinkedIn</a>
+          <a href="https://github.com/AustinZhai8" target="_blank" rel="noopener noreferrer" className="btn-social"><IconGithub /> GitHub</a>
+        </div>
+        <button className="explore-btn" onClick={() => scrollToSection('about')} aria-label="Skip to About">
+          <span>Explore</span>
+          <IconArrowDown />
+        </button>
+      </div>
+    </section>
   )
 }
 
 // ─── About ───────────────────────────────────────────────────────────────
 
-function AboutPage({ onNavigate }) {
-  const ref = useRef(null)
-  useScrollReveal(ref)
-
+function AboutSection() {
   return (
-    <Page pageKey="about">
-      {/* paddingTop replaces the clearance the removed hero section used to provide */}
-      <div ref={ref} style={{ paddingTop: '6rem' }}>
+    <section id="about" className="section-pad">
+      <SectionHeading eyebrow="Who I am" title="About" />
 
-        {/* Bio */}
-        <SectionRule label="About Me" />
-        <div className="reveal" style={{ maxWidth: '960px', margin: '0 auto', padding: '3.5rem 1.5rem', textAlign: 'center' }}>
-          <p className="bio-line">
-            UBC Computer Engineering student who spends way too much time on business student activities.
-            Somewhere along the way that turned into a genuine interest in where hardware meets software.
-          </p>
-        </div>
-
-        {/* Investing */}
-        <SectionRule label="Investing" />
-        <div className="reveal" style={{ maxWidth: '960px', margin: '0 auto', padding: '3rem 1.5rem' }}>
-          <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 3rem' }}>
-            <Eyebrow>Where it all started</Eyebrow>
-            <h2 className="section-title">Investing is the thread that ties everything together.</h2>
-            <p className="body-text" style={{ marginBottom: '1.1rem' }}>
-              I spend a lot of time on fundamentals research: tracking key metrics, waiting on earnings,
-              pulling apart business models, and building conviction one company at a time.
-              Every position I hold is a thesis I can defend.
-            </p>
-            <p className="body-text">
-              That passion is what pulled me toward Computer Engineering. The goal is simple:
-              work for a company I believe in enough to own, and build the products from the inside.
-            </p>
-          </div>
-          <div className="invest-grid">
-            <div className="img-card"><img src="/wealthsimple.png" alt="Wealthsimple portfolio" loading="lazy" /></div>
-            <div className="img-card"><img src="/blossom.png" alt="Blossom portfolio" loading="lazy" /></div>
-          </div>
-          <p className="body-text" style={{ textAlign: 'center', marginTop: '2rem', fontSize: '14px' }}>
-            Here&apos;s my <a href="https://link.blossomsocial.com/7uYa/kos58964" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 600 }}>Blossom</a> if
-            you have it and want to connect.
-          </p>
-        </div>
-
-        {/* Hobbies */}
-        <div className="reveal" style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 1.5rem 3rem' }}>
-          <Eyebrow style={{ textAlign: 'center', marginBottom: '1.6rem' }}>Hobbies</Eyebrow>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px' }}>
-            {['Basketball', 'Gym', 'Piano', 'Video Games'].map((h) => (
-              <span key={h} className="hobby-pill">{h}</span>
-            ))}
-          </div>
-        </div>
-
-        {/* Quick facts */}
-        <div className="reveal" style={{ maxWidth: '960px', margin: '0 auto', padding: '0 1.5rem 4rem' }}>
-          <Eyebrow style={{ textAlign: 'center', marginBottom: '1.6rem' }}>Quick Facts</Eyebrow>
-          <div className="facts-card">
-            {[
-              '3.5 languages: English, French, Chinese, and a little Spanish',
-              'NewJeans and The Kid LAROI are fire',
-              'Lanzhou hand-pulled noodles are my all-time favorite dish',
-              'Mavericks and Patriots fan (and the number one fantasy football manager out there)',
-              'Top 0.7% performing TFSA',
-            ].map((fact, i, arr) => (
-              <div key={fact} className="fact-row" style={{ borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none' }}>
-                <span className="fact-arrow">→</span>
-                <p>{fact}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <NextPage label="View Experience" onClick={() => onNavigate('experience')} />
-        <Footer />
+      <div className="reveal" style={{ maxWidth: '780px', margin: '0 auto', textAlign: 'center' }}>
+        <p className="bio-line">
+          UBC Computer Engineering student who spends way too much time on business student activities.
+          Somewhere along the way that turned into a genuine interest in where hardware meets software.
+        </p>
       </div>
-    </Page>
+
+      {/* Investing */}
+      <SectionRule label="Investing" />
+      <div className="reveal" style={{ paddingTop: '1rem' }}>
+        <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 3rem' }}>
+          <Eyebrow>Where it all started</Eyebrow>
+          <h3 className="section-title">Investing is the thread that ties everything together.</h3>
+          <p className="body-text" style={{ marginBottom: '1.1rem' }}>
+            I spend a lot of time on fundamentals research: tracking key metrics, waiting on earnings,
+            pulling apart business models, and building conviction one company at a time.
+            Every position I hold is a thesis I can defend.
+          </p>
+          <p className="body-text">
+            That passion is what pulled me toward Computer Engineering. The goal is simple:
+            work for a company I believe in enough to own, and build the products from the inside.
+          </p>
+        </div>
+        <div className="invest-grid">
+          <div className="img-card"><img src="/wealthsimple.png" alt="Wealthsimple portfolio" loading="lazy" /></div>
+          <div className="img-card"><img src="/blossom.png" alt="Blossom portfolio" loading="lazy" /></div>
+        </div>
+        <p className="body-text" style={{ textAlign: 'center', marginTop: '2rem', fontSize: '14px' }}>
+          Here&apos;s my <a href="https://link.blossomsocial.com/7uYa/kos58964" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 600 }}>Blossom</a> if
+          you have it and want to connect.
+        </p>
+      </div>
+
+      {/* Hobbies */}
+      <div className="reveal" style={{ paddingTop: '3.5rem' }}>
+        <Eyebrow style={{ textAlign: 'center', marginBottom: '1.6rem' }}>Hobbies</Eyebrow>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px' }}>
+          {['Basketball', 'Gym', 'Piano', 'Video Games'].map((h) => (
+            <span key={h} className="hobby-pill">{h}</span>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick facts */}
+      <div className="reveal" style={{ paddingTop: '3rem' }}>
+        <Eyebrow style={{ textAlign: 'center', marginBottom: '1.6rem' }}>Quick Facts</Eyebrow>
+        <div className="facts-card">
+          {[
+            '3.5 languages: English, French, Chinese, and a little Spanish',
+            'NewJeans and The Kid LAROI are fire',
+            'Lanzhou hand-pulled noodles are my all-time favorite dish',
+            'Mavericks and Patriots fan (and the number one fantasy football manager out there)',
+            'Top 0.7% performing TFSA',
+          ].map((fact, i, arr) => (
+            <div key={fact} className="fact-row" style={{ borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none' }}>
+              <span className="fact-arrow">→</span>
+              <p>{fact}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -666,11 +691,10 @@ const EXPERIENCE = [
   },
 ]
 
-function ExperienceCard({ exp, index, open, onToggle }) {
+function ExperienceCard({ exp, open, onToggle }) {
   const expandable = exp.parts && exp.parts.length > 0
   return (
-    <div className={'exp-card' + (open ? ' open' : '')} data-card-id={exp.company}
-      style={{ animationDelay: `${0.08 + index * 0.1}s` }}>
+    <div className={'exp-card reveal' + (open ? ' open' : '')} data-card-id={exp.company}>
       <div className="exp-head">
         <div>
           <h3>{exp.company}</h3>
@@ -714,31 +738,17 @@ function ExperienceCard({ exp, index, open, onToggle }) {
   )
 }
 
-function ExperiencePage({ onNavigate }) {
-  const { openIds, toggle, collapse, activeId } = useCollapsibleCards()
-
+function ExperienceSection({ cards }) {
   return (
-    <>
-    <Page pageKey="experience">
-      <div className="page-pad">
-        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
-          <div className="fade-in-up">
-            <Eyebrow>Where I&apos;ve been</Eyebrow>
-            <h1 className="page-title">Experience</h1>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '2rem' }}>
-            {EXPERIENCE.map((exp, i) => (
-              <ExperienceCard key={exp.company} exp={exp} index={i}
-                open={!!openIds[exp.company]} onToggle={() => toggle(exp.company)} />
-            ))}
-          </div>
-        </div>
-        <NextPage label="View Projects" onClick={() => onNavigate('projects')} />
-        <Footer />
+    <section id="experience" className="section-pad">
+      <SectionHeading eyebrow="Where I&apos;ve been" title="Experience" />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        {EXPERIENCE.map((exp) => (
+          <ExperienceCard key={exp.company} exp={exp}
+            open={!!cards.openIds[exp.company]} onToggle={() => cards.toggle(exp.company)} />
+        ))}
       </div>
-    </Page>
-    <CollapseBar activeId={activeId} title={activeId} onCollapse={collapse} />
-    </>
+    </section>
   )
 }
 
@@ -1087,91 +1097,85 @@ function MinorEntry({ p, open, onToggle, isLast }) {
 
 // ─── Projects page ───────────────────────────────────────────────────────
 
-function ProjectsPage({ onNavigate }) {
-  const { openIds, toggle, collapse, activeId } = useCollapsibleCards()
-  const ref = useRef(null)
-  useScrollReveal(ref)
-  const activeTitle = [...MAIN_PROJECTS, ...MINOR_HARDWARE, ...MINOR_SOFTWARE]
-    .find((p) => p.id === activeId)?.title
-
+function ProjectsSection({ cards }) {
   return (
-    <>
-    <Page pageKey="projects">
-      <div ref={ref} className="page-pad">
-        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
-          <div className="fade-in-up" style={{ marginBottom: '2.5rem' }}>
-            <Eyebrow>What I&apos;ve built</Eyebrow>
-            <h1 className="page-title">Projects</h1>
-            <p className="print-only print-name">Austin Zhai · austinzhai.com · github.com/AustinZhai8</p>
-          </div>
+    <section id="projects" className="section-pad">
+      <SectionHeading eyebrow="What I&apos;ve built" title="Projects" />
+      <p className="print-only print-name">Austin Zhai · austinzhai.com · github.com/AustinZhai8</p>
 
-          <div className="reveal">
-            <p className="sub-heading">Main Projects</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              {MAIN_PROJECTS.map((p) => (
-                <MainProjectCard key={p.id} p={p} open={!!openIds[p.id]} onToggle={() => toggle(p.id)} />
-              ))}
-            </div>
-          </div>
+      <div className="reveal">
+        <p className="sub-heading">Main Projects</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {MAIN_PROJECTS.map((p) => (
+            <MainProjectCard key={p.id} p={p} open={!!cards.openIds[p.id]} onToggle={() => cards.toggle(p.id)} />
+          ))}
+        </div>
+      </div>
 
-          <div className="reveal" style={{ marginTop: '3.5rem' }}>
-            <p className="sub-heading">Minor Projects</p>
+      <div className="reveal" style={{ marginTop: '3.5rem' }}>
+        <p className="sub-heading">Minor Projects</p>
 
-            <p className="sub-sub-heading">Hardware / Firmware</p>
-            <div className="minor-group">
-              {MINOR_HARDWARE.map((p, i) => (
-                <MinorEntry key={p.id} p={p} open={!!openIds[p.id]} onToggle={() => toggle(p.id)} isLast={i === MINOR_HARDWARE.length - 1} />
-              ))}
-            </div>
-
-            <p className="sub-sub-heading" style={{ marginTop: '2.2rem' }}>Software</p>
-            <div className="minor-group">
-              {MINOR_SOFTWARE.map((p, i) => (
-                <MinorEntry key={p.id} p={p} open={!!openIds[p.id]} onToggle={() => toggle(p.id)} isLast={i === MINOR_SOFTWARE.length - 1} />
-              ))}
-            </div>
-          </div>
+        <p className="sub-sub-heading">Hardware / Firmware</p>
+        <div className="minor-group">
+          {MINOR_HARDWARE.map((p, i) => (
+            <MinorEntry key={p.id} p={p} open={!!cards.openIds[p.id]} onToggle={() => cards.toggle(p.id)} isLast={i === MINOR_HARDWARE.length - 1} />
+          ))}
         </div>
 
-        <NextPage label="Back to Home" onClick={() => onNavigate('home')} />
-        <Footer />
+        <p className="sub-sub-heading" style={{ marginTop: '2.2rem' }}>Software</p>
+        <div className="minor-group">
+          {MINOR_SOFTWARE.map((p, i) => (
+            <MinorEntry key={p.id} p={p} open={!!cards.openIds[p.id]} onToggle={() => cards.toggle(p.id)} isLast={i === MINOR_SOFTWARE.length - 1} />
+          ))}
+        </div>
       </div>
-    </Page>
-    <CollapseBar activeId={activeId} title={activeTitle} onCollapse={collapse} />
-    </>
+    </section>
   )
 }
 
 // ─── App ─────────────────────────────────────────────────────────────────
 
-const PAGES = { home: HomePage, about: AboutPage, experience: ExperiencePage, projects: ProjectsPage }
-
 export default function App() {
-  const initial = (() => {
-    const h = window.location.hash.replace('#', '')
-    return PAGES[h] ? h : 'home'
-  })()
-  const [page, setPage] = useState(initial)
+  const ref = useRef(null)
+  const cards = useCollapsibleCards()
+  const active = useScrollSpy()
+  useScrollReveal(ref)
 
-  const navigate = (id) => {
-    setPage(id)
-    try { history.replaceState(null, '', '#' + id) } catch { /* no-op */ }
-  }
+  const activeTitle =
+    [...MAIN_PROJECTS, ...MINOR_HARDWARE, ...MINOR_SOFTWARE].find((p) => p.id === cards.activeId)?.title ||
+    (EXPERIENCE.some((e) => e.company === cards.activeId) ? cards.activeId : undefined)
 
+  // Deep links still work: #about, #experience, #projects jump to their section.
   useEffect(() => {
-    const onHash = () => {
+    const jump = () => {
       const h = window.location.hash.replace('#', '')
-      if (PAGES[h]) setPage(h)
+      if (!SECTION_IDS.includes(h)) return
+      const el = document.getElementById(h)
+      if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' })
     }
-    window.addEventListener('hashchange', onHash)
-    return () => window.removeEventListener('hashchange', onHash)
+    const raf = requestAnimationFrame(jump)
+    window.addEventListener('hashchange', jump)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('hashchange', jump)
+    }
   }, [])
 
-  const Current = PAGES[page]
   return (
     <>
-      <Nav page={page} onNavigate={navigate} />
-      <Current onNavigate={navigate} />
+      <ScrollProgress />
+      <Nav active={active} onNavigate={scrollToSection} />
+      <main ref={ref}>
+        <HomeSection />
+        <AboutSection />
+        <ExperienceSection cards={cards} />
+        <ProjectsSection cards={cards} />
+        <div className="no-print" style={{ textAlign: 'center', padding: '1rem 0 4.5rem' }}>
+          <button className="btn-primary" onClick={() => scrollToSection('home')}>Back to top</button>
+        </div>
+        <Footer />
+      </main>
+      <CollapseBar activeId={cards.activeId} title={activeTitle} onCollapse={cards.collapse} />
     </>
   )
 }
