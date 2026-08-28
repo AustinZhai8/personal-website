@@ -74,6 +74,58 @@ function useScrollReveal(ref, deps) {
   }, deps || [])
 }
 
+function findCard(id) {
+  return Array.from(document.querySelectorAll('[data-card-id]')).find((el) => el.dataset.cardId === id) || null
+}
+
+// Expand/collapse state for a page of cards, plus the id of the open card the reader is
+// currently scrolled inside — so a floating control can offer to close it without
+// scrolling back up to the header.
+function useCollapsibleCards() {
+  const [openIds, setOpenIds] = useState({})
+  const [activeId, setActiveId] = useState(null)
+
+  const toggle = (id) => setOpenIds((s) => ({ ...s, [id]: !s[id] }))
+
+  // Land the reader back on the header rather than wherever the shrinking page leaves them.
+  const collapse = (id) => {
+    const el = findCard(id)
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'instant' })
+    setOpenIds((s) => ({ ...s, [id]: false }))
+  }
+
+  useEffect(() => {
+    const ids = Object.keys(openIds).filter((k) => openIds[k])
+    const check = () => {
+      const hit = ids.find((id) => {
+        const el = findCard(id)
+        if (!el) return false
+        const r = el.getBoundingClientRect()
+        return r.top < 64 && r.bottom > 220
+      })
+      setActiveId(hit || null)
+    }
+    // deferred a frame so the first measurement happens after paint, not in the effect body
+    const raf = requestAnimationFrame(check)
+    window.addEventListener('scroll', check, { passive: true })
+    window.addEventListener('resize', check)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', check)
+      window.removeEventListener('resize', check)
+    }
+  }, [openIds])
+
+  useEffect(() => {
+    if (!activeId) return
+    const onKey = (e) => { if (e.key === 'Escape') collapse(activeId) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [activeId])
+
+  return { openIds, toggle, collapse, activeId }
+}
+
 // ─── Nav ─────────────────────────────────────────────────────────────────
 
 function Nav({ page, onNavigate }) {
@@ -202,6 +254,21 @@ function PartCard({ part }) {
       <StatBlock stat={part.stat} />
       <Media items={part.media} />
     </div>
+  )
+}
+
+// Floating "collapse" pill, shown only while the reader is inside an expanded card.
+function CollapseBar({ activeId, title, onCollapse }) {
+  return (
+    <button
+      className={'collapse-bar no-print' + (activeId ? ' show' : '')}
+      onClick={() => activeId && onCollapse(activeId)}
+      tabIndex={activeId ? 0 : -1}
+      aria-hidden={!activeId}
+    >
+      <IconChevron open />
+      <span>Collapse{title ? ' ' + title : ''}</span>
+    </button>
   )
 }
 
@@ -616,7 +683,8 @@ const EXPERIENCE = [
 function ExperienceCard({ exp, index, open, onToggle }) {
   const expandable = exp.parts && exp.parts.length > 0
   return (
-    <div className={'exp-card' + (open ? ' open' : '')} style={{ animationDelay: `${0.08 + index * 0.1}s` }}>
+    <div className={'exp-card' + (open ? ' open' : '')} data-card-id={exp.company}
+      style={{ animationDelay: `${0.08 + index * 0.1}s` }}>
       <div className="exp-head">
         <div>
           <h3>{exp.company}</h3>
@@ -661,10 +729,10 @@ function ExperienceCard({ exp, index, open, onToggle }) {
 }
 
 function ExperiencePage({ onNavigate }) {
-  const [openIds, setOpenIds] = useState({})
-  const toggle = (id) => setOpenIds((s) => ({ ...s, [id]: !s[id] }))
+  const { openIds, toggle, collapse, activeId } = useCollapsibleCards()
 
   return (
+    <>
     <Page pageKey="experience">
       <div className="page-pad">
         <div style={{ maxWidth: '960px', margin: '0 auto' }}>
@@ -683,6 +751,8 @@ function ExperiencePage({ onNavigate }) {
         <Footer />
       </div>
     </Page>
+    <CollapseBar activeId={activeId} title={activeId} onCollapse={collapse} />
+    </>
   )
 }
 
@@ -906,7 +976,7 @@ const MINOR_SOFTWARE = [
 
 function MainProjectCard({ p, open, onToggle }) {
   return (
-    <div className={'proj-card' + (open ? ' open' : '')}>
+    <div className={'proj-card' + (open ? ' open' : '')} data-card-id={p.id}>
       <button className="proj-summary" onClick={onToggle} aria-expanded={open}>
         <div className="proj-summary-text">
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
@@ -991,7 +1061,7 @@ function MainProjectCard({ p, open, onToggle }) {
 
 function MinorEntry({ p, open, onToggle, isLast }) {
   return (
-    <div className="minor-entry" style={{ borderBottom: isLast ? 'none' : '1px solid var(--border)' }}>
+    <div className="minor-entry" data-card-id={p.id} style={{ borderBottom: isLast ? 'none' : '1px solid var(--border)' }}>
       <button className="minor-head" onClick={onToggle} aria-expanded={open}>
         <span className="minor-title">{p.title}</span>
         <span style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -1032,12 +1102,14 @@ function MinorEntry({ p, open, onToggle, isLast }) {
 // ─── Projects page ───────────────────────────────────────────────────────
 
 function ProjectsPage({ onNavigate }) {
-  const [openIds, setOpenIds] = useState({})
-  const toggle = (id) => setOpenIds((s) => ({ ...s, [id]: !s[id] }))
+  const { openIds, toggle, collapse, activeId } = useCollapsibleCards()
   const ref = useRef(null)
   useScrollReveal(ref)
+  const activeTitle = [...MAIN_PROJECTS, ...MINOR_HARDWARE, ...MINOR_SOFTWARE]
+    .find((p) => p.id === activeId)?.title
 
   return (
+    <>
     <Page pageKey="projects">
       <div ref={ref} className="page-pad">
         <div style={{ maxWidth: '960px', margin: '0 auto' }}>
@@ -1079,6 +1151,8 @@ function ProjectsPage({ onNavigate }) {
         <Footer />
       </div>
     </Page>
+    <CollapseBar activeId={activeId} title={activeTitle} onCollapse={collapse} />
+    </>
   )
 }
 

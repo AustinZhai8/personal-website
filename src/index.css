@@ -375,6 +375,30 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 .minor-img { height: 280px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border); max-width: 100%; }
 .minor-link { display: inline-flex; align-items: center; gap: 6px; font-size: 14.5px; font-weight: 600; }
 
+/* ─── Floating collapse control ──────────────────────────── */
+/* Hidden state is opacity-only and class-driven, so it never depends on an
+   animation firing — no entry needed in the reduced-motion / print lists. */
+.collapse-bar {
+  position: fixed; left: 50%; bottom: 24px; z-index: 60;
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 11px 20px; border-radius: 999px;
+  background: var(--card); border: 1px solid var(--border2);
+  color: var(--text); font-size: 13.5px; font-weight: 600;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  opacity: 0; transform: translate(-50%, 14px); pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.2s ease, color 0.2s ease;
+}
+.collapse-bar.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.collapse-bar:hover { border-color: var(--accent); color: var(--accent); }
+.collapse-bar span {
+  max-width: 230px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+@media (max-width: 560px) {
+  .collapse-bar { bottom: 16px; padding: 10px 16px; font-size: 12.5px; }
+  .collapse-bar span { max-width: 145px; }
+}
+
 /* ─── Footer ─────────────────────────────────────────────── */
 .site-footer {
   max-width: 860px; margin: 0 auto; padding: 1.6rem 1.5rem 2.2rem;
