@@ -580,7 +580,7 @@ const EXPERIENCE = [
     company: 'Galaxy Instrumentation and Controls Inc',
     role: 'Automation and Controls Engineering Intern',
     dates: 'May 2026 to June 2026',
-    tag: 'Engineering',
+    tag: 'Automation & Controls',
     description: "This was my first real exposure to industrial automation: the PLCs, SCADA systems, and operator terminals that keep a factory floor running. I worked on CHEP's global rollout of upgraded Factory Management Systems, doing pre-migration verification across roughly 25 plants a week. At each site I connected to the plant server and baselined every layer beneath it, validating communication paths to about 7 Allen-Bradley PLCs, capturing HMI terminal configs in ThinManager, cross-checking device diagnostics in AVEVA SCADA, and confirming the automated pallet inspection systems were still hitting their timing spec. I wrote the verification runbook myself and automated the repetitive parts in Python. Learning to read a controls stack top to bottom, and to tell a network fault apart from a protocol one, is what I took away from it.",
   },
   {
