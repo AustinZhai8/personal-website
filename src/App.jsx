@@ -588,7 +588,7 @@ const EXPERIENCE = [
     role: 'Bilingual Data Analyst',
     dates: 'March 2026 to June 2026',
     tag: 'Data & AI',
-    description: "I evaluate AI-generated geolocation data across English and French, helping train the models behind mapping products used by millions. That means assessing 80+ search queries weekly across POI accuracy, search relevance, routing quality, and autocomplete, applying structured rubrics while maintaining a ~90% accuracy rate. The bilingual angle is the differentiator: I catch multilingual discrepancies that monolingual reviewers miss, and those signals feed back into model retraining.",
+    description: "I evaluated AI-generated geolocation data across English and French, helping train the models behind mapping products used by millions. That meant assessing 80+ search queries weekly across POI accuracy, search relevance, routing quality, and autocomplete, applying structured rubrics while maintaining a ~90% accuracy rate. The bilingual angle was the differentiator: I caught multilingual discrepancies that monolingual reviewers missed, and those signals fed back into model retraining.",
   },
   {
     company: 'Hydroficient',
