@@ -396,12 +396,12 @@ const EXPERIENCE = [
           'The answer: an MTF-01 optical flow module, a downward camera and laser rangefinder that tracks movement against the floor',
           'Once it was fitted and tuned the drifting stopped, and everything after this was designed around it',
         ],
-        chips: ['DJI F450', 'Pixhawk', 'MTF-01 Optical Flow'],
+        chips: ['DJI F450', 'Pixhawk 2.4.8', 'MTF-01 Optical Flow'],
         media: [
           {
             src: '/projects/auav-prototype.jpg', w: 1300, h: 1143,
-            alt: 'The F450 prototype quadcopter on a desk with a Pixhawk flight controller mounted on top',
-            caption: 'The prototype: a light-show F450 stripped back and rebuilt around a Pixhawk, with the optical flow module tucked underneath.',
+            alt: 'The F450 prototype quadcopter on a desk with a Pixhawk 2.4.8 flight controller mounted on top',
+            caption: 'The prototype: a light-show F450 stripped back and rebuilt around a Pixhawk 2.4.8, with the optical flow module tucked underneath.',
           },
           {
             type: 'video', preload: 'none', full: true, maxWidth: 340, w: 720, h: 1280,
@@ -448,12 +448,12 @@ const EXPERIENCE = [
         tag: 'Final airframe',
         body: 'The prototype could not carry everything we needed, so we moved onto a bigger 20 inch carbon fiber frame. I assembled and wired this one up myself, and designed the parts that did not exist off the shelf.',
         points: [
-          'Pixhawk 2.4.8 flight controller, with the MTF-01 optical flow module mounted underneath',
+          'Pixhawk 6X flight controller, with the MTF-01 optical flow module mounted underneath',
           'No commercial landing leg fitted our combination of motors and frame, so I modelled our own in Onshape around the real parts and printed them',
           'They were hollowed out in a hex pattern to save weight without losing stiffness, and they are the legs holding the drone up in the photos below',
           'Then tuned until it held position steadily indoors',
         ],
-        chips: ['Carbon Fiber Frame', 'Pixhawk 2.4.8', 'Onshape', '3D Printing'],
+        chips: ['Carbon Fiber Frame', 'Pixhawk 6X', 'Onshape', '3D Printing'],
         media: [
           {
             src: '/projects/auav-cad-leg.png', w: 1300, h: 583, full: true,
@@ -462,7 +462,7 @@ const EXPERIENCE = [
           },
           {
             src: '/projects/auav-final.jpg', w: 1300, h: 1040,
-            alt: 'The finished carbon fiber quadcopter on a desk with Pixhawk and GPS mounted',
+            alt: 'The finished carbon fiber quadcopter on a desk with a Pixhawk 6X and GPS mounted',
             caption: 'The finished airframe, standing on the printed legs.',
           },
           {
