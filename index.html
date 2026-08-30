@@ -2,12 +2,49 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Austin Zhai" />
+    <meta name="theme-color" content="#0b0b0d" />
+
+    <!-- the AZ monogram; type was image/x-icon on a PNG, which browsers had to sniff past -->
+    <link rel="icon" type="image/png" sizes="100x100" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Identical on every route. The per-route tags go in at the marker below. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Austin Zhai" />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:image" content="https://austinzhai.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Austin Zhai — Computer Engineering student at UBC" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://austinzhai.com/og.png" />
+
     <title>Austin Zhai</title>
+    <!--seo-->
+
+    <!--
+      Every .reveal starts at opacity 0 and is only revealed by the IntersectionObserver
+      in useScrollReveal. The pages are prerendered, so the text is in the HTML even with
+      JavaScript off — this makes sure it is actually visible. Third override list,
+      alongside prefers-reduced-motion and @media print in index.css.
+    -->
+    <noscript>
+      <style>
+        .reveal, .stagger > *, .page-fade {
+          opacity: 1 !important;
+          transform: none !important;
+          animation: none !important;
+          transition: none !important;
+        }
+      </style>
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

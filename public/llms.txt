@@ -1,0 +1,40 @@
+# Austin Zhai
+
+> Computer Engineering student at the University of British Columbia. Builds at the
+> point where hardware meets software: inspection drones, custom PCBs and firmware,
+> on-device machine learning, industrial automation, and full-stack web apps. Investing
+> is the thread that ties it together.
+
+Personal portfolio at https://austinzhai.com. Contact: austinhzhai@gmail.com,
+https://www.linkedin.com/in/austin-zhai/, https://github.com/AustinZhai8
+
+## Pages
+
+- [Home](https://austinzhai.com/): Introduction and contact links.
+- [About](https://austinzhai.com/about): How investing led to Computer Engineering, plus hobbies and quick facts.
+- [Experience](https://austinzhai.com/experience): Index of roles.
+- [Projects](https://austinzhai.com/projects): Index of projects.
+
+## Experience
+
+- [Advanced UAV Tech](https://austinzhai.com/experience/advanced-uav-tech): Electronics Engineering Intern, June 2026 to August 2026. Built the electronics for an indoor warehouse inspection drone and ran the project day to day with DHL.
+- [Galaxy Instrumentation and Controls Inc](https://austinzhai.com/experience/galaxy-controls): Automation and Controls Engineering Intern, May 2026 to June 2026. Pre-migration verification across roughly 25 plants a week for CHEP's factory system rollout.
+- [TELUS Digital](https://austinzhai.com/experience/telus-digital): Bilingual Data Analyst, March 2026 to June 2026. Evaluated AI-generated geolocation data in English and French to help train mapping models.
+- [Hydroficient](https://austinzhai.com/experience/hydroficient): IoT Cyber Defense Extern, April 2026 to June 2026. Secured an IoT sensor pipeline for a simulated 500-room hotel water management system.
+- [UBC Sailbot](https://austinzhai.com/experience/ubc-sailbot): Operations Team Member, September 2025 to April 2026. Ran operations for a student team building a fully autonomous sailing robot.
+- [Independent Haircutting Business](https://austinzhai.com/experience/haircutting): Founder and Operator, August 2024 to December 2025. 50+ clients, 350+ appointments, $7,000+ in revenue.
+
+## Projects
+
+- [Smart Alarm](https://austinzhai.com/projects/smart-alarm): ESP32 bedside alarm clock that tracks sleep with an onboard accelerometer and wakes you during light sleep. Firmware, sleep-staging model, schematic and PCB all designed from scratch.
+- [Portfolio Vision](https://austinzhai.com/projects/portfolio-vision): Full-stack ETF portfolio decomposer that breaks a portfolio into its true underlying holdings, with live prices and sector and geographic exposure.
+- [Personal Website](https://austinzhai.com/projects/personal-website): This site. Vite + React, dark theme, scroll-triggered reveals, and a print-optimized projects page.
+- [Servo Sonar Radar](https://austinzhai.com/projects/sonar): Servo-mounted ultrasonic sensor sweeping 180 degrees, plotted on a live radar display in Processing.
+- [Smart Gate Access System](https://austinzhai.com/projects/smart-gate): ESP32 access control with RFID and keypad entry driving a servo gate, with LCD status and LED/buzzer feedback.
+- [Stock Predictor](https://austinzhai.com/projects/stock-predictor): Random Forest predicting next-day S&P 500 direction, backtested to about 0.58 precision.
+- [Hangman](https://austinzhai.com/projects/hangman): Command-line word-guessing game with difficulty levels.
+- [Random Password Manager](https://austinzhai.com/projects/password-manager): Command-line Python credential generator and store, persisted to local JSON.
+
+## Optional
+
+- [Sitemap](https://austinzhai.com/sitemap.xml)

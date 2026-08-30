@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 
 // ─── Icons ───────────────────────────────────────────────────────────────
 
@@ -81,6 +81,60 @@ function useScrollReveal(ref, deps) {
   }, deps || [])
 }
 
+// The prerendered <head> is correct for the first paint only. Navigating inside the
+// SPA never reloads the document, so the tab title, description, canonical and the
+// social tags have to be swapped by hand on every route change.
+function setTag(selector, create, value) {
+  let el = document.head.querySelector(selector)
+  if (!el) {
+    el = create()
+    document.head.appendChild(el)
+  }
+  el.setAttribute(el.tagName === 'LINK' ? 'href' : 'content', value)
+}
+
+function useDocumentHead(meta) {
+  useEffect(() => {
+    document.title = meta.title
+    const meta$ = (name, value) =>
+      setTag(`meta[name="${name}"]`, () => {
+        const el = document.createElement('meta')
+        el.setAttribute('name', name)
+        return el
+      }, value)
+    const og$ = (prop, value) =>
+      setTag(`meta[property="${prop}"]`, () => {
+        const el = document.createElement('meta')
+        el.setAttribute('property', prop)
+        return el
+      }, value)
+
+    meta$('description', meta.description)
+    meta$('robots', meta.noindex ? 'noindex, follow' : 'index, follow')
+    meta$('twitter:title', meta.title)
+    meta$('twitter:description', meta.description)
+    og$('og:title', meta.title)
+    og$('og:description', meta.description)
+    og$('og:url', meta.canonical)
+    setTag('link[rel="canonical"]', () => {
+      const el = document.createElement('link')
+      el.setAttribute('rel', 'canonical')
+      return el
+    }, meta.canonical)
+
+    // One script holds whatever structured data the current route carries, so the
+    // previous route's Breadcrumb/SoftwareSourceCode never lingers.
+    let ld = document.getElementById('ld-route')
+    if (!ld) {
+      ld = document.createElement('script')
+      ld.type = 'application/ld+json'
+      ld.id = 'ld-route'
+      document.head.appendChild(ld)
+    }
+    ld.textContent = ldJson(meta)
+  }, [meta])
+}
+
 const SECTION_IDS = ['home', 'about', 'experience', 'projects']
 
 // '#experience' is a section of the one long page; '#experience/galaxy-controls'
@@ -90,25 +144,46 @@ function pathFor(section, id) {
   return section === 'home' ? '/' : '/' + section
 }
 
+const HOME_ROUTE = { detail: null, id: null, section: 'home', notFound: false }
+const NOT_FOUND_ROUTE = { detail: null, id: null, section: 'home', notFound: true }
+
 // '/experience' is a section of the one long page; '/experience/galaxy-controls'
-// is a standalone detail view. Real paths, no '#' — vercel.json rewrites every
-// unmatched path to index.html so a deep link loads directly.
-function parseRoute() {
-  const [a, b] = window.location.pathname.replace(/^\/+|\/+$/g, '').split('/')
-  if (b && (a === 'experience' || a === 'projects')) return { detail: a, id: b, section: a }
-  return { detail: null, id: null, section: SECTION_IDS.includes(a) ? a : 'home' }
+// is a standalone detail view. Every route below is prerendered to its own file at
+// build time, so a deep link loads directly and anything else is a real 404 instead
+// of a silent fall-through to the home page.
+export function routeForPath(pathname) {
+  const [a, b] = pathname.replace(/^\/+|\/+$/g, '').split('/')
+  if (b) {
+    if (a !== 'experience' && a !== 'projects') return NOT_FOUND_ROUTE
+    const known = a === 'experience'
+      ? EXPERIENCE.some((e) => e.id === b)
+      : ALL_PROJECTS.some((p) => p.id === b)
+    return known ? { detail: a, id: b, section: a, notFound: false } : NOT_FOUND_ROUTE
+  }
+  if (!a) return HOME_ROUTE
+  return SECTION_IDS.includes(a)
+    ? { detail: null, id: null, section: a, notFound: false }
+    : NOT_FOUND_ROUTE
 }
 
-// Hash links from before the switch (#projects, #experience/advanced-uav-tech) are
-// still out in the world on a resume and a LinkedIn profile; quietly upgrade them.
-function migrateHash() {
-  const raw = window.location.hash.replace('#', '')
-  if (!raw) return
-  const [a, b] = raw.split('/')
-  if (!SECTION_IDS.includes(a)) return
-  try { history.replaceState(null, '', pathFor(a, b)) } catch { /* no-op */ }
+// The prerender pass runs this module under Node, where there is no window; it hands
+// App its route explicitly instead, so this only ever answers on the client.
+function parseRoute() {
+  if (typeof window === 'undefined') return HOME_ROUTE
+  return routeForPath(window.location.pathname)
 }
-migrateHash()
+
+// Internal links are real anchors, so crawlers can follow them and middle-click and
+// "open in new tab" work. A plain left click stays inside the SPA; anything the
+// browser has its own meaning for is left alone.
+function interceptClick(go) {
+  return (e) => {
+    if (e.defaultPrevented || e.button !== 0) return
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+    e.preventDefault()
+    go()
+  }
+}
 
 function scrollToSection(id) {
   const el = document.getElementById(id)
@@ -150,16 +225,10 @@ function Page({ pageKey, children }) {
     const t = setTimeout(() => setOn(true), 30)
     return () => clearTimeout(t)
   }, [pageKey])
-  return (
-    <div style={{
-      opacity: on ? 1 : 0,
-      transform: on ? 'none' : 'translateY(14px)',
-      transition: 'opacity 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.45s cubic-bezier(0.22,1,0.36,1)',
-      minHeight: '100vh',
-    }}>
-      {children}
-    </div>
-  )
+  // A class, not an inline style: the reduced-motion, print and no-JS override blocks
+  // in index.css all need to be able to force this visible, and !important cannot
+  // reach an inline style set from JS.
+  return <div className={'page-fade' + (on ? ' on' : '')}>{children}</div>
 }
 
 // ─── Nav ─────────────────────────────────────────────────────────────────
@@ -173,18 +242,20 @@ function Nav({ page, onNavigate }) {
   return (
     <nav className="site-nav no-print">
       <div className="nav-inner">
-        <button className="nav-brand" onClick={() => onNavigate('home')}>
+        <a className="nav-brand" href="/" onClick={interceptClick(() => onNavigate('home'))}>
           Austin <span style={{ color: 'var(--accent)' }}>Zhai</span>
-        </button>
+        </a>
         <div className="nav-links">
           {links.map((l) => (
-            <button
+            <a
               key={l.id}
               className={'nav-link' + (page === l.id ? ' active' : '')}
-              onClick={() => onNavigate(l.id)}
+              href={pathFor(l.id)}
+              aria-current={page === l.id ? 'page' : undefined}
+              onClick={interceptClick(() => onNavigate(l.id))}
             >
               {l.label}
-            </button>
+            </a>
           ))}
         </div>
       </div>
@@ -307,7 +378,7 @@ function PartCard({ part }) {
 
 // Long detail reads (AUAV, Smart Alarm) need an exit that doesn't require
 // scrolling back to the top.
-function FloatingBack({ label, onClick }) {
+function FloatingBack({ label, href, onClick }) {
   const [show, setShow] = useState(false)
   useEffect(() => {
     const check = () => setShow(window.scrollY > 420)
@@ -324,31 +395,49 @@ function FloatingBack({ label, onClick }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [onClick])
   return (
-    <button
+    <a
       className={'float-back no-print' + (show ? ' show' : '')}
-      onClick={onClick}
+      href={href}
+      onClick={interceptClick(onClick)}
       tabIndex={show ? 0 : -1}
       aria-hidden={!show}
     >
       <IconArrowLeft size={13} /> {label}
-    </button>
+    </a>
   )
 }
 
-function BackLink({ label, onClick }) {
+function BackLink({ label, href, onClick }) {
   return (
-    <button className="back-link no-print" onClick={onClick}>
+    <a className="back-link no-print" href={href} onClick={interceptClick(onClick)}>
       <IconArrowLeft size={13} /> {label}
-    </button>
+    </a>
   )
 }
 
-function HomeLink({ label, onClick }) {
+function HomeLink({ label, href, onClick }) {
   return (
-    <button className="home-link" onClick={onClick}>
+    <a className="home-link" href={href} onClick={interceptClick(onClick)}>
       <span className="home-link-label">{label}</span>
       <span className="home-link-arrow"><IconArrowRight size={14} /></span>
-    </button>
+    </a>
+  )
+}
+
+// Home / Experience / Advanced UAV Tech. Real anchors, and mirrored as BreadcrumbList
+// JSON-LD by metaFor() so search results show the same trail.
+function Breadcrumb({ trail, onGo }) {
+  return (
+    <nav className="breadcrumb no-print" aria-label="Breadcrumb">
+      {trail.map((c, i) => (
+        <span key={c.path}>
+          {i > 0 && <span className="breadcrumb-sep" aria-hidden="true">/</span>}
+          {i === trail.length - 1
+            ? <span aria-current="page">{c.name}</span>
+            : <a href={c.path} onClick={interceptClick(() => onGo(c.section))}>{c.name}</a>}
+        </span>
+      ))}
+    </nav>
   )
 }
 
@@ -381,7 +470,8 @@ function HomeSection({ onNavigate }) {
   return (
     <section id="home" className="hero-screen">
       <div className="stagger" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '22px' }}>
-        <img src="/Headshot.JPG" alt="Austin Zhai" className="headshot" />
+        <img src="/Headshot.JPG" alt="Austin Zhai" className="headshot"
+          width="2501" height="2784" fetchPriority="high" />
         <div>
           <h1 className="hero-title">Hi, I&apos;m <span style={{ color: 'var(--accent)' }}>Austin</span>.</h1>
           <p className="hero-sub">Computer Engineering student at UBC.</p>
@@ -393,9 +483,9 @@ function HomeSection({ onNavigate }) {
           <a href="https://github.com/AustinZhai8" target="_blank" rel="noopener noreferrer" className="btn-social"><IconGithub /> GitHub</a>
         </div>
         <div className="home-links">
-          <HomeLink label="About me" onClick={() => onNavigate('about')} />
-          <HomeLink label="Experience" onClick={() => onNavigate('experience')} />
-          <HomeLink label="Projects" onClick={() => onNavigate('projects')} />
+          <HomeLink label="About me" href="/about" onClick={() => onNavigate('about')} />
+          <HomeLink label="Experience" href="/experience" onClick={() => onNavigate('experience')} />
+          <HomeLink label="Projects" href="/projects" onClick={() => onNavigate('projects')} />
         </div>
       </div>
       <div className="scroll-cue no-print" aria-hidden="true">
@@ -482,7 +572,7 @@ function AboutSection() {
 
 // ─── Experience ──────────────────────────────────────────────────────────
 
-const EXPERIENCE = [
+export const EXPERIENCE = [
   {
     id: 'advanced-uav-tech',
     logo: '/logos/auav.png',
@@ -767,7 +857,8 @@ function ExperienceSection({ onOpen }) {
         <SectionHeading eyebrow="Where I&apos;ve been" title="Experience" />
         <div className="card-grid reveal">
           {EXPERIENCE.map((exp) => (
-            <button key={exp.id} className="grid-card" onClick={() => onOpen(exp.id)}>
+            <a key={exp.id} className="grid-card" href={pathFor('experience', exp.id)}
+              onClick={interceptClick(() => onOpen(exp.id))}>
               <span className="grid-card-brand">
                 <LogoTile src={exp.logo} />
                 <span className="exp-dates">{exp.dates}</span>
@@ -777,7 +868,7 @@ function ExperienceSection({ onOpen }) {
               <span className="exp-tag">{exp.tag}</span>
               <span className="grid-card-blurb">{exp.blurb}</span>
               <span className="grid-card-more">Read more <IconArrowRight size={12} /></span>
-            </button>
+            </a>
           ))}
         </div>
       </div>
@@ -785,11 +876,12 @@ function ExperienceSection({ onOpen }) {
   )
 }
 
-function ExperienceDetail({ exp, onBack }) {
+function ExperienceDetail({ exp, trail, onBack, onGo }) {
   return (
     <div className="page-pad">
       <div className="page-shell">
-        <BackLink label="All experience" onClick={onBack} />
+        <BackLink label="All experience" href="/experience" onClick={onBack} />
+        <Breadcrumb trail={trail} onGo={onGo} />
         <div className="detail-head">
           <div className="detail-brand">
             <LogoTile src={exp.logo} size="lg" />
@@ -826,7 +918,7 @@ function ExperienceDetail({ exp, onBack }) {
           </>
         )}
       </div>
-      <FloatingBack label="All experience" onClick={onBack} />
+      <FloatingBack label="All experience" href="/experience" onClick={onBack} />
       <Footer />
     </div>
   )
@@ -834,7 +926,7 @@ function ExperienceDetail({ exp, onBack }) {
 
 // ─── Projects data ───────────────────────────────────────────────────────
 
-const MAIN_PROJECTS = [
+export const MAIN_PROJECTS = [
   {
     id: 'smart-alarm',
     title: 'Smart Alarm',
@@ -994,7 +1086,7 @@ const MAIN_PROJECTS = [
   },
 ]
 
-const MINOR_HARDWARE = [
+export const MINOR_HARDWARE = [
   {
     id: 'sonar',
     title: 'Servo Sonar Radar',
@@ -1020,7 +1112,7 @@ const MINOR_HARDWARE = [
   },
 ]
 
-const MINOR_SOFTWARE = [
+export const MINOR_SOFTWARE = [
   {
     id: 'stock-predictor',
     title: 'Stock Predictor',
@@ -1052,6 +1144,10 @@ const MINOR_SOFTWARE = [
     images: [],
   },
 ]
+
+// One flat list, because ids are unique across all three project arrays and routing,
+// the print sheet and the sitemap all need to look a project up by id alone.
+export const ALL_PROJECTS = [...MAIN_PROJECTS, ...MINOR_HARDWARE, ...MINOR_SOFTWARE]
 
 // ─── Expandable main project card ───────────────────────────────────────
 
@@ -1139,7 +1235,8 @@ function ProjectBody({ p }) {
 
 function ProjectCard({ p, featured, onOpen }) {
   return (
-    <button className={'grid-card' + (featured ? ' featured' : '')} onClick={() => onOpen(p.id)}>
+    <a className={'grid-card' + (featured ? ' featured' : '')} href={pathFor('projects', p.id)}
+      onClick={interceptClick(() => onOpen(p.id))}>
       {featured && p.thumb && (
         <span className="grid-thumb"><img src={p.thumb} alt="" loading="lazy" /></span>
       )}
@@ -1150,13 +1247,13 @@ function ProjectCard({ p, featured, onOpen }) {
       <span className="grid-card-title">{p.title}</span>
       <span className="grid-card-blurb">{p.summary || p.description}</span>
       <span className="grid-card-more">Read more <IconArrowRight size={12} /></span>
-    </button>
+    </a>
   )
 }
 
 // Screen shows a grid of summaries; print still gets the full resume-style document.
 function PrintSheet() {
-  const all = [...MAIN_PROJECTS, ...MINOR_HARDWARE, ...MINOR_SOFTWARE]
+  const all = ALL_PROJECTS
   return (
     <div className="print-only print-sheet">
       {all.map((p) => (
@@ -1207,11 +1304,12 @@ function ProjectsSection({ onOpen }) {
   )
 }
 
-function ProjectDetail({ p, onBack }) {
+function ProjectDetail({ p, trail, onBack, onGo }) {
   return (
     <div className="page-pad">
       <div className="page-shell">
-        <BackLink label="All projects" onClick={onBack} />
+        <BackLink label="All projects" href="/projects" onClick={onBack} />
+        <Breadcrumb trail={trail} onGo={onGo} />
         <div className="detail-head">
           <div className="detail-meta">
             {p.category && <span className="proj-cat">{p.category}</span>}
@@ -1222,7 +1320,201 @@ function ProjectDetail({ p, onBack }) {
         </div>
         <ProjectBody p={p} />
       </div>
-      <FloatingBack label="All projects" onClick={onBack} />
+      <FloatingBack label="All projects" href="/projects" onClick={onBack} />
+      <Footer />
+    </div>
+  )
+}
+
+// ─── SEO / route metadata ────────────────────────────────────────────────
+
+export const SITE = {
+  origin: 'https://austinzhai.com',
+  name: 'Austin Zhai',
+  ogImage: '/og.png',
+  ogAlt: 'Austin Zhai — Computer Engineering student at UBC',
+  linkedin: 'https://www.linkedin.com/in/austin-zhai/',
+  github: 'https://github.com/AustinZhai8',
+  email: 'austinhzhai@gmail.com',
+}
+
+// Every URL the site answers on, in sitemap order. Derived from the content arrays
+// so a new experience or project entry can never be missing from the sitemap or the
+// prerender pass.
+export const ALL_ROUTES = [
+  '/',
+  '/about',
+  '/experience',
+  '/projects',
+  ...EXPERIENCE.map((e) => '/experience/' + e.id),
+  ...ALL_PROJECTS.map((p) => '/projects/' + p.id),
+]
+
+// '/about', '/experience' and '/projects' scroll to a section of the one long home
+// page — same document, same content. They get their own title for the tab and the
+// back button, but canonicalise to '/' rather than presenting four URLs of identical
+// content to a crawler, and they stay out of the sitemap.
+const SECTION_ROUTES = ['/about', '/experience', '/projects']
+export const SITEMAP_ROUTES = ALL_ROUTES.filter((r) => !SECTION_ROUTES.includes(r))
+
+// Meta descriptions are cut at a word boundary; Google truncates around 160 anyway.
+function clamp(text, max = 158) {
+  const s = text.replace(/\s+/g, ' ').trim()
+  if (s.length <= max) return s
+  return s.slice(0, s.lastIndexOf(' ', max - 1)).replace(/[,;:.]$/, '') + '…'
+}
+
+const PERSON_LD = {
+  '@type': 'Person',
+  '@id': SITE.origin + '/#person',
+  name: 'Austin Zhai',
+  url: SITE.origin + '/',
+  jobTitle: 'Computer Engineering Student',
+  email: 'mailto:' + SITE.email,
+  image: SITE.origin + '/Headshot.JPG',
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'University of British Columbia' },
+  knowsAbout: [
+    'Embedded systems', 'PCB design', 'Unmanned aerial vehicles', 'Machine learning',
+    'Industrial automation and controls', 'Full-stack web development', 'Investing',
+  ],
+  sameAs: [SITE.linkedin, SITE.github],
+}
+
+const SECTION_META = {
+  home: {
+    title: 'Austin Zhai — Computer Engineering Student at UBC',
+    description: 'Austin Zhai is a Computer Engineering student at UBC who builds hardware and software: inspection drones, custom PCBs, and full-stack apps.',
+  },
+  about: {
+    title: 'About — Austin Zhai',
+    description: 'How investing became the thread that pulled Austin Zhai into Computer Engineering at UBC, plus the hobbies, languages and quick facts behind the work.',
+  },
+  experience: {
+    title: 'Experience — Austin Zhai',
+    description: 'Austin Zhai’s engineering and business experience: Advanced UAV Tech, Galaxy Instrumentation and Controls, TELUS Digital, Hydroficient and UBC Sailbot.',
+  },
+  projects: {
+    title: 'Projects — Austin Zhai',
+    description: 'Projects Austin Zhai designed and built, from an ESP32 sleep-tracking alarm clock with a custom PCB to a full-stack ETF portfolio decomposer.',
+  },
+}
+
+// One place decides the title, description, canonical, breadcrumb trail and structured
+// data for a route. Read by the prerenderer at build time and by useDocumentHead on
+// every client-side navigation, so the two can never disagree.
+export function metaFor(route) {
+  const crumb = (name, path, section) => ({ name, path, section })
+  const home = crumb('Home', '/', 'home')
+
+  if (route.notFound) {
+    return {
+      title: 'Page not found — Austin Zhai',
+      description: 'That page doesn’t exist. Browse Austin Zhai’s experience and projects instead.',
+      canonical: SITE.origin + '/404',
+      noindex: true,
+      trail: [],
+      jsonLd: [PERSON_LD],
+    }
+  }
+
+  if (route.detail === 'experience') {
+    const exp = EXPERIENCE.find((e) => e.id === route.id)
+    const path = pathFor('experience', exp.id)
+    return {
+      title: `${exp.company} · Austin Zhai`,
+      description: clamp(`${exp.role}. ${exp.blurb}`),
+      canonical: SITE.origin + path,
+      noindex: false,
+      trail: [home, crumb('Experience', '/experience', 'experience'), crumb(exp.company, path, 'experience')],
+      jsonLd: [PERSON_LD, breadcrumbLd([home, crumb('Experience', '/experience'), crumb(exp.company, path)])],
+    }
+  }
+
+  if (route.detail === 'projects') {
+    const p = ALL_PROJECTS.find((x) => x.id === route.id)
+    const path = pathFor('projects', p.id)
+    const repo = (p.links || []).find((l) => l.href.startsWith('https://github.com/'))
+    const description = clamp(p.summary || p.description)
+    const work = {
+      '@type': repo ? 'SoftwareSourceCode' : 'CreativeWork',
+      name: p.title,
+      description,
+      url: SITE.origin + path,
+      author: { '@id': SITE.origin + '/#person' },
+      ...(p.year ? { dateCreated: p.year } : {}),
+      ...(repo ? { codeRepository: repo.href } : {}),
+    }
+    return {
+      title: `${p.title} · Austin Zhai`,
+      description,
+      canonical: SITE.origin + path,
+      noindex: false,
+      trail: [home, crumb('Projects', '/projects', 'projects'), crumb(p.title, path, 'projects')],
+      jsonLd: [PERSON_LD, breadcrumbLd([home, crumb('Projects', '/projects'), crumb(p.title, path)]), work],
+    }
+  }
+
+  const section = route.section || 'home'
+  const path = pathFor(section)
+  const base = SECTION_META[section] || SECTION_META.home
+  return {
+    title: base.title,
+    description: base.description,
+    // all four are the same document, so they all canonicalise to '/' — see SECTION_ROUTES
+    canonical: SITE.origin + '/',
+    noindex: false,
+    trail: [],
+    jsonLd: section === 'home'
+      ? [
+        { '@type': 'ProfilePage', '@id': SITE.origin + '/#page', url: SITE.origin + '/', name: base.title, mainEntity: { '@id': SITE.origin + '/#person' } },
+        { '@type': 'WebSite', '@id': SITE.origin + '/#website', url: SITE.origin + '/', name: SITE.name, author: { '@id': SITE.origin + '/#person' } },
+        PERSON_LD,
+      ]
+      : [PERSON_LD, breadcrumbLd([home, crumb(base.title.split(' —')[0], path)])],
+  }
+}
+
+function breadcrumbLd(trail) {
+  return {
+    '@type': 'BreadcrumbList',
+    itemListElement: trail.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      item: SITE.origin + c.path,
+    })),
+  }
+}
+
+// One @graph per page rather than a stack of separate scripts, so the nodes can refer
+// to each other by @id (every page's structured data points at the same Person).
+export function ldJson(meta) {
+  return JSON.stringify({ '@context': 'https://schema.org', '@graph': meta.jsonLd })
+}
+
+// ─── Not found ───────────────────────────────────────────────────────────
+
+// Nothing here uses .reveal: a 404 has to be readable the instant it paints, without
+// waiting on the IntersectionObserver.
+function NotFoundSection({ onGo }) {
+  return (
+    <div className="page-pad not-found">
+      <div className="page-shell">
+        <Eyebrow>Error 404</Eyebrow>
+        <h1 className="page-title">This page doesn&apos;t exist.</h1>
+        <p className="body-text not-found-lead">
+          The link may be out of date, or the address slightly off. Everything on the
+          site is one click away below.
+        </p>
+        <a className="btn-primary" href="/" onClick={interceptClick(() => onGo('home'))}>
+          Back to home
+        </a>
+        <div className="home-links not-found-links">
+          <HomeLink label="About me" href="/about" onClick={() => onGo('about')} />
+          <HomeLink label="Experience" href="/experience" onClick={() => onGo('experience')} />
+          <HomeLink label="Projects" href="/projects" onClick={() => onGo('projects')} />
+        </div>
+      </div>
       <Footer />
     </div>
   )
@@ -1230,34 +1522,53 @@ function ProjectDetail({ p, onBack }) {
 
 // ─── App ─────────────────────────────────────────────────────────────────
 
-export default function App() {
-  const [route, setRoute] = useState(parseRoute)
+export default function App({ initialRoute }) {
+  // The prerender pass supplies the route; in the browser the URL is the source of truth.
+  const [route, setRoute] = useState(() => initialRoute || parseRoute())
   const ref = useRef(null)
-  const pending = useRef(parseRoute().section)
+  const pending = useRef(route.section)
   // deps matter: swapping between the main page and a detail view mounts fresh
   // .reveal nodes that the observer has to pick up
   useScrollReveal(ref, [route.detail, route.id])
-  const spy = useScrollSpy(!route.detail)
+  const spy = useScrollSpy(!route.detail && !route.notFound)
+  const meta = useMemo(() => metaFor(route), [route])
+  useDocumentHead(meta)
 
   const openDetail = (kind, id) => {
-    setRoute({ detail: kind, id, section: kind })
+    setRoute({ detail: kind, id, section: kind, notFound: false })
     try { history.pushState(null, '', pathFor(kind, id)) } catch { /* no-op */ }
   }
 
   const goSection = (id) => {
-    if (route.detail) {
+    if (route.detail || route.notFound) {
       pending.current = id
-      setRoute({ detail: null, id: null, section: id })
+      setRoute({ detail: null, id: null, section: id, notFound: false })
       try { history.replaceState(null, '', pathFor(id)) } catch { /* no-op */ }
     } else {
       scrollToSection(id)
     }
   }
 
+  // Hash links from before the switch to real paths (#projects,
+  // #experience/advanced-uav-tech) are still out in the world on a resume and a
+  // LinkedIn profile. The server only ever saw '/' for those, so rather than patch the
+  // route in place — which would mean hydrating one route on top of another's HTML —
+  // send the browser to the prerendered document for that path. One extra navigation,
+  // on legacy links only.
+  useEffect(() => {
+    const raw = window.location.hash.replace('#', '')
+    if (!raw) return
+    const [a, b] = raw.split('/')
+    if (!SECTION_IDS.includes(a)) return
+    const path = pathFor(a, b)
+    if (routeForPath(path).notFound) return
+    window.location.replace(path)
+  }, [])
+
   // One place decides scroll position after a view swap, so leaving a detail view
   // returns you to the card you came from rather than the top of the page.
   useEffect(() => {
-    if (route.detail) {
+    if (route.detail || route.notFound) {
       window.scrollTo({ top: 0, behavior: 'instant' })
       return
     }
@@ -1265,7 +1576,7 @@ export default function App() {
     pending.current = null
     const el = document.getElementById(target)
     if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' })
-  }, [route.detail, route.id])
+  }, [route.detail, route.id, route.notFound])
 
   useEffect(() => {
     const onPop = () => {
@@ -1277,17 +1588,16 @@ export default function App() {
     return () => window.removeEventListener('popstate', onPop)
   }, [])
 
+  // routeForPath has already checked the id exists, so these lookups always hit.
   let body
-  if (route.detail === 'experience') {
+  if (route.notFound) {
+    body = <NotFoundSection onGo={goSection} />
+  } else if (route.detail === 'experience') {
     const exp = EXPERIENCE.find((e) => e.id === route.id)
-    body = exp
-      ? <ExperienceDetail exp={exp} onBack={() => goSection('experience')} />
-      : null
+    body = <ExperienceDetail exp={exp} trail={meta.trail} onBack={() => goSection('experience')} onGo={goSection} />
   } else if (route.detail === 'projects') {
-    const proj = [...MAIN_PROJECTS, ...MINOR_HARDWARE, ...MINOR_SOFTWARE].find((x) => x.id === route.id)
-    body = proj
-      ? <ProjectDetail p={proj} onBack={() => goSection('projects')} />
-      : null
+    const proj = ALL_PROJECTS.find((x) => x.id === route.id)
+    body = <ProjectDetail p={proj} trail={meta.trail} onBack={() => goSection('projects')} onGo={goSection} />
   }
 
   return (
@@ -1296,7 +1606,7 @@ export default function App() {
       <Nav page={route.detail || spy} onNavigate={goSection} />
       <div ref={ref}>
         {body ? (
-          <Page key={route.detail + route.id} pageKey={route.detail + route.id}>{body}</Page>
+          <Page key={meta.canonical} pageKey={meta.canonical}>{body}</Page>
         ) : (
           <>
             <HomeSection onNavigate={goSection} />

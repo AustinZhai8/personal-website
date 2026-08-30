@@ -51,7 +51,11 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
   max-width: 1100px; margin: 0 auto; padding: 16px 28px;
   display: flex; align-items: center; justify-content: space-between;
 }
-.nav-brand { font-size: 16px; font-weight: 800; letter-spacing: -0.01em; }
+/* nav-brand and the cards are anchors, so they need their colour stated: without it
+   the global `a { color: var(--accent) }` turns them blue. Same for the :hover rules,
+   which have to out-specify `a:hover`. */
+.nav-brand { font-size: 16px; font-weight: 800; letter-spacing: -0.01em; color: var(--text); }
+.nav-brand:hover { color: var(--text); }
 .nav-links { display: flex; gap: 30px; }
 .nav-link {
   position: relative; font-size: 14px; font-weight: 500;
@@ -100,12 +104,12 @@ section[id] { scroll-margin-top: 58px; }
 .minor-block { margin-top: 4.5rem; padding-top: 3rem; border-top: 1px solid var(--border); }
 .grid-card {
   display: flex; flex-direction: column; align-items: flex-start; gap: 9px;
-  text-align: left; width: 100%;
+  text-align: left; width: 100%; color: var(--text);
   background: var(--card); border: 1px solid var(--border); border-radius: 18px;
   padding: 1.5rem 1.6rem;
   transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease;
 }
-.grid-card:hover { transform: translateY(-3px); border-color: var(--border2); }
+.grid-card:hover { transform: translateY(-3px); border-color: var(--border2); color: var(--text); }
 .grid-card-top {
   display: flex; align-items: center; justify-content: space-between;
   gap: 12px; width: 100%; margin-bottom: 4px;
@@ -149,6 +153,21 @@ section[id] { scroll-margin-top: 58px; }
 .card-grid.compact .grid-card { padding: 1.3rem 1.4rem; }
 .card-grid.compact .grid-card-title { font-size: 19px; }
 .card-grid.compact .grid-card-blurb { font-size: 14.5px; }
+
+/* ─── Breadcrumbs ───────────────────────────────────────── */
+.breadcrumb {
+  display: flex; flex-wrap: wrap; align-items: center;
+  margin-bottom: 1.4rem; font-size: 12.5px; color: var(--text3);
+}
+.breadcrumb a { color: var(--text3); transition: color 0.2s ease; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb [aria-current='page'] { color: var(--text2); font-weight: 600; }
+.breadcrumb-sep { margin: 0 8px; color: var(--border2); }
+
+/* ─── Not found ─────────────────────────────────────────── */
+.not-found .page-shell { text-align: center; padding-bottom: 6rem; }
+.not-found-lead { max-width: 520px; margin: 0.9rem auto 2rem; }
+.not-found .home-links { margin-top: 2.6rem; }  /* out-specify .home-links, which is defined later */
 
 /* ─── Detail views ──────────────────────────────────────── */
 .back-link {
@@ -453,10 +472,18 @@ section[id] { scroll-margin-top: 58px; }
 /* settle to `none`, not translateY(0): a lingering transform on a container that can
    expand to many thousands of px makes it a composited layer and can render blank */
 .reveal.visible { opacity: 1; transform: none; }
+/* The detail-view fade. A class rather than an inline style so the override blocks
+   below (and the <noscript> block in index.html) can force it visible. */
+.page-fade {
+  opacity: 0; transform: translateY(14px); min-height: 100vh;
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.page-fade.on { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .reveal, .stagger > * { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
+  .reveal, .stagger > *, .page-fade { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
   .scroll-cue { opacity: 1 !important; animation: none !important; }
   .scroll-cue-dot { animation: none !important; }
+  html { scroll-behavior: auto; }
 }
 
 /* ─── Print: resume-style projects ──────────────────────── */
@@ -479,9 +506,10 @@ section[id] { scroll-margin-top: 58px; }
   .print-project { break-inside: auto; margin-bottom: 1.4rem; }
   .print-project .proj-title { font-size: 15pt; margin-bottom: 8px; }
   .print-only { display: block; }
-  .reveal, .stagger > * {
+  .reveal, .stagger > *, .page-fade {
     opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important;
   }
+  .page-fade { min-height: 0 !important; }
   .page-title { font-size: 26pt; }
   .print-name { font-size: 10pt; color: #555555; margin-top: 6px; }
   .facts-card, .part-card, .grid-card {
