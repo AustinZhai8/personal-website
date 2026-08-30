@@ -85,18 +85,36 @@ const SECTION_IDS = ['home', 'about', 'experience', 'projects']
 
 // '#experience' is a section of the one long page; '#experience/galaxy-controls'
 // is a standalone detail view.
-function parseHash() {
-  const raw = window.location.hash.replace('#', '')
-  const [a, b] = raw.split('/')
+function pathFor(section, id) {
+  if (id) return '/' + section + '/' + id
+  return section === 'home' ? '/' : '/' + section
+}
+
+// '/experience' is a section of the one long page; '/experience/galaxy-controls'
+// is a standalone detail view. Real paths, no '#' — vercel.json rewrites every
+// unmatched path to index.html so a deep link loads directly.
+function parseRoute() {
+  const [a, b] = window.location.pathname.replace(/^\/+|\/+$/g, '').split('/')
   if (b && (a === 'experience' || a === 'projects')) return { detail: a, id: b, section: a }
   return { detail: null, id: null, section: SECTION_IDS.includes(a) ? a : 'home' }
 }
+
+// Hash links from before the switch (#projects, #experience/advanced-uav-tech) are
+// still out in the world on a resume and a LinkedIn profile; quietly upgrade them.
+function migrateHash() {
+  const raw = window.location.hash.replace('#', '')
+  if (!raw) return
+  const [a, b] = raw.split('/')
+  if (!SECTION_IDS.includes(a)) return
+  try { history.replaceState(null, '', pathFor(a, b)) } catch { /* no-op */ }
+}
+migrateHash()
 
 function scrollToSection(id) {
   const el = document.getElementById(id)
   if (!el) return
   el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  try { history.replaceState(null, '', '#' + id) } catch { /* no-op */ }
+  try { history.replaceState(null, '', pathFor(id)) } catch { /* no-op */ }
 }
 
 // Which section owns the top of the viewport, for the nav underline.
@@ -1213,9 +1231,9 @@ function ProjectDetail({ p, onBack }) {
 // ─── App ─────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const [route, setRoute] = useState(parseHash)
+  const [route, setRoute] = useState(parseRoute)
   const ref = useRef(null)
-  const pending = useRef(parseHash().section)
+  const pending = useRef(parseRoute().section)
   // deps matter: swapping between the main page and a detail view mounts fresh
   // .reveal nodes that the observer has to pick up
   useScrollReveal(ref, [route.detail, route.id])
@@ -1223,14 +1241,14 @@ export default function App() {
 
   const openDetail = (kind, id) => {
     setRoute({ detail: kind, id, section: kind })
-    try { history.replaceState(null, '', '#' + kind + '/' + id) } catch { /* no-op */ }
+    try { history.pushState(null, '', pathFor(kind, id)) } catch { /* no-op */ }
   }
 
   const goSection = (id) => {
     if (route.detail) {
       pending.current = id
       setRoute({ detail: null, id: null, section: id })
-      try { history.replaceState(null, '', '#' + id) } catch { /* no-op */ }
+      try { history.replaceState(null, '', pathFor(id)) } catch { /* no-op */ }
     } else {
       scrollToSection(id)
     }
@@ -1250,13 +1268,13 @@ export default function App() {
   }, [route.detail, route.id])
 
   useEffect(() => {
-    const onHash = () => {
-      const next = parseHash()
+    const onPop = () => {
+      const next = parseRoute()
       pending.current = next.section
       setRoute(next)
     }
-    window.addEventListener('hashchange', onHash)
-    return () => window.removeEventListener('hashchange', onHash)
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
   }, [])
 
   let body
