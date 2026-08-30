@@ -35,6 +35,22 @@ function IconExternal({ size = 12 }) {
     </svg>
   )
 }
+function IconArrowRight({ size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="12 5 19 12 12 19" />
+    </svg>
+  )
+}
+function IconArrowLeft({ size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12" />
+      <polyline points="12 19 5 12 12 5" />
+    </svg>
+  )
+}
 function IconChevron({ open }) {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
@@ -65,59 +81,16 @@ function useScrollReveal(ref, deps) {
   }, deps || [])
 }
 
-function findCard(id) {
-  return Array.from(document.querySelectorAll('[data-card-id]')).find((el) => el.dataset.cardId === id) || null
-}
-
-// Expand/collapse state for a page of cards, plus the id of the open card the reader is
-// currently scrolled inside — so a floating control can offer to close it without
-// scrolling back up to the header.
-function useCollapsibleCards() {
-  const [openIds, setOpenIds] = useState({})
-  const [activeId, setActiveId] = useState(null)
-
-  const toggle = (id) => setOpenIds((s) => ({ ...s, [id]: !s[id] }))
-
-  // Land the reader back on the header rather than wherever the shrinking page leaves them.
-  const collapse = (id) => {
-    const el = findCard(id)
-    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'instant' })
-    setOpenIds((s) => ({ ...s, [id]: false }))
-  }
-
-  useEffect(() => {
-    const ids = Object.keys(openIds).filter((k) => openIds[k])
-    const check = () => {
-      const hit = ids.find((id) => {
-        const el = findCard(id)
-        if (!el) return false
-        const r = el.getBoundingClientRect()
-        return r.top < 64 && r.bottom > 220
-      })
-      setActiveId(hit || null)
-    }
-    // deferred a frame so the first measurement happens after paint, not in the effect body
-    const raf = requestAnimationFrame(check)
-    window.addEventListener('scroll', check, { passive: true })
-    window.addEventListener('resize', check)
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('scroll', check)
-      window.removeEventListener('resize', check)
-    }
-  }, [openIds])
-
-  useEffect(() => {
-    if (!activeId) return
-    const onKey = (e) => { if (e.key === 'Escape') collapse(activeId) }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [activeId])
-
-  return { openIds, toggle, collapse, activeId }
-}
-
 const SECTION_IDS = ['home', 'about', 'experience', 'projects']
+
+// '#experience' is a section of the one long page; '#experience/galaxy-controls'
+// is a standalone detail view.
+function parseHash() {
+  const raw = window.location.hash.replace('#', '')
+  const [a, b] = raw.split('/')
+  if (b && (a === 'experience' || a === 'projects')) return { detail: a, id: b, section: a }
+  return { detail: null, id: null, section: SECTION_IDS.includes(a) ? a : 'home' }
+}
 
 function scrollToSection(id) {
   const el = document.getElementById(id)
@@ -126,10 +99,11 @@ function scrollToSection(id) {
   try { history.replaceState(null, '', '#' + id) } catch { /* no-op */ }
 }
 
-// Which section currently owns the top of the viewport, for the nav underline.
-function useScrollSpy() {
-  const [active, setActive] = useState(SECTION_IDS[0])
+// Which section owns the top of the viewport, for the nav underline.
+function useScrollSpy(enabled) {
+  const [active, setActive] = useState('home')
   useEffect(() => {
+    if (!enabled) return undefined
     const check = () => {
       let current = SECTION_IDS[0]
       SECTION_IDS.forEach((id) => {
@@ -146,13 +120,33 @@ function useScrollSpy() {
       window.removeEventListener('scroll', check)
       window.removeEventListener('resize', check)
     }
-  }, [])
+  }, [enabled])
   return active
+}
+
+// ─── Page transition wrapper ────────────────────────────────────────────
+
+function Page({ pageKey, children }) {
+  const [on, setOn] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setOn(true), 30)
+    return () => clearTimeout(t)
+  }, [pageKey])
+  return (
+    <div style={{
+      opacity: on ? 1 : 0,
+      transform: on ? 'none' : 'translateY(14px)',
+      transition: 'opacity 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.45s cubic-bezier(0.22,1,0.36,1)',
+      minHeight: '100vh',
+    }}>
+      {children}
+    </div>
+  )
 }
 
 // ─── Nav ─────────────────────────────────────────────────────────────────
 
-function Nav({ active, onNavigate }) {
+function Nav({ page, onNavigate }) {
   const links = [
     { id: 'about', label: 'About' },
     { id: 'experience', label: 'Experience' },
@@ -168,7 +162,7 @@ function Nav({ active, onNavigate }) {
           {links.map((l) => (
             <button
               key={l.id}
-              className={'nav-link' + (active === l.id ? ' active' : '')}
+              className={'nav-link' + (page === l.id ? ' active' : '')}
               onClick={() => onNavigate(l.id)}
             >
               {l.label}
@@ -293,17 +287,49 @@ function PartCard({ part }) {
   )
 }
 
-// Floating "collapse" pill, shown only while the reader is inside an expanded card.
-function CollapseBar({ activeId, title, onCollapse }) {
+// Long detail reads (AUAV, Smart Alarm) need an exit that doesn't require
+// scrolling back to the top.
+function FloatingBack({ label, onClick }) {
+  const [show, setShow] = useState(false)
+  useEffect(() => {
+    const check = () => setShow(window.scrollY > 420)
+    const raf = requestAnimationFrame(check)
+    window.addEventListener('scroll', check, { passive: true })
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', check)
+    }
+  }, [])
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClick() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClick])
   return (
     <button
-      className={'collapse-bar no-print' + (activeId ? ' show' : '')}
-      onClick={() => activeId && onCollapse(activeId)}
-      tabIndex={activeId ? 0 : -1}
-      aria-hidden={!activeId}
+      className={'float-back no-print' + (show ? ' show' : '')}
+      onClick={onClick}
+      tabIndex={show ? 0 : -1}
+      aria-hidden={!show}
     >
-      <IconChevron open />
-      <span>Collapse{title ? ' ' + title : ''}</span>
+      <IconArrowLeft size={13} /> {label}
+    </button>
+  )
+}
+
+function BackLink({ label, onClick }) {
+  return (
+    <button className="back-link no-print" onClick={onClick}>
+      <IconArrowLeft size={13} /> {label}
+    </button>
+  )
+}
+
+function HomeLink({ label, onClick }) {
+  return (
+    <button className="home-link" onClick={onClick}>
+      <span className="home-link-label">{label}</span>
+      <span className="home-link-arrow"><IconArrowRight size={14} /></span>
     </button>
   )
 }
@@ -333,10 +359,10 @@ function Footer() {
 
 // ─── Home ────────────────────────────────────────────────────────────────
 
-function HomeSection() {
+function HomeSection({ onNavigate }) {
   return (
     <section id="home" className="hero-screen">
-      <div className="stagger" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
+      <div className="stagger" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '22px' }}>
         <img src="/Headshot.JPG" alt="Austin Zhai" className="headshot" />
         <div>
           <h1 className="hero-title">Hi, I&apos;m <span style={{ color: 'var(--accent)' }}>Austin</span>.</h1>
@@ -348,10 +374,15 @@ function HomeSection() {
           <a href="https://www.linkedin.com/in/austin-zhai/" target="_blank" rel="noopener noreferrer" className="btn-social"><IconLinkedIn /> LinkedIn</a>
           <a href="https://github.com/AustinZhai8" target="_blank" rel="noopener noreferrer" className="btn-social"><IconGithub /> GitHub</a>
         </div>
-        <button className="scroll-cue" onClick={() => scrollToSection('about')} aria-label="Scroll to About">
-          <span className="scroll-cue-label">Scroll</span>
-          <span className="scroll-cue-track"><span className="scroll-cue-dot" /></span>
-        </button>
+        <div className="home-links">
+          <HomeLink label="About me" onClick={() => onNavigate('about')} />
+          <HomeLink label="Experience" onClick={() => onNavigate('experience')} />
+          <HomeLink label="Projects" onClick={() => onNavigate('projects')} />
+        </div>
+      </div>
+      <div className="scroll-cue no-print" aria-hidden="true">
+        <span className="scroll-cue-label">Scroll</span>
+        <span className="scroll-cue-track"><span className="scroll-cue-dot" /></span>
       </div>
     </section>
   )
@@ -362,6 +393,7 @@ function HomeSection() {
 function AboutSection() {
   return (
     <section id="about" className="section-pad">
+      <div className="page-shell">
       <SectionHeading eyebrow="Who I am" title="About" />
 
       <div className="reveal" style={{ maxWidth: '780px', margin: '0 auto', textAlign: 'center' }}>
@@ -425,6 +457,7 @@ function AboutSection() {
           ))}
         </div>
       </div>
+      </div>
     </section>
   )
 }
@@ -433,10 +466,13 @@ function AboutSection() {
 
 const EXPERIENCE = [
   {
+    id: 'advanced-uav-tech',
+    logo: '/logos/auav.png',
     company: 'Advanced UAV Tech',
     role: 'Electronics Engineering Intern',
     dates: 'June 2026 to August 2026',
     tag: 'Hardware Engineering',
+    blurb: 'Built the electronics for an indoor warehouse inspection drone, and ran the project day to day with DHL.',
     description: "I worked on a 5-person team building a drone that inspects warehouse pallets for damage at DHL sites. A pilot flew it down the aisles filming the racking, and that footage ran through a computer vision pipeline the team trained, which flagged which pallets were damaged and how they were stacked. My focus was the electronics: I sized and built the power system, assembled and wired the full stack onto a 20 inch carbon fiber airframe, and tuned the flight controller and optical flow sensor so it holds position indoors with no GPS. I also designed and printed the landing legs in Onshape when nothing off the shelf fit our motors and frame. Alongside the build I ran the project day to day and was the point of contact with DHL's staff and project managers.",
     links: [{ href: 'https://github.com/zacharyL16/DroneScan', label: 'DroneScan, the team repo' }],
     parts: [
@@ -646,100 +682,135 @@ const EXPERIENCE = [
     ],
   },
   {
+    id: 'galaxy-controls',
+    logo: '/logos/galaxy.png',
     company: 'Galaxy Instrumentation and Controls Inc',
     role: 'Automation and Controls Engineering Intern',
     dates: 'May 2026 to June 2026',
     tag: 'Automation & Controls',
+    blurb: 'Pre-migration verification across roughly 25 plants a week for CHEP\'s factory system rollout.',
     description: "This was my first real exposure to industrial automation: the PLCs, SCADA systems, and operator terminals that keep a factory floor running. I worked on CHEP's global rollout of upgraded Factory Management Systems, doing pre-migration verification across roughly 25 plants a week. At each site I connected to the plant server and baselined every layer beneath it, validating communication paths to about 7 Allen-Bradley PLCs, capturing HMI terminal configs in ThinManager, cross-checking device diagnostics in AVEVA SCADA, and confirming the automated pallet inspection systems were still hitting their timing spec. I wrote the verification runbook myself and automated the repetitive parts in Python. Learning to read a controls stack top to bottom, and to tell a network fault apart from a protocol one, is what I took away from it.",
   },
   {
+    id: 'telus-digital',
+    logo: '/logos/telus.png',
     company: 'TELUS Digital',
     role: 'Bilingual Data Analyst',
     dates: 'March 2026 to June 2026',
     tag: 'Data & AI',
+    blurb: 'Evaluated AI-generated geolocation data in English and French to help train mapping models.',
     description: "I evaluated AI-generated geolocation data across English and French, helping train the models behind mapping products used by millions. That meant assessing 80+ search queries weekly across POI accuracy, search relevance, routing quality, and autocomplete, applying structured rubrics while maintaining a ~90% accuracy rate. The bilingual angle was the differentiator: I caught multilingual discrepancies that monolingual reviewers missed, and those signals fed back into model retraining.",
   },
   {
+    id: 'hydroficient',
+    logo: '/logos/hydroficient.png',
     company: 'Hydroficient',
     role: 'IoT Cyber Defense Extern',
     dates: 'April 2026 to June 2026',
     tag: 'Cybersecurity',
+    blurb: 'Secured an IoT sensor pipeline for a simulated 500-room hotel water management system.',
     description: "I secured an IoT sensor pipeline for a simulated 500-room hotel water management system. I designed and stress-tested a 5-layer defense stack (TLS encryption, mutual TLS device authentication, HMAC message signing, timestamp validation, and sequence counters) against attack classes I built myself: eavesdropping, sensor spoofing, and replay attacks. Per-device certificates brought unauthorized broker access to zero, and I trained an Isolation Forest anomaly detection model wired into a real-time Streamlit dashboard so non-technical staff could monitor security without touching a terminal.",
   },
   {
+    id: 'ubc-sailbot',
+    logo: '/logos/sailbot.png',
     company: 'UBC Sailbot',
     role: 'Operations Team Member',
     dates: 'September 2025 to April 2026',
     tag: 'Business Operations',
-    description: "UBC Sailbot builds a fully autonomous sailing robot: no remote control, no crew. I work on the operations side, connecting electrical, mechanical, and software subteams to keep the project moving. I manage timelines, organize technical documentation for cross-team integration, and own the outward-facing work: sponsor packages, website content, and video production. A social campaign I planned end-to-end grew average engagement by ~80%, supporting a roster of 18 active sponsors.",
+    blurb: 'Ran operations for a student team building a fully autonomous sailing robot.',
+    description: "UBC Sailbot builds a fully autonomous sailing robot: no remote control, no crew. I worked on the operations side, connecting electrical, mechanical, and software subteams to keep the project moving. I managed timelines, organized technical documentation for cross-team integration, and owned the outward-facing work: sponsor packages, website content, and video production. A social campaign I planned end-to-end grew average engagement by ~80%, supporting a roster of 18 active sponsors.",
   },
   {
+    id: 'haircutting',
     company: 'Independent Haircutting Business',
     role: 'Founder & Operator',
     dates: 'August 2024 to December 2025',
     tag: 'Entrepreneurship',
+    blurb: 'Turned a hobby into a real business: 50+ clients, 350+ appointments, $7,000+ in revenue.',
     description: "This started as a hobby, but once I noticed how many friends were walking around with bad haircuts, the demand clicked and I turned it into a real business. I handled everything: client acquisition, pricing, scheduling, payments, and follow-up. An Excel-based booking and client system pushed retention to ~85% and let referrals run on autopilot. By the time I wrapped up to focus on school, I had served 50+ clients across 350+ appointments and generated over $7,000 in revenue. The biggest lesson: the scariest part of starting something is just starting.",
   },
 ]
 
-function ExperienceCard({ exp, open, onToggle }) {
-  const expandable = exp.parts && exp.parts.length > 0
+function LogoTile({ src, size }) {
+  // no logo on file: render nothing and let that card sit a little differently
+  if (!src) return null
   return (
-    <div className={'exp-card' + (open ? ' open' : '')} data-card-id={exp.company}>
-      <div className="exp-head">
-        <div>
-          <h3>{exp.company}</h3>
-          <p className="exp-role">{exp.role}</p>
-        </div>
-        <div className="exp-meta">
-          <span className="exp-tag">{exp.tag}</span>
-          <span className="exp-dates">{exp.dates}</span>
-        </div>
-      </div>
-      <p className="exp-body">{exp.description}</p>
-
-      {expandable && (
-        <>
-          <button className="exp-more no-print" onClick={onToggle} aria-expanded={open}>
-            <span>{open ? 'Show less' : 'Read the full breakdown'}</span>
-            <IconChevron open={open} />
-          </button>
-          <div className={'proj-body' + (open ? ' expanded' : '')}>
-            <div className="exp-expand-inner">
-              {exp.parts.map((part) => <PartCard key={part.tag} part={part} />)}
-              {exp.links && exp.links.length > 0 && (
-                <>
-                  <div className="no-print" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    {exp.links.map((l) => (
-                      <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className="pill-ghost">
-                        <IconGithub size={12} /> {l.label}
-                      </a>
-                    ))}
-                  </div>
-                  <div className="print-links print-only">
-                    {exp.links.map((l) => <div key={l.href}>{l.label}: {l.href}</div>)}
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+    <span className={'logo-tile' + (size ? ' ' + size : '')}>
+      <img src={src} alt="" loading="lazy" />
+    </span>
   )
 }
 
-function ExperienceSection({ cards }) {
+function ExperienceSection({ onOpen }) {
   return (
     <section id="experience" className="section-pad">
-      <SectionHeading eyebrow="Where I&apos;ve been" title="Experience" />
-      <div className="reveal" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {EXPERIENCE.map((exp) => (
-          <ExperienceCard key={exp.company} exp={exp}
-            open={!!cards.openIds[exp.company]} onToggle={() => cards.toggle(exp.company)} />
-        ))}
+      <div className="page-shell">
+        <SectionHeading eyebrow="Where I&apos;ve been" title="Experience" />
+        <div className="card-grid reveal">
+          {EXPERIENCE.map((exp) => (
+            <button key={exp.id} className="grid-card" onClick={() => onOpen(exp.id)}>
+              <span className="grid-card-brand">
+                <LogoTile src={exp.logo} />
+                <span className="exp-dates">{exp.dates}</span>
+              </span>
+              <span className="grid-card-title">{exp.company}</span>
+              <span className="grid-card-role">{exp.role}</span>
+              <span className="exp-tag">{exp.tag}</span>
+              <span className="grid-card-blurb">{exp.blurb}</span>
+              <span className="grid-card-more">Read more <IconArrowRight size={12} /></span>
+            </button>
+          ))}
+        </div>
       </div>
     </section>
+  )
+}
+
+function ExperienceDetail({ exp, onBack }) {
+  return (
+    <div className="page-pad">
+      <div className="page-shell">
+        <BackLink label="All experience" onClick={onBack} />
+        <div className="detail-head">
+          <div className="detail-brand">
+            <LogoTile src={exp.logo} size="lg" />
+            <div>
+              <h1 className="page-title">{exp.company}</h1>
+              <p className="detail-role">{exp.role}</p>
+            </div>
+          </div>
+          <div className="detail-meta">
+            <span className="exp-tag">{exp.tag}</span>
+            <span className="exp-dates">{exp.dates}</span>
+          </div>
+        </div>
+        <p className="exp-body detail-lead">{exp.description}</p>
+
+        {exp.parts && exp.parts.length > 0 && (
+          <div className="detail-parts">
+            {exp.parts.map((part) => <PartCard key={part.tag} part={part} />)}
+          </div>
+        )}
+
+        {exp.links && exp.links.length > 0 && (
+          <>
+            <div className="no-print" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '1.6rem' }}>
+              {exp.links.map((l) => (
+                <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className="pill-ghost">
+                  <IconGithub size={12} /> {l.label}
+                </a>
+              ))}
+            </div>
+            <div className="print-links print-only">
+              {exp.links.map((l) => <div key={l.href}>{l.label}: {l.href}</div>)}
+            </div>
+          </>
+        )}
+      </div>
+      <FloatingBack label="All experience" onClick={onBack} />
+      <Footer />
+    </div>
   )
 }
 
@@ -909,6 +980,7 @@ const MINOR_HARDWARE = [
   {
     id: 'sonar',
     title: 'Servo Sonar Radar',
+    summary: 'An ultrasonic sensor on a servo sweeps 180 degrees and plots whatever it finds on a live radar display.',
     year: '2026',
     description: 'A servo-mounted ultrasonic sensor sweeps 180° to detect objects across three modes: continuous sweep, detection-triggered pause, and manual joystick control. Detected objects are visualized on a real-time radar display rendered in Processing.',
     chips: ['Arduino', 'Servo Control', 'Ultrasonic Sensing', 'Serial Communication', 'Processing'],
@@ -921,6 +993,7 @@ const MINOR_HARDWARE = [
   {
     id: 'smart-gate',
     title: 'Smart Gate Access System',
+    summary: 'An RFID card or a keypad code opens a servo-driven gate, with status on an LCD and LED and buzzer feedback.',
     year: '2026',
     description: 'An ESP32-based access control system combining RFID card scanning and keypad password entry to control a servo-actuated gate, with an I2C LCD display for real-time status feedback and LED/buzzer alerts for granted and denied access events.',
     chips: ['ESP32', 'RFID', 'SPI', 'I2C', 'Servo Control', 'Embedded Systems'],
@@ -933,6 +1006,7 @@ const MINOR_SOFTWARE = [
   {
     id: 'stock-predictor',
     title: 'Stock Predictor',
+    summary: 'A Random Forest that predicts whether the S&P 500 closes up or down the next day, backtested to ~0.58 precision.',
     year: '2026',
     description: 'A Random Forest classifier that predicts next-day S&P 500 direction (up or down) from historical price and volume data pulled via yfinance. Trained and backtested in a Jupyter notebook, reaching a precision score of about 0.58 on held-out data.',
     chips: ['Python', 'scikit-learn', 'pandas', 'Jupyter'],
@@ -942,6 +1016,7 @@ const MINOR_SOFTWARE = [
   {
     id: 'hangman',
     title: 'Hangman',
+    summary: 'The classic word-guessing game in the terminal, with difficulty levels and six lives.',
     year: '2026',
     description: 'A command-line implementation of the classic word-guessing game. Players choose a difficulty, then guess letters or the full word with 6 lives. Draws from a curated word list per difficulty and tracks guessed letters to prevent duplicates.',
     chips: ['Python', 'CLI'],
@@ -951,6 +1026,7 @@ const MINOR_SOFTWARE = [
   {
     id: 'password-manager',
     title: 'Random Password Manager',
+    summary: 'Generates, stores and retrieves credentials locally from the command line, persisted to a JSON file.',
     year: '2026',
     description: 'A command-line Python password manager that stores, retrieves, and deletes credentials locally. A built-in generator guarantees variety across uppercase, lowercase, digits, and symbols on every run. Data persists via a local JSON file.',
     chips: ['Python', 'JSON', 'CLI'],
@@ -961,212 +1037,258 @@ const MINOR_SOFTWARE = [
 
 // ─── Expandable main project card ───────────────────────────────────────
 
-function MainProjectCard({ p, open, onToggle }) {
+// The full write-up for one project. Shared by the detail view and the print sheet,
+// so the resume printout can never drift from what the site shows.
+function ProjectBody({ p }) {
+  const gallery = p.images && p.images.length > 0
   return (
-    <div className={'proj-card' + (open ? ' open' : '')} data-card-id={p.id}>
-      <button className="proj-summary" onClick={onToggle} aria-expanded={open}>
-        <div className="proj-summary-text">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-            <span className="proj-year">{p.year}</span>
-            <span className="proj-cat">{p.category}</span>
-          </div>
-          <h2 className="proj-title">{p.title}</h2>
-          <p className="proj-blurb">{p.summary}</p>
+    <>
+      {p.detail && <p className="proj-detail">{p.detail}</p>}
+      {p.description && <p className="minor-desc">{p.description}</p>}
+
+      {p.chips && p.chips.length > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '18px' }}>
+          {p.chips.map((c) => <Chip key={c} label={c} />)}
         </div>
-        {p.thumb && (
-          <div className="proj-thumb no-print">
-            {/* decorative: the same shot appears with full alt text in the gallery below */}
-            <img src={p.thumb} alt="" loading="lazy" />
-          </div>
-        )}
-        <span className="proj-toggle no-print"><IconChevron open={open} /></span>
-      </button>
+      )}
 
-      <div className={'proj-body' + (open ? ' expanded' : '')}>
-        <div className="proj-body-inner">
-          {p.detail && <p className="proj-detail">{p.detail}</p>}
+      {p.parts && p.parts.length > 0 && (
+        <div className="detail-parts" style={{ marginBottom: '22px' }}>
+          {p.parts.map((part) => <PartCard key={part.tag} part={part} />)}
+        </div>
+      )}
 
-          {p.parts && p.parts.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '22px' }}>
-              {p.parts.map((part) => <PartCard key={part.tag} part={part} />)}
-            </div>
-          )}
-
-          {p.skills && (
-            <div style={{ marginBottom: '20px' }}>
-              <div className="mini-label">Skills used</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {p.skills.map(({ label, chips }) => (
-                  <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
-                    <span className="skill-label">{label}</span>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-                      {chips.map((c) => <Chip key={c} label={c} />)}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div style={{ marginBottom: '20px' }}>
-            <div className="mini-label">Highlights</div>
-            {p.highlights.map((h, i) => (
-              <div key={i} className="highlight-row" style={{ borderBottom: i < p.highlights.length - 1 ? '1px solid var(--border)' : 'none' }}>
-                <span className="fact-arrow">→</span>
-                {h}
-              </div>
-            ))}
-          </div>
-
-          <div className="no-print" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: p.images.length ? '20px' : 0 }}>
-            {p.links.map((l) => (
-              <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className={l.primary ? 'pill-primary' : 'pill-ghost'}>
-                {l.external ? <IconExternal /> : <IconGithub size={12} />} {l.label}
-              </a>
-            ))}
-          </div>
-          <div className="print-links print-only">
-            {p.links.map((l) => <div key={l.href}>{l.label}: {l.href}</div>)}
-          </div>
-
-          {p.images.length > 0 && (
-            <div className="proj-images">
-              {p.images.map((img) => (
-                <div key={img.src} className="proj-img-frame">
-                  <img src={img.src} alt={img.alt} loading="lazy" />
+      {p.skills && (
+        <div style={{ marginBottom: '20px' }}>
+          <div className="mini-label">Skills used</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {p.skills.map(({ label, chips }) => (
+              <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
+                <span className="skill-label">{label}</span>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                  {chips.map((c) => <Chip key={c} label={c} />)}
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ─── Minor project entry (expandable row) ───────────────────────────────
-
-function MinorEntry({ p, open, onToggle, isLast }) {
-  return (
-    <div className="minor-entry" data-card-id={p.id} style={{ borderBottom: isLast ? 'none' : '1px solid var(--border)' }}>
-      <button className="minor-head" onClick={onToggle} aria-expanded={open}>
-        <span className="minor-title">{p.title}</span>
-        <span style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span className="minor-year">{p.year}</span>
-          <span className="no-print" style={{ color: 'var(--text3)' }}><IconChevron open={open} /></span>
-        </span>
-      </button>
-      <div className={'proj-body' + (open ? ' expanded' : '')}>
-        <div className="proj-body-inner" style={{ paddingTop: '4px' }}>
-          <p className="minor-desc">{p.description}</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '14px' }}>
-            {p.chips.map((c) => <Chip key={c} label={c} />)}
-          </div>
-          {p.images.length > 0 && (
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '14px' }}>
-              {p.images.map((img) => (
-                <img key={img.src} src={img.src} alt={img.alt} loading="lazy" className="minor-img"
-                  style={{ width: img.w === 'auto' ? 'auto' : `${img.w}px` }} />
-              ))}
-            </div>
-          )}
-          <div className="no-print" style={{ display: 'flex', gap: '14px' }}>
-            {p.links.map((l) => (
-              <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className="minor-link">
-                <IconGithub size={12} /> {l.label}
-              </a>
+              </div>
             ))}
           </div>
-          <div className="print-links print-only">
-            {p.links.map((l) => <div key={l.href}>{l.label}: {l.href}</div>)}
-          </div>
         </div>
+      )}
+
+      {p.highlights && p.highlights.length > 0 && (
+        <div style={{ marginBottom: '20px' }}>
+          <div className="mini-label">Highlights</div>
+          {p.highlights.map((h, i) => (
+            <div key={i} className="highlight-row" style={{ borderBottom: i < p.highlights.length - 1 ? '1px solid var(--border)' : 'none' }}>
+              <span className="fact-arrow">→</span>
+              {h}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="no-print" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: gallery ? '20px' : 0 }}>
+        {p.links.map((l) => (
+          <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className={l.primary ? 'pill-primary' : 'pill-ghost'}>
+            {l.external ? <IconExternal /> : <IconGithub size={12} />} {l.label}
+          </a>
+        ))}
       </div>
+      <div className="print-links print-only">
+        {p.links.map((l) => <div key={l.href}>{l.label}: {l.href}</div>)}
+      </div>
+
+      {gallery && (
+        p.highlights ? (
+          <div className="proj-images">
+            {p.images.map((img) => (
+              <div key={img.src} className="proj-img-frame">
+                <img src={img.src} alt={img.alt} loading="lazy" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            {p.images.map((img) => (
+              <img key={img.src} src={img.src} alt={img.alt} loading="lazy" className="minor-img"
+                style={{ width: img.w === 'auto' ? 'auto' : `${img.w}px` }} />
+            ))}
+          </div>
+        )
+      )}
+    </>
+  )
+}
+
+function ProjectCard({ p, featured, onOpen }) {
+  return (
+    <button className={'grid-card' + (featured ? ' featured' : '')} onClick={() => onOpen(p.id)}>
+      {featured && p.thumb && (
+        <span className="grid-thumb"><img src={p.thumb} alt="" loading="lazy" /></span>
+      )}
+      <span className="grid-card-top">
+        <span className="proj-cat">{p.category || 'Project'}</span>
+        <span className="proj-year">{p.year}</span>
+      </span>
+      <span className="grid-card-title">{p.title}</span>
+      <span className="grid-card-blurb">{p.summary || p.description}</span>
+      <span className="grid-card-more">Read more <IconArrowRight size={12} /></span>
+    </button>
+  )
+}
+
+// Screen shows a grid of summaries; print still gets the full resume-style document.
+function PrintSheet() {
+  const all = [...MAIN_PROJECTS, ...MINOR_HARDWARE, ...MINOR_SOFTWARE]
+  return (
+    <div className="print-only print-sheet">
+      {all.map((p) => (
+        <div key={p.id} className="print-project">
+          <h2 className="proj-title">{p.title}</h2>
+          <ProjectBody p={p} />
+        </div>
+      ))}
     </div>
   )
 }
 
-// ─── Projects page ───────────────────────────────────────────────────────
-
-function ProjectsSection({ cards }) {
+function ProjectsSection({ onOpen }) {
   return (
     <section id="projects" className="section-pad">
-      <SectionHeading eyebrow="What I&apos;ve built" title="Projects" />
-      <p className="print-only print-name">Austin Zhai · austinzhai.com · github.com/AustinZhai8</p>
+      <div className="page-shell">
+        <SectionHeading eyebrow="What I&apos;ve built" title="Projects" />
+        <p className="print-only print-name">Austin Zhai · austinzhai.com · github.com/AustinZhai8</p>
 
-      <div className="reveal">
-        <p className="sub-heading">Main Projects</p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {MAIN_PROJECTS.map((p) => (
-            <MainProjectCard key={p.id} p={p} open={!!cards.openIds[p.id]} onToggle={() => cards.toggle(p.id)} />
-          ))}
-        </div>
-      </div>
-
-      <div className="reveal" style={{ marginTop: '3.5rem' }}>
-        <p className="sub-heading">Minor Projects</p>
-
-        <p className="sub-sub-heading">Hardware / Firmware</p>
-        <div className="minor-group">
-          {MINOR_HARDWARE.map((p, i) => (
-            <MinorEntry key={p.id} p={p} open={!!cards.openIds[p.id]} onToggle={() => cards.toggle(p.id)} isLast={i === MINOR_HARDWARE.length - 1} />
-          ))}
+        <div className="reveal">
+          <div className="group-head">
+            <h3 className="group-title">Main Projects</h3>
+          </div>
+          <div className="card-grid main">
+            {MAIN_PROJECTS.map((p) => <ProjectCard key={p.id} p={p} featured onOpen={onOpen} />)}
+          </div>
         </div>
 
-        <p className="sub-sub-heading" style={{ marginTop: '2.2rem' }}>Software</p>
-        <div className="minor-group">
-          {MINOR_SOFTWARE.map((p, i) => (
-            <MinorEntry key={p.id} p={p} open={!!cards.openIds[p.id]} onToggle={() => cards.toggle(p.id)} isLast={i === MINOR_SOFTWARE.length - 1} />
-          ))}
+        <div className="reveal minor-block">
+          <div className="group-head">
+            <h3 className="group-title sm">Minor Projects</h3>
+          </div>
+
+          <p className="sub-heading">Hardware / Firmware</p>
+          <div className="card-grid compact">
+            {MINOR_HARDWARE.map((p) => <ProjectCard key={p.id} p={p} onOpen={onOpen} />)}
+          </div>
+
+          <p className="sub-heading" style={{ marginTop: '2.2rem' }}>Software</p>
+          <div className="card-grid compact">
+            {MINOR_SOFTWARE.map((p) => <ProjectCard key={p.id} p={p} onOpen={onOpen} />)}
+          </div>
         </div>
+
+        <PrintSheet />
       </div>
     </section>
+  )
+}
+
+function ProjectDetail({ p, onBack }) {
+  return (
+    <div className="page-pad">
+      <div className="page-shell">
+        <BackLink label="All projects" onClick={onBack} />
+        <div className="detail-head">
+          <div className="detail-meta">
+            {p.category && <span className="proj-cat">{p.category}</span>}
+            <span className="proj-year">{p.year}</span>
+          </div>
+          <h1 className="page-title">{p.title}</h1>
+          {p.summary && !p.description && <p className="proj-blurb detail-lead">{p.summary}</p>}
+        </div>
+        <ProjectBody p={p} />
+      </div>
+      <FloatingBack label="All projects" onClick={onBack} />
+      <Footer />
+    </div>
   )
 }
 
 // ─── App ─────────────────────────────────────────────────────────────────
 
 export default function App() {
+  const [route, setRoute] = useState(parseHash)
   const ref = useRef(null)
-  const cards = useCollapsibleCards()
-  const active = useScrollSpy()
-  useScrollReveal(ref)
+  const pending = useRef(parseHash().section)
+  // deps matter: swapping between the main page and a detail view mounts fresh
+  // .reveal nodes that the observer has to pick up
+  useScrollReveal(ref, [route.detail, route.id])
+  const spy = useScrollSpy(!route.detail)
 
-  const activeTitle =
-    [...MAIN_PROJECTS, ...MINOR_HARDWARE, ...MINOR_SOFTWARE].find((p) => p.id === cards.activeId)?.title ||
-    (EXPERIENCE.some((e) => e.company === cards.activeId) ? cards.activeId : undefined)
+  const openDetail = (kind, id) => {
+    setRoute({ detail: kind, id, section: kind })
+    try { history.replaceState(null, '', '#' + kind + '/' + id) } catch { /* no-op */ }
+  }
 
-  // Deep links still work: #about, #experience, #projects jump to their section.
+  const goSection = (id) => {
+    if (route.detail) {
+      pending.current = id
+      setRoute({ detail: null, id: null, section: id })
+      try { history.replaceState(null, '', '#' + id) } catch { /* no-op */ }
+    } else {
+      scrollToSection(id)
+    }
+  }
+
+  // One place decides scroll position after a view swap, so leaving a detail view
+  // returns you to the card you came from rather than the top of the page.
   useEffect(() => {
-    const jump = () => {
-      const h = window.location.hash.replace('#', '')
-      if (!SECTION_IDS.includes(h)) return
-      const el = document.getElementById(h)
-      if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' })
+    if (route.detail) {
+      window.scrollTo({ top: 0, behavior: 'instant' })
+      return
     }
-    const raf = requestAnimationFrame(jump)
-    window.addEventListener('hashchange', jump)
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('hashchange', jump)
+    const target = pending.current || 'home'
+    pending.current = null
+    const el = document.getElementById(target)
+    if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' })
+  }, [route.detail, route.id])
+
+  useEffect(() => {
+    const onHash = () => {
+      const next = parseHash()
+      pending.current = next.section
+      setRoute(next)
     }
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
   }, [])
+
+  let body
+  if (route.detail === 'experience') {
+    const exp = EXPERIENCE.find((e) => e.id === route.id)
+    body = exp
+      ? <ExperienceDetail exp={exp} onBack={() => goSection('experience')} />
+      : null
+  } else if (route.detail === 'projects') {
+    const proj = [...MAIN_PROJECTS, ...MINOR_HARDWARE, ...MINOR_SOFTWARE].find((x) => x.id === route.id)
+    body = proj
+      ? <ProjectDetail p={proj} onBack={() => goSection('projects')} />
+      : null
+  }
 
   return (
     <>
       <ScrollProgress />
-      <Nav active={active} onNavigate={scrollToSection} />
-      <main ref={ref}>
-        <HomeSection />
-        <AboutSection />
-        <ExperienceSection cards={cards} />
-        <ProjectsSection cards={cards} />
-        <div className="no-print" style={{ textAlign: 'center', padding: '1rem 0 4.5rem' }}>
-          <button className="btn-primary" onClick={() => scrollToSection('home')}>Back to top</button>
-        </div>
-        <Footer />
-      </main>
-      <CollapseBar activeId={cards.activeId} title={activeTitle} onCollapse={cards.collapse} />
+      <Nav page={route.detail || spy} onNavigate={goSection} />
+      <div ref={ref}>
+        {body ? (
+          <Page key={route.detail + route.id} pageKey={route.detail + route.id}>{body}</Page>
+        ) : (
+          <>
+            <HomeSection onNavigate={goSection} />
+            <AboutSection />
+            <ExperienceSection onOpen={(id) => openDetail('experience', id)} />
+            <ProjectsSection onOpen={(id) => openDetail('projects', id)} />
+            <Footer />
+          </>
+        )}
+      </div>
     </>
   )
 }
