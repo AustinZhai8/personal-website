@@ -79,10 +79,19 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 .page-shell { max-width: 960px; margin: 0 auto; }
 .section-heading { margin-bottom: 2.5rem; }
 section[id] { scroll-margin-top: 58px; }
+/* The visible break between sections is the .page-shell border rule, which sits
+   6rem into the section - not the section's own top edge. Pull the scroll target up
+   by that padding so a nav click lands on the rule just under the 58px nav, instead
+   of on a screenful of empty padding with the heading stranded mid-viewport.
+   #home is a full-bleed hero with no rule, so it keeps the plain nav offset. */
+#about, #experience, #projects { scroll-margin-top: calc(58px - 6rem); }
 .section-pad { padding: 6rem 1.5rem; }
 #about, #experience, #projects > .page-shell { position: relative; }
 #about .page-shell, #experience .page-shell, #projects .page-shell { border-top: 1px solid var(--border); padding-top: 5rem; }
-@media (max-width: 560px) { .section-pad { padding: 4rem 1.5rem; } }
+@media (max-width: 560px) {
+  .section-pad { padding: 4rem 1.5rem; }
+  #about, #experience, #projects { scroll-margin-top: calc(58px - 4rem); }
+}
 .scroll-progress {
   position: fixed; top: 0; left: 0; right: 0; height: 2px;
   z-index: 60; pointer-events: none;
