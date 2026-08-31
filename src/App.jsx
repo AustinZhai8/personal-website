@@ -1382,7 +1382,7 @@ const PERSON_LD = {
 
 const SECTION_META = {
   home: {
-    title: 'Austin Zhai — Computer Engineering Student at UBC',
+    title: 'Austin Zhai',
     description: 'Austin Zhai is a Computer Engineering student at UBC who builds hardware and software: inspection drones, custom PCBs, and full-stack apps.',
   },
   about: {
