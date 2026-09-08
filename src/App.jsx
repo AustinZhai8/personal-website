@@ -580,7 +580,7 @@ export const EXPERIENCE = [
     role: 'Electronics Engineering Intern',
     dates: 'June 2026 to August 2026',
     tag: 'Hardware Engineering',
-    blurb: 'I helped build a drone to inspect DHL warehouses. The challenge? Flying indoors without GPS.',
+    blurb: 'I built the electronics for a warehouse inspection drone on a five-person team working with DHL. My work took it from power-system design to stable flight indoors, without GPS.',
     description: "I worked on a 5-person team building a drone that inspects warehouse pallets for damage at DHL sites. A pilot flew it down the aisles filming the racking, and that footage ran through a computer vision pipeline the team trained, which flagged which pallets were damaged and how they were stacked. My focus was the electronics: I sized and built the power system, assembled and wired the full stack onto a 20 inch carbon fiber airframe, and tuned the flight controller and optical flow sensor so it holds position indoors with no GPS. I also designed and printed the landing legs in Onshape when nothing off the shelf fit our motors and frame. Alongside the build I ran the project day to day and was the point of contact with DHL's staff and project managers.",
     links: [{ href: 'https://github.com/zacharyL16/DroneScan', label: 'DroneScan, the team repo' }],
     parts: [
@@ -796,7 +796,7 @@ export const EXPERIENCE = [
     role: 'Automation and Controls Engineering Intern',
     dates: 'May 2026 to June 2026',
     tag: 'Automation & Controls',
-    blurb: 'I checked factory control systems before software upgrades.',
+    blurb: 'I supported CHEP’s factory software rollout by verifying control systems across roughly 25 plants each week. I documented the checks and automated repetitive steps in Python.',
     description: "This was my first real exposure to industrial automation: the PLCs, SCADA systems, and operator terminals that keep a factory floor running. I worked on CHEP's global rollout of upgraded Factory Management Systems, doing pre-migration verification across roughly 25 plants a week. At each site I connected to the plant server and baselined every layer beneath it, validating communication paths to about 7 Allen-Bradley PLCs, capturing HMI terminal configs in ThinManager, cross-checking device diagnostics in AVEVA SCADA, and confirming the automated pallet inspection systems were still hitting their timing spec. I wrote the verification runbook myself and automated the repetitive parts in Python. Learning to read a controls stack top to bottom, and to tell a network fault apart from a protocol one, is what I took away from it.",
   },
   {
@@ -806,7 +806,7 @@ export const EXPERIENCE = [
     role: 'Bilingual Data Analyst',
     dates: 'March 2026 to June 2026',
     tag: 'Data & AI',
-    blurb: 'I reviewed AI mapping results in English and French.',
+    blurb: 'I evaluated AI-generated mapping results in English and French, reviewing more than 80 queries each week. My work helped improve location accuracy and search relevance across both languages.',
     description: "I evaluated AI-generated geolocation data across English and French, helping train the models behind mapping products used by millions. That meant assessing 80+ search queries weekly across POI accuracy, search relevance, routing quality, and autocomplete, applying structured rubrics while maintaining a ~90% accuracy rate. The bilingual angle was the differentiator: I caught multilingual discrepancies that monolingual reviewers missed, and those signals fed back into model retraining.",
   },
   {
@@ -816,7 +816,7 @@ export const EXPERIENCE = [
     role: 'IoT Cyber Defense Extern',
     dates: 'April 2026 to June 2026',
     tag: 'Cybersecurity',
-    blurb: 'I tested ways to protect connected water sensors from cyberattacks.',
+    blurb: 'I developed and tested security for connected water sensors in a simulated 500-room hotel. The project combined device protection, attack testing, and a dashboard for monitoring suspicious activity.',
     description: "I secured an IoT sensor pipeline for a simulated 500-room hotel water management system. I designed and stress-tested a 5-layer defense stack (TLS encryption, mutual TLS device authentication, HMAC message signing, timestamp validation, and sequence counters) against attack classes I built myself: eavesdropping, sensor spoofing, and replay attacks. Per-device certificates brought unauthorized broker access to zero, and I trained an Isolation Forest anomaly detection model wired into a real-time Streamlit dashboard so non-technical staff could monitor security without touching a terminal.",
   },
   {
@@ -869,7 +869,7 @@ function ExperienceSection({ onOpen }) {
               <span className="grid-card-blurb">{exp.blurb}</span>
               {exp.id === 'advanced-uav-tech' && (
                 <span className="experience-flight no-print">
-                  <img src="/projects/auav-final-flight-poster.jpg" alt="The completed warehouse inspection drone during a flight test" loading="lazy" />
+                  <img src="/projects/auav-flight.jpg" alt="The warehouse inspection drone hover testing above a rooftop" loading="lazy" />
                   <span>From prototype to flight</span>
                 </span>
               )}

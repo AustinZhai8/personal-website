@@ -404,7 +404,7 @@ section[id] { scroll-margin-top: 58px; }
   padding: 10px; border-radius: 12px; background: var(--accent-soft);
   color: var(--text2); font-size: 13px;
 }
-.experience-flight img { width: 100px; height: 64px; object-fit: cover; border-radius: 7px; }
+.experience-flight img { width: 100px; height: 64px; object-fit: cover; object-position: center 60%; border-radius: 7px; }
 @media (max-width: 640px) {
   .card-grid.experience-grid { grid-template-columns: 1fr; }
 }
