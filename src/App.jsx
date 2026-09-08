@@ -528,7 +528,7 @@ function AboutSection() {
           </p>
         </div>
         <div className="invest-grid">
-          <div className="img-card"><img src="/wealthsimple.png" alt="Wealthsimple portfolio" loading="lazy" /></div>
+          <div className="img-card"><img src="/wealthsimple-private.png" alt="Wealthsimple weekly portfolio performance with financial amounts obscured" loading="lazy" /></div>
           <div className="img-card"><img src="/blossom.png" alt="Blossom portfolio" loading="lazy" /></div>
         </div>
         <p className="body-text" style={{ textAlign: 'center', marginTop: '2rem', fontSize: '14px' }}>
