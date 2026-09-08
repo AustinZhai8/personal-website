@@ -580,7 +580,7 @@ export const EXPERIENCE = [
     role: 'Electronics Engineering Intern',
     dates: 'June 2026 to August 2026',
     tag: 'Hardware Engineering',
-    blurb: 'Built the electronics for an indoor warehouse inspection drone, and ran the project day to day with DHL.',
+    blurb: 'I helped build a drone to inspect DHL warehouses. The challenge? Flying indoors without GPS.',
     description: "I worked on a 5-person team building a drone that inspects warehouse pallets for damage at DHL sites. A pilot flew it down the aisles filming the racking, and that footage ran through a computer vision pipeline the team trained, which flagged which pallets were damaged and how they were stacked. My focus was the electronics: I sized and built the power system, assembled and wired the full stack onto a 20 inch carbon fiber airframe, and tuned the flight controller and optical flow sensor so it holds position indoors with no GPS. I also designed and printed the landing legs in Onshape when nothing off the shelf fit our motors and frame. Alongside the build I ran the project day to day and was the point of contact with DHL's staff and project managers.",
     links: [{ href: 'https://github.com/zacharyL16/DroneScan', label: 'DroneScan, the team repo' }],
     parts: [
@@ -796,7 +796,7 @@ export const EXPERIENCE = [
     role: 'Automation and Controls Engineering Intern',
     dates: 'May 2026 to June 2026',
     tag: 'Automation & Controls',
-    blurb: 'Pre-migration verification across roughly 25 plants a week for CHEP\'s factory system rollout.',
+    blurb: 'I checked factory control systems before software upgrades.',
     description: "This was my first real exposure to industrial automation: the PLCs, SCADA systems, and operator terminals that keep a factory floor running. I worked on CHEP's global rollout of upgraded Factory Management Systems, doing pre-migration verification across roughly 25 plants a week. At each site I connected to the plant server and baselined every layer beneath it, validating communication paths to about 7 Allen-Bradley PLCs, capturing HMI terminal configs in ThinManager, cross-checking device diagnostics in AVEVA SCADA, and confirming the automated pallet inspection systems were still hitting their timing spec. I wrote the verification runbook myself and automated the repetitive parts in Python. Learning to read a controls stack top to bottom, and to tell a network fault apart from a protocol one, is what I took away from it.",
   },
   {
@@ -806,7 +806,7 @@ export const EXPERIENCE = [
     role: 'Bilingual Data Analyst',
     dates: 'March 2026 to June 2026',
     tag: 'Data & AI',
-    blurb: 'Evaluated AI-generated geolocation data in English and French to help train mapping models.',
+    blurb: 'I reviewed AI mapping results in English and French.',
     description: "I evaluated AI-generated geolocation data across English and French, helping train the models behind mapping products used by millions. That meant assessing 80+ search queries weekly across POI accuracy, search relevance, routing quality, and autocomplete, applying structured rubrics while maintaining a ~90% accuracy rate. The bilingual angle was the differentiator: I caught multilingual discrepancies that monolingual reviewers missed, and those signals fed back into model retraining.",
   },
   {
@@ -816,7 +816,7 @@ export const EXPERIENCE = [
     role: 'IoT Cyber Defense Extern',
     dates: 'April 2026 to June 2026',
     tag: 'Cybersecurity',
-    blurb: 'Secured an IoT sensor pipeline for a simulated 500-room hotel water management system.',
+    blurb: 'I tested ways to protect connected water sensors from cyberattacks.',
     description: "I secured an IoT sensor pipeline for a simulated 500-room hotel water management system. I designed and stress-tested a 5-layer defense stack (TLS encryption, mutual TLS device authentication, HMAC message signing, timestamp validation, and sequence counters) against attack classes I built myself: eavesdropping, sensor spoofing, and replay attacks. Per-device certificates brought unauthorized broker access to zero, and I trained an Isolation Forest anomaly detection model wired into a real-time Streamlit dashboard so non-technical staff could monitor security without touching a terminal.",
   },
   {
@@ -855,9 +855,9 @@ function ExperienceSection({ onOpen }) {
     <section id="experience" className="section-pad">
       <div className="page-shell">
         <SectionHeading eyebrow="Where I&apos;ve been" title="Experience" />
-        <div className="card-grid reveal">
-          {EXPERIENCE.map((exp) => (
-            <a key={exp.id} className="grid-card" href={pathFor('experience', exp.id)}
+        <div className="card-grid experience-grid reveal">
+          {EXPERIENCE.slice(0, 4).map((exp) => (
+            <a key={exp.id} className={'grid-card' + (exp.id === 'advanced-uav-tech' ? ' experience-featured' : '')} href={pathFor('experience', exp.id)}
               onClick={interceptClick(() => onOpen(exp.id))}>
               <span className="grid-card-brand">
                 <LogoTile src={exp.logo} />
@@ -867,7 +867,13 @@ function ExperienceSection({ onOpen }) {
               <span className="grid-card-role">{exp.role}</span>
               <span className="exp-tag">{exp.tag}</span>
               <span className="grid-card-blurb">{exp.blurb}</span>
-              <span className="grid-card-more">Read more <IconArrowRight size={12} /></span>
+              {exp.id === 'advanced-uav-tech' && (
+                <span className="experience-flight no-print">
+                  <img src="/projects/auav-final-flight-poster.jpg" alt="The completed warehouse inspection drone during a flight test" loading="lazy" />
+                  <span>From prototype to flight</span>
+                </span>
+              )}
+              <span className="grid-card-more">{exp.id === 'advanced-uav-tech' ? 'See the build & flight tests' : 'Explore my work'} <IconArrowRight size={12} /></span>
             </a>
           ))}
         </div>

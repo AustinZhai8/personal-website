@@ -395,6 +395,19 @@ section[id] { scroll-margin-top: 58px; }
 .fact-arrow { color: var(--accent); font-weight: 700; flex-shrink: 0; line-height: 1.4; }
 
 /* ─── Experience ─────────────────────────────────────────── */
+.card-grid.experience-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.experience-grid .grid-card { min-width: 0; }
+.experience-grid .grid-card-more { margin-top: auto; padding-top: 12px; }
+.experience-featured { border-color: var(--accent); }
+.experience-flight {
+  display: flex; align-items: center; gap: 14px; width: 100%;
+  padding: 10px; border-radius: 12px; background: var(--accent-soft);
+  color: var(--text2); font-size: 13px;
+}
+.experience-flight img { width: 100px; height: 64px; object-fit: cover; border-radius: 7px; }
+@media (max-width: 640px) {
+  .card-grid.experience-grid { grid-template-columns: 1fr; }
+}
 .exp-tag {
   font-size: 12.5px; padding: 4px 13px; border-radius: 999px; font-weight: 500;
   background: var(--accent-soft); color: var(--accent); border: 1px solid transparent;
