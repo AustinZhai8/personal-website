@@ -316,7 +316,7 @@ section[id] { scroll-margin-top: 58px; }
   position: relative;
   min-height: 100vh; display: flex; flex-direction: column;
   align-items: center; justify-content: center; text-align: center;
-  padding: 6rem 1.5rem 7.5rem;
+  padding: 6rem 1.5rem 9.5rem;
 }
 .headshot {
   width: 260px; height: 260px; border-radius: 50%;
