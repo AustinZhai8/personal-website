@@ -1257,18 +1257,84 @@ function ProjectCard({ p, featured, onOpen }) {
   )
 }
 
-// Screen shows a grid of summaries; print still gets the full resume-style document.
-function PrintSheet() {
-  const all = ALL_PROJECTS
+// Always mounted outside the screen content so printing works from any route.
+// Reuse the content data without adding controls or changing the screen layout.
+function PortfolioLinks({ links = [], path }) {
   return (
-    <div className="print-only print-sheet">
-      {all.map((p) => (
-        <div key={p.id} className="print-project">
-          <h2 className="proj-title">{p.title}</h2>
-          <ProjectBody p={p} />
-        </div>
+    <div className="portfolio-links">
+      {[{ href: SITE.origin + path, label: 'Full write-up' }, ...links].map((link) => (
+        <div key={link.href}>{link.label}: <a href={link.href} target="_blank" rel="noopener noreferrer">{link.href}</a></div>
       ))}
     </div>
+  )
+}
+
+function PortfolioImages({ images }) {
+  if (!images.length) return null
+  return (
+    <div className="portfolio-images">
+      {images.map((img) => (
+        <figure key={img.src}>
+          <img src={img.src} alt={img.alt} loading="eager" />
+          <figcaption>{img.caption || img.alt}</figcaption>
+        </figure>
+      ))}
+    </div>
+  )
+}
+
+function PrintSheet() {
+  return (
+    <article className="print-only portfolio-print" aria-label="Printable portfolio">
+      <header className="portfolio-header">
+        <p>Engineering portfolio</p>
+        <h1>Austin Zhai</h1>
+        <p>Computer Engineering · University of British Columbia</p>
+        <p><a href={SITE.origin} target="_blank" rel="noopener noreferrer">austinzhai.com</a> · <a href={'mailto:' + SITE.email}>{SITE.email}</a></p>
+        <p><a href={SITE.github} target="_blank" rel="noopener noreferrer">github.com/AustinZhai8</a> · <a href={SITE.linkedin} target="_blank" rel="noopener noreferrer">linkedin.com/in/austin-zhai</a></p>
+      </header>
+      <h2>Experience</h2>
+      {EXPERIENCE.map((exp) => (
+        <section className="portfolio-entry" key={exp.id}>
+          <h3>{exp.company}</h3>
+          <p className="portfolio-meta">{exp.role} · {exp.dates}</p>
+          <p>{exp.description}</p>
+          {exp.parts && <PortfolioImages images={exp.parts.flatMap((part) => part.media || []).filter((img) => ['/projects/auav-cad-leg.png', '/projects/auav-final.jpg'].includes(img.src))} />}
+          <PortfolioLinks links={exp.links} path={pathFor('experience', exp.id)} />
+        </section>
+      ))}
+      {MAIN_PROJECTS.map((p) => (
+        <section className={p.parts.length ? 'portfolio-main' : 'portfolio-entry'} key={p.id}>
+          <p className="portfolio-kicker">Projects · {p.category} · {p.year}</p>
+          <h2>{p.title}</h2>
+          <p>{p.summary}</p>
+          {p.detail && <p>{p.detail}</p>}
+          {(p.parts || []).map((part) => (
+            <div className="portfolio-part" key={part.tag}>
+              <h3>{part.tag}</h3>
+              <p>{part.body}</p>
+              {part.chips?.length > 0 && <p className="portfolio-meta">{part.chips.join(' · ')}</p>}
+            </div>
+          ))}
+          {p.skills?.map((skill) => <p key={skill.label}><strong>{skill.label}: </strong>{skill.chips.join(', ')}</p>)}
+          {p.highlights?.length > 0 && <ul>{p.highlights.slice(0, 3).map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>}
+          <PortfolioImages images={(p.parts || []).flatMap((part) => (part.media || []).filter((img) => img.type !== 'video').slice(0, 1)).slice(0, 3)} />
+          <PortfolioLinks links={p.links} path={pathFor('projects', p.id)} />
+        </section>
+      ))}
+      <section className="portfolio-additional">
+        <h2>Additional projects</h2>
+        {[...MINOR_HARDWARE, ...MINOR_SOFTWARE].map((p) => (
+          <section className="portfolio-entry" key={p.id}>
+            <h3>{p.title} · {p.year}</h3>
+            <p>{p.description}</p>
+            <p className="portfolio-meta">{p.chips.join(' · ')}</p>
+            <PortfolioImages images={p.images.slice(0, 1)} />
+            <PortfolioLinks links={p.links} path={pathFor('projects', p.id)} />
+          </section>
+        ))}
+      </section>
+    </article>
   )
 }
 
@@ -1304,7 +1370,6 @@ function ProjectsSection({ onOpen }) {
           </div>
         </div>
 
-        <PrintSheet />
       </div>
     </section>
   )
@@ -1610,7 +1675,7 @@ export default function App({ initialRoute }) {
     <>
       <ScrollProgress />
       <Nav page={route.detail || spy} onNavigate={goSection} />
-      <div ref={ref}>
+      <div ref={ref} className="screen-content">
         {body ? (
           <Page key={meta.canonical} pageKey={meta.canonical}>{body}</Page>
         ) : (
@@ -1623,6 +1688,7 @@ export default function App({ initialRoute }) {
           </>
         )}
       </div>
+      <PrintSheet />
     </>
   )
 }
