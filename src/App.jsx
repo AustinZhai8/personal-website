@@ -1275,11 +1275,25 @@ function PortfolioImages({ images }) {
     <div className="portfolio-images">
       {images.map((img) => (
         <figure key={img.src}>
-          <img src={img.src} alt={img.alt} loading="eager" />
+          {(img.type !== 'video' || img.poster) && <img src={img.type === 'video' ? img.poster : img.src} alt={img.alt} loading="eager" />}
           <figcaption>{img.caption || img.alt}</figcaption>
+          {img.type === 'video' && <div className="portfolio-links">Watch video: <a href={SITE.origin + img.src} target="_blank" rel="noopener noreferrer">{SITE.origin + img.src}</a></div>}
         </figure>
       ))}
     </div>
+  )
+}
+
+function PortfolioPart({ part }) {
+  return (
+    <section className="portfolio-part">
+      <h3>{part.tag}</h3>
+      <p>{part.body}</p>
+      {part.points?.length > 0 && <ul>{part.points.map((point) => <li key={point}>{point}</li>)}</ul>}
+      {part.chips?.length > 0 && <p className="portfolio-meta">{part.chips.join(' · ')}</p>}
+      <StatBlock stat={part.stat} />
+      <PortfolioImages images={part.media || []} />
+    </section>
   )
 }
 
@@ -1295,11 +1309,11 @@ function PrintSheet() {
       </header>
       <h2>Experience</h2>
       {EXPERIENCE.map((exp) => (
-        <section className="portfolio-entry" key={exp.id}>
+        <section className={'portfolio-entry' + (exp.parts?.length ? ' portfolio-long' : '')} key={exp.id}>
           <h3>{exp.company}</h3>
           <p className="portfolio-meta">{exp.role} · {exp.dates}</p>
           <p>{exp.description}</p>
-          {exp.parts && <PortfolioImages images={exp.parts.flatMap((part) => part.media || []).filter((img) => ['/projects/auav-cad-leg.png', '/projects/auav-final.jpg'].includes(img.src))} />}
+          {exp.parts?.map((part) => <PortfolioPart key={part.tag} part={part} />)}
           <PortfolioLinks links={exp.links} path={pathFor('experience', exp.id)} />
         </section>
       ))}
@@ -1309,16 +1323,10 @@ function PrintSheet() {
           <h2>{p.title}</h2>
           <p>{p.summary}</p>
           {p.detail && <p>{p.detail}</p>}
-          {(p.parts || []).map((part) => (
-            <div className="portfolio-part" key={part.tag}>
-              <h3>{part.tag}</h3>
-              <p>{part.body}</p>
-              {part.chips?.length > 0 && <p className="portfolio-meta">{part.chips.join(' · ')}</p>}
-            </div>
-          ))}
+          {(p.parts || []).map((part) => <PortfolioPart key={part.tag} part={part} />)}
           {p.skills?.map((skill) => <p key={skill.label}><strong>{skill.label}: </strong>{skill.chips.join(', ')}</p>)}
-          {p.highlights?.length > 0 && <ul>{p.highlights.slice(0, 3).map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>}
-          <PortfolioImages images={(p.parts || []).flatMap((part) => (part.media || []).filter((img) => img.type !== 'video').slice(0, 1)).slice(0, 3)} />
+          {p.highlights?.length > 0 && <><h3>Highlights</h3><ul>{p.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}</ul></>}
+          <PortfolioImages images={p.images || []} />
           <PortfolioLinks links={p.links} path={pathFor('projects', p.id)} />
         </section>
       ))}
@@ -1329,7 +1337,7 @@ function PrintSheet() {
             <h3>{p.title} · {p.year}</h3>
             <p>{p.description}</p>
             <p className="portfolio-meta">{p.chips.join(' · ')}</p>
-            <PortfolioImages images={p.images.slice(0, 1)} />
+            <PortfolioImages images={p.images} />
             <PortfolioLinks links={p.links} path={pathFor('projects', p.id)} />
           </section>
         ))}
