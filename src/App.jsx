@@ -1071,12 +1071,12 @@ export const MAIN_PROJECTS = [
     year: '2026',
     category: 'Hardware',
     thumb: '/projects/pocketsense-thumb.jpg',
-    summary: 'A pocket-sized ambient room monitor on a custom four-layer PCB. Temperature, humidity, pressure, UV index, and WiFi signal strength on a 0.96 inch OLED, driven by three buttons and three AA batteries. I wrote the firmware, drew the schematic, laid out the board, and assembled it by hand.',
-    detail: 'Breadboard first, then schematic, then PCB, then fabrication, then bring-up. The board is assembled and talking over UART, and the first flash is still fighting the power supply.',
+    summary: 'A pocket-sized room monitor on a custom PCB I designed from scratch. Temperature, humidity, pressure, UV, and WiFi signal on a small OLED, navigated with three buttons and running off AA batteries.',
+    detail: 'Breadboard, then schematic, then board, then bring-up. I wrote the firmware, drew the schematic, laid out the PCB, and soldered it by hand.',
     parts: [
       {
         tag: 'Part 1 · Breadboard and firmware',
-        body: "Nothing got designed into copper until it worked on a breadboard first. The entire firmware was written and validated on an ESP32 DevKit before a single schematic symbol was placed. The BME280 at 0x77 and the SSD1306 OLED at 0x3C share one I2C bus on IO21 and IO22, which is exactly the kind of conflict you want to rule out before a board is fabricated. The UV sensor sits on IO32 specifically: it is on ADC1, which stays usable while the WiFi radio is active, and unlike IO34, IO35, and IO36 it is not input-only. The whole UI is a menuIndex plus an inDetail flag, five screens deep, driven by three INPUT_PULLUP buttons.",
+        body: "Nothing got designed into copper until it worked on a breadboard first. The whole firmware was written and proven on a dev board before a single schematic symbol was placed. The sensor and the display share one I2C bus, which is exactly the kind of conflict you want to rule out while it is still a jumper wire away from fixable, and the UV sensor sits on a pin that stays readable while the WiFi radio is running. The interface itself is deliberately small: five screens, three buttons, and a state machine that fits in a couple of variables.",
         chips: ['ESP32', 'Arduino', 'I2C', 'Adafruit GFX', 'SSD1306', 'BME280'],
         media: [
           {
@@ -1088,70 +1088,70 @@ export const MAIN_PROJECTS = [
       },
       {
         tag: 'Part 2 · Schematic and PCB',
-        body: "Drawn in Altium as four blocks: power, EN and reset, boot, and the programming header. Three AA cells feed an AMS1117-3.3 through a slide switch that breaks the positive rail, so the board is genuinely dead when it is off. The EN pin gets a 10k pullup and a 1uF cap for a clean rise out of reset. Layout is a four-layer stackup with solid internal ground and power planes, and a 2mm keepout around the module antenna with no copper on any layer. DRC passed at zero violations, and I loaded the Gerbers into JLCPCB's own viewer to confirm the negative-plane layers came out right before ordering.",
+        body: "Drawn in Altium as four blocks: power, reset, boot, and the programming header. Three AA cells feed a linear regulator through a slide switch that breaks the positive rail, so the board is genuinely dead when it is off. The layout is four layers, with solid ground and power planes inside and a clear keepout around the module antenna. DRC came back clean, and I checked the Gerbers in the fab viewer before ordering.",
         chips: ['Altium Designer', 'Schematic Capture', 'PCB Layout', '4-Layer Stackup', 'JLCPCB'],
         media: [
           {
             src: '/projects/pocketsense-schematic.png',
             alt: 'Altium schematic split into power, EN/reset, boot, and programming header blocks',
-            caption: 'The schematic. Power, EN and reset, boot, and the UART header, with TX and RX deliberately crossed at the connector.',
+            caption: 'The schematic, in four blocks: power, reset, boot, and the programming header.',
           },
           {
             src: '/projects/pocketsense-pcb-layout.png',
             alt: 'Four-layer PCB layout with the antenna keepout at the top edge',
-            caption: 'Four-layer layout. Signal on top and bottom, solid GND and power planes in between, and a 2mm void under the antenna.',
+            caption: 'Four-layer layout. Signal on the outside, ground and power planes in the middle, and a clear void under the antenna.',
           },
           {
             src: '/projects/pocketsense-pcb-3d.png',
             alt: '3D render of the assembled PocketSense board in Altium',
-            caption: "Altium's 3D view, used as the last check before export: component collisions, connector clearance, and whether the OLED actually fits.",
+            caption: "Altium's 3D view, the last check before export. Mostly: does anything collide, and does the display actually fit.",
           },
         ],
       },
       {
         tag: 'Part 3 · Assembly',
-        body: "Boards arrived from JLCPCB and I soldered them by hand, SMD first while the board was still flat: the AMS1117-3.3 in SOT-223, the 10uF and 22uF bulk caps in 0805, the EN circuit, and the remaining 0603 passives. The switch that shipped was SP3T against an SPDT footprint, so rather than reorder I probed it with a meter and found that three of its four electrical pins line up with the three holes, with the middle pin beeping against pin 3 in the ON position. Before any voltage went near it I checked continuity between the 3V3 pad and GND. No beep, no short, safe to power.",
+        body: "Boards came back from JLCPCB and I soldered every part by hand, surface mount first while the board was still flat and nothing tall was in the way. The switch that shipped had the wrong pin count for the footprint, so instead of reordering I probed it with a meter and found the three pins that line up. Before any voltage went near it I checked for a short between power and ground. No beep, safe to power.",
         chips: ['SMD Soldering', 'SOT-223', '0603 / 0805', 'Continuity Testing'],
         media: [
           {
             src: '/projects/pocketsense-assembly.jpg',
             alt: 'Bare PocketSense PCB with the ESP32 module placed and unpopulated footprints visible',
             full: true,
-            caption: 'Fresh from the fab, with the ESP32 module dry-fitted. SMD work goes first, while there is nothing tall in the way.',
+            caption: 'Fresh from the fab, with the module dry-fitted. Surface mount work goes first, while the board is still flat.',
           },
           {
             src: '/projects/pocketsense-final-front.jpg',
             alt: 'Fully populated PocketSense board with ESP32, OLED, BME280, UV sensor and six buttons',
-            caption: 'Fully populated. The purple board is the BME280, the red one is the GUVA UV sensor, and the three buttons along the bottom are back, scroll, and select.',
+            caption: 'Fully populated. Purple board is the environment sensor, red is the UV sensor, and the three buttons along the bottom are back, scroll, and select.',
           },
           {
             src: '/projects/pocketsense-final-back.jpg',
             alt: 'Back of the PocketSense board with a three-cell AA battery holder mounted over the LDO',
-            caption: 'The back, with the three-AA holder mounted over the regulator. The whole thing runs off cells you can buy anywhere.',
+            caption: 'The back, with the battery holder mounted over the regulator. It runs off cells you can buy anywhere.',
           },
         ],
       },
       {
         tag: 'Part 4 · UART bring-up',
-        body: "There is no auto-reset circuit on this board, so getting into the bootloader is manual: hold BOOT, tap EN, release BOOT, in the window while esptool prints Connecting. I dropped the upload speed from 921600 to 115200 to widen that window. It works. esptool identifies the chip as an ESP32-D0WD-V3 revision v3.1 and the stub flasher starts, which means the EN circuit, the boot circuit, the crossed TX and RX, and the regulator are all doing their jobs. Then the transfer dies, and the meter says why: the AMS1117 output sits at roughly 3.0V, not 3.3V. With a 1.3V dropout against a 4.5V nominal pack there was never much margin, and the moment the stub pulls the ESP32 toward its 500mA peak the cells sag and the module browns out. That is a supply problem, not a layout one.",
+        body: "There is no auto-reset circuit on this board, so getting into the bootloader is manual: hold boot, tap reset, release, all inside the second or so while the uploader is trying to connect. It works. The chip answers, reports its ID, and the flasher starts, which means the reset circuit, the boot circuit, the crossed serial lines, and the regulator are all doing their jobs. Then the transfer dies, and the meter says why. The regulator is putting out about 3.0V instead of 3.3V, so the moment the ESP32 pulls real current the cells sag and the board browns out mid-upload. That is a supply problem, not a layout one.",
         chips: ['FT232R', 'UART', 'esptool', 'Hardware Bring-up'],
         media: [
           {
             src: '/projects/pocketsense-bringup.jpg',
             alt: 'PocketSense connected to an FT232R converter with esptool output on screen',
             full: true,
-            caption: 'Bring-up over an FT232R. esptool reaches the chip, reads the MAC, and starts the stub flasher before the rail gives out.',
+            caption: 'Bring-up over a USB to serial converter. The chip answers and the flasher starts, right up until the rail gives out.',
           },
         ],
       },
     ],
     highlights: [
-      'Five sensor screens on one 128x64 OLED, all navigated with three buttons. No phone, no app, no cloud',
-      'The bug that almost shipped: BTN_SELECT and BTN_BACK were wired to physical pins 17 and 18 on the module symbol, which are internal SPI flash pins, not GPIO 17 and 18. Caught it by going through the WROOM-32E datasheet pin table line by line before the PCB push',
-      'A 2mm antenna keepout on every layer. Altium keepouts only block routing on signal layers, so voiding the internal planes underneath took Fill objects placed directly on the plane layers',
-      'The sketch compiles to 927,388 bytes, 70% of the default 1.3 MB partition, with 47,120 bytes of static RAM',
-      'Every stage was mine end to end: firmware on a breadboard, schematic and four-layer layout in Altium, Gerbers out to JLCPCB, and every part on the board soldered by hand, down to the SOT-223 regulator and the 0603 passives',
-      'Currently one step from done: the flash browns out on battery sag at ~3.0V. Fresh cells or a bench supply during programming is the fix, which is the real lesson here. An AMS1117 with a 1.3V dropout and a 4.5V pack has almost no headroom, and under a WiFi current burst almost none becomes none',
+      'Five sensor screens on one small OLED, all driven by three buttons. No phone, no app, no cloud',
+      'The bug that almost shipped: two of the buttons were wired to physical pins 17 and 18 on the module symbol, which are internal flash pins, not the GPIOs of the same number. Caught it against the datasheet pin table before the board went out',
+      'The antenna keepout took a second pass. Altium keepouts only block routing on the outer layers, so clearing the internal planes underneath meant placing fills on them directly',
+      'The firmware compiles to about 927 KB, 70% of the default partition, which is a lot of program space for something that draws five screens',
+      'Every stage was mine end to end: firmware on a breadboard, schematic and four-layer layout in Altium, Gerbers out to the fab, and every part on the board soldered by hand',
+      'One step from done. The upload browns out on battery sag, and the fix is fresh cells or a bench supply rather than a respin. The real lesson: a regulator with a 1.3V dropout on a 4.5V pack has almost no headroom, and under a WiFi current burst almost none becomes none',
     ],
     links: [
       { href: 'https://github.com/AustinZhai8/Pocket-Sense', label: 'GitHub', primary: true },
@@ -1163,8 +1163,9 @@ export const MAIN_PROJECTS = [
     title: 'Personal Website',
     year: '2026',
     category: 'Software',
-    summary: 'Designed, built, and deployed austinzhai.com end to end. A Vite + React SPA with a refined dark theme, scroll-triggered reveals, and a print-optimized projects page.',
-    detail: 'Full CI/CD via GitHub and Vercel, with the custom domain and DNS configured from scratch.',
+    summary: 'Designed, built, and deployed austinzhai.com end to end. A React single-page site with a dark theme, scroll-triggered reveals, and a projects page that prints as a clean resume.',
+    detail: 'Full CI/CD through GitHub and Vercel, with the domain and DNS set up from scratch.',
+    thumb: '/projects/personal-website-thumb.jpg',
     parts: [],
     skills: [
       { label: 'Languages', chips: ['JavaScript', 'HTML', 'CSS'] },
@@ -1181,7 +1182,9 @@ export const MAIN_PROJECTS = [
       { href: 'https://austinzhai.com', label: 'austinzhai.com', primary: true, external: true },
       { href: 'https://github.com/AustinZhai8/personal-website', label: 'GitHub' },
     ],
-    images: [],
+    images: [
+      { src: '/projects/personal-website-hero.jpg', alt: 'The austinzhai.com landing page, with the headshot, intro and navigation cards' },
+    ],
   },
 ]
 
