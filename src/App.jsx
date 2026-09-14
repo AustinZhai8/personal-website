@@ -632,7 +632,6 @@ export const EXPERIENCE = [
           'One 4S LiPo fed all four motor controllers, the flight controller and the video transmitter',
           'I worked the flight time out from measured current draw before we bought anything',
           'Roughly 40 soldered connections across the power and signal wiring, every cable cut to length and heat-shrunk',
-          'We trialled a 4-in-1 ESC stack part way through and ended up back on four separate ESCs',
         ],
         chips: ['4S LiPo', 'ESCs', 'XT60', 'Soldering'],
         stat: {
@@ -652,8 +651,8 @@ export const EXPERIENCE = [
           },
           {
             src: '/projects/auav-wiring.jpg', w: 1300, h: 1300,
-            alt: 'The drone mid-rebuild on a workbench with helping hands, custom heat-shrunk cables and a 4-in-1 ESC',
-            caption: 'Mid-rebuild on the bench, with the 4-in-1 ESC we trialled and every cable cut to length and heat-shrunk.',
+            alt: 'The drone mid-rebuild on a workbench with helping hands and custom heat-shrunk cables',
+            caption: 'Mid-rebuild on the bench, with every cable cut to length and heat-shrunk.',
           },
         ],
       },
@@ -807,7 +806,7 @@ export const EXPERIENCE = [
     dates: 'March 2026 to June 2026',
     tag: 'Data & AI',
     blurb: 'Evaluated English and French mapping data for AI training, assessing search, routing, and place accuracy. Reviewed more than 80 queries each week while maintaining about 90% rubric accuracy.',
-    description: "I evaluated AI-generated geolocation data across English and French, helping train the models behind mapping products used by millions. That meant assessing 80+ search queries weekly across POI accuracy, search relevance, routing quality, and autocomplete, applying structured rubrics while maintaining a ~90% accuracy rate. The bilingual angle was the differentiator: I caught multilingual discrepancies that monolingual reviewers missed, and those signals fed back into model retraining.",
+    description: "I evaluated AI-generated geolocation data across English and French, helping train the models behind TELUS's mapping products. That meant assessing 80+ search queries weekly across POI accuracy, search relevance, routing quality, and autocomplete, applying structured rubrics while maintaining a ~90% accuracy rate. The bilingual angle was the differentiator: I caught multilingual discrepancies that monolingual reviewers missed, and those signals fed back into model retraining.",
   },
   {
     id: 'hydroficient',
@@ -1051,7 +1050,7 @@ export const MAIN_PROJECTS = [
       },
     ],
     highlights: [
-      'Recursive ETF decomposition across 500+ tickers with configurable depth cap and circular reference protection',
+      'Recursive ETF decomposition across 750+ tickers with configurable depth cap and circular reference protection',
       'Live price fetching across US and Canadian exchanges (TSX, NEO, CSE) through a Vercel serverless proxy to Yahoo Finance, removing API key requirements and exchange restrictions',
       'Google OAuth and OTP email auth via Supabase with row-level security policies per user',
       'Real-time USD/CAD conversion via Frankfurter API with per-position and display-level currency toggling',
