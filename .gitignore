@@ -26,3 +26,17 @@ dist-ssr
 # Loose resume/headshot copies at repo root (site serves the public/ copies)
 /Headshot.JPG
 /Austin Zhai Resume - Google Docs.pdf
+
+# AI assistant config and local notes — kept on disk, never pushed
+.claude/
+.agents/
+.remember/
+.cursor/
+.aider*
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.mcp.json
+
+# Local scratch
+tmp/

@@ -70,7 +70,7 @@ scripts/
 public/                 # static assets, robots.txt, llms.txt, og.png, favicon, manifest
 ```
 
-See `CLAUDE.md` for the conventions this codebase follows.
+All site content (experience entries, projects) lives in the arrays near the top of `src/App.jsx` — editing content means editing those array literals, not the components that render them.
 
 ## License
 

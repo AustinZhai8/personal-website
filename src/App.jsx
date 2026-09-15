@@ -580,13 +580,13 @@ export const EXPERIENCE = [
     role: 'Electronics Engineering Intern',
     dates: 'June 2026 to August 2026',
     tag: 'Hardware Engineering',
-    blurb: 'Designed and integrated the electronics for a DHL warehouse-inspection drone, from power distribution to stable indoor position hold without GPS. I also coordinated the five-person build team from prototype through flight testing.',
-    description: "I worked on a 5-person team building a drone that inspects warehouse pallets for damage at DHL sites. A pilot flew it down the aisles filming the racking, and that footage ran through a computer vision pipeline the team trained, which flagged which pallets were damaged and how they were stacked. My focus was the electronics: I sized and built the power system, assembled and wired the full stack onto a 20 inch carbon fiber airframe, and tuned the flight controller and optical flow sensor so it holds position indoors with no GPS. I also designed and printed the landing legs in Onshape when nothing off the shelf fit our motors and frame. Alongside the build I ran the project day to day and was the point of contact with DHL's staff and project managers.",
+    blurb: 'Built the electronics for a DHL warehouse inspection drone, from the power system to steady indoor flight without GPS, and led the five-person team from prototype to flight testing.',
+    description: "I led a 5-person team building a drone that checks warehouse pallets for damage at DHL sites. A pilot flies it down an aisle filming the shelves, and software the team trained reads that footage back and marks which pallets are damaged. My side of it was the electronics. I sized and built the power system, wired the whole stack onto a 20 inch carbon fiber frame, and tuned it until it could hold still indoors, where there is no GPS to lock onto. I designed and printed the landing legs when nothing off the shelf fit our motors, and toward the end I drew up a flight controller board of our own. I also ran the project day to day and was the point of contact at DHL.",
     links: [{ href: 'https://github.com/zacharyL16/DroneScan', label: 'DroneScan, the team repo' }],
     parts: [
       {
         tag: 'The problem',
-        body: "Warehouses check pallets for damage by eye, one at a time, and a large DHL site holds thousands of them. We wanted to make that faster: fly an aisle once, and let software do the looking. I ran the meetings with DHL's staff and project managers, so what they needed came back to the team through me, and I kept the five of us pointed at the same milestones from there.",
+        body: "Warehouses check pallets for damage by eye, one at a time, and a large DHL site holds thousands of them. We wanted to fly an aisle once and let software do the looking. I ran the meetings with DHL, so what they needed came back to the team through me.",
         points: [
           'Damage gets spotted by whoever happens to walk past it',
           'Pallets are stacked well above head height, so the top rows are the hardest to check',
@@ -603,18 +603,18 @@ export const EXPERIENCE = [
       },
       {
         tag: 'Prototype',
-        body: 'We started with a drone the company already owned, one of its light-show quads built on a DJI F450 frame. It was never going to be the final build. It was there to answer a single question.',
+        body: 'We started with a drone the company already owned, one of its light-show quads. It was never going to be the final build. It was there to answer a single question.',
         points: [
           'The question: how does a drone hold still indoors, where there is no GPS to lock onto?',
-          'The answer: an MTF-01 optical flow module, a downward camera and laser rangefinder that tracks movement against the floor',
+          'The answer: an optical flow sensor, a small downward camera and laser rangefinder that watches the floor slide past and works out how far the drone has drifted',
           'Once it was fitted and tuned the drifting stopped, and everything after this was designed around it',
         ],
         chips: ['DJI F450', 'Pixhawk 2.4.8', 'MTF-01 Optical Flow'],
         media: [
           {
             src: '/projects/auav-prototype.jpg', w: 1300, h: 1143,
-            alt: 'The F450 prototype quadcopter on a desk with a Pixhawk 2.4.8 flight controller mounted on top',
-            caption: 'The prototype: a light-show F450 stripped back and rebuilt around a Pixhawk 2.4.8, with the optical flow module tucked underneath.',
+            alt: 'The prototype quadcopter on a desk with its flight controller mounted on top',
+            caption: 'The prototype: a light-show drone stripped back and rebuilt around a new flight controller, with the optical flow sensor tucked underneath.',
           },
           {
             type: 'video', preload: 'none', full: true, maxWidth: 340, w: 720, h: 1280,
@@ -627,27 +627,27 @@ export const EXPERIENCE = [
       },
       {
         tag: 'Power system',
-        body: 'The battery decides how long a flight lasts, and how long a flight lasts decides how much of a warehouse you can cover in one go. So I sized the power system from measured numbers instead of guessing at a battery.',
+        body: 'How long the drone stays up decides how much of a warehouse you can cover in one go, and that comes down to the battery. So I worked the flight time out on paper before we bought anything, rather than picking a battery and hoping.',
         points: [
-          'One 4S LiPo fed all four motor controllers, the flight controller and the video transmitter',
-          'I worked the flight time out from measured current draw before we bought anything',
-          'Roughly 40 soldered connections across the power and signal wiring, every cable cut to length and heat-shrunk',
+          'One battery feeds all four motors, the flight controller and the camera',
+          'Everything runs through a board I wired up that splits that single supply out to each of them',
+          'Roughly 40 soldered connections across the whole drone, every cable cut to length and heat-shrunk',
         ],
         chips: ['4S LiPo', 'ESCs', 'XT60', 'Soldering'],
         stat: {
           rows: [
-            { label: 'Usable capacity', expr: '2.2 Ah × 0.8 depth of discharge', result: '1.76 Ah' },
-            { label: 'All-up weight', expr: 'frame, motors, props, ESCs, Pixhawk, LiPo, FPV gear, wiring', result: '≈1.34 kg' },
-            { label: 'Hover current', expr: '150 W/kg ÷ 14.8 V ≈ 10 A/kg, × 1.34 kg', result: '≈13.4 A' },
-            { label: 'Endurance', expr: '1.76 Ah ÷ 13.4 A × 60', result: '≈7.9 min' },
+            { label: 'Usable charge', expr: 'battery capacity, minus the fifth you never drain', result: '1.76 Ah' },
+            { label: 'Weight', expr: 'frame, motors, props, battery, camera and wiring', result: '≈1.34 kg' },
+            { label: 'Draw in a hover', expr: 'roughly 10 A per kilogram of drone', result: '≈13.4 A' },
+            { label: 'Flight time', expr: 'charge ÷ draw, in minutes', result: '≈7.9 min' },
           ],
-          note: 'A projection, not a measurement. The airframe was never put on a scale and it has never been flown down to empty. The 0.8 is there because a LiPo below roughly 20% charge is off limits.',
+          note: 'An estimate, not a measurement. The drone was never put on a scale and never flown down to empty, so treat it as the ballpark it is. The last fifth of the battery is off limits because draining a pack that far damages it.',
         },
         media: [
           {
             src: '/projects/auav-power.jpg', w: 1300, h: 1464,
-            alt: 'Top-down view of the drone showing the power distribution board, XT60 connector and four ESCs',
-            caption: 'Top-down on the distribution board: four ESCs zip-tied along the arms, XT60 into the PDB, optical flow module at the nose.',
+            alt: 'Top-down view of the drone showing the power distribution board and the four motor controllers on the arms',
+            caption: 'Top-down on the power board: one motor controller zip-tied to each arm, battery lead into the middle, optical flow sensor at the nose.',
           },
           {
             src: '/projects/auav-wiring.jpg', w: 1300, h: 1300,
@@ -658,23 +658,23 @@ export const EXPERIENCE = [
       },
       {
         tag: 'Final airframe',
-        body: 'The prototype could not carry everything we needed, so we moved onto a bigger 20 inch carbon fiber frame. I assembled and wired this one up myself, and designed the parts that did not exist off the shelf.',
+        body: 'The prototype could not carry everything we needed, so we moved onto a bigger 20 inch carbon fiber frame. I assembled and wired this one myself, and designed the parts that did not exist off the shelf.',
         points: [
-          'Pixhawk V6X flight controller, with the MTF-01 optical flow module mounted underneath',
-          'No commercial landing leg fitted our combination of motors and frame, so I modelled our own in Onshape around the real parts and printed them',
-          'They were hollowed out in a hex pattern to save weight without losing stiffness, and they are the legs holding the drone up in the photos below',
-          'Then tuned until it held position steadily indoors',
+          'A better flight controller than the prototype had, with the optical flow sensor mounted underneath',
+          'No landing leg on the market fitted our combination of motors and frame, so I modelled our own around the real parts and printed them',
+          'They are hollowed out in a hex pattern to save weight without going floppy, and they are the legs holding the drone up in the photos below',
+          'Then tuned until it held still indoors',
         ],
         chips: ['Carbon Fiber Frame', 'Pixhawk V6X', 'Onshape', '3D Printing'],
         media: [
           {
             src: '/projects/auav-cad-leg.png', w: 1300, h: 583, full: true,
-            alt: 'Onshape CAD model of the custom landing leg, showing the motor mounting flange and hex lightening cutouts',
-            caption: 'The landing leg in Onshape, modelled around imported geometry of the motors and frame we actually had.',
+            alt: 'CAD model of the custom landing leg, showing the motor mounting flange and hex cutouts',
+            caption: 'The landing leg in CAD, modelled around the real motors and frame rather than a guess at them.',
           },
           {
             src: '/projects/auav-final.jpg', w: 1300, h: 1040,
-            alt: 'The finished carbon fiber quadcopter on a desk with a Pixhawk V6X and GPS mounted',
+            alt: 'The finished carbon fiber quadcopter on a desk with its flight controller and GPS mounted',
             caption: 'The finished airframe, standing on the printed legs.',
           },
           {
@@ -704,11 +704,11 @@ export const EXPERIENCE = [
       },
       {
         tag: 'Getting the footage off the drone',
-        body: 'The footage came off the drone live. It carried a tiny FPV camera and video transmitter, and the picture arrived on a laptop while the drone was still in the air.',
+        body: 'The footage came off the drone live. It carried a tiny camera and transmitter, and the picture arrived on a laptop while the drone was still in the air.',
         points: [
-          'An all-in-one camera and video transmitter weighing 4.7 g, about a thumbnail at 18.7 × 13 mm',
-          'It transmitted to a receiver plugged into a laptop, which captured the feed in OBS',
-          'That recording is what got fed through the software afterwards',
+          'Camera and transmitter in one part, 4.7 g and about the size of a thumbnail',
+          'It beams to a receiver plugged into a laptop, which records the feed',
+          'That recording is what gets fed through the software afterwards',
         ],
         chips: ['FPV', 'OBS', 'Video Capture'],
         media: [
@@ -723,12 +723,10 @@ export const EXPERIENCE = [
       },
       {
         tag: 'Teaching it to recognise a damaged pallet',
-        body: 'Before software can spot damage, someone has to show it thousands of examples. We labelled every training photo by hand in Roboflow, drawing a shape around each pallet and tagging it twice.',
+        body: 'Before software can spot damage, someone has to show it thousands of examples. We labelled every training photo by hand, drawing a shape around each pallet and tagging it twice: damaged or not, and stacked flat or in a pyramid.',
         points: [
-          'Tag one: is this pallet damaged, or undamaged?',
-          'Tag two: is it stacked flat, or in a pyramid?',
-          'The two shapes sit on top of each other, which would make the model draw two boxes around every pallet',
-          'So we built its training set from the damage shapes only, and saved the stacking tags for a later step',
+          'Both tags sit on the same pallet, which would have the model draw two boxes around every one it finds',
+          'So we trained it on the damage tags alone, and saved the stacking question for a later step',
         ],
         chips: ['Roboflow'],
         media: [
@@ -741,26 +739,24 @@ export const EXPERIENCE = [
       },
       {
         tag: 'Training the models',
-        body: 'Three models, trained in a notebook and chained together. The first one finds the pallets; the other two look at each pallet it found.',
+        body: 'Three models chained together. The first finds the pallets, and the other two look at each pallet it found: one says whether it is damaged, the other whether it is stacked flat or in a pyramid.',
         points: [
-          'Model 1 draws a box around every pallet in the frame',
-          'Model 2 decides whether that pallet is damaged',
-          'Model 3 decides whether it is stacked flat or in a pyramid',
-          'Damaged pallets are rare in the training data, so we tuned model 2 to catch as many as it could and tolerate a few false alarms. Missing a damaged pallet costs more than double-checking a good one.',
+          'Damaged pallets are rare in the training photos, so the damage model is deliberately tuned to over-report',
+          'Missing a broken pallet costs a lot more than sending someone to double-check a good one',
         ],
         chips: ['YOLO11', 'Ultralytics', 'Jupyter'],
         stat: {
           rows: [
-            { label: 'Finding pallets', expr: 'detector score across the test set', result: '0.88' },
-            { label: 'Flat or pyramid', expr: 'test set accuracy', result: '0.86' },
-            { label: 'Damaged or not', expr: 'accuracy / damaged caught', result: '0.82 / 0.80' },
+            { label: 'Finding pallets', expr: 'score on photos it had never seen', result: '0.88' },
+            { label: 'Flat or pyramid', expr: 'how often it got the stacking right', result: '0.86' },
+            { label: 'Damaged or not', expr: 'overall / damaged ones caught', result: '0.82 / 0.80' },
           ],
         },
         media: [
           {
             src: '/projects/auav-training.png', w: 1032, h: 442,
-            alt: 'Jupyter notebook cell training the YOLO11 detector, with per-epoch loss and mAP output',
-            caption: 'Training the pallet detector in the notebook, with its score climbing pass over pass.',
+            alt: 'Notebook cell training the pallet detector, with its score printed after each pass',
+            caption: 'Training the pallet detector, with its score climbing pass over pass.',
           },
           {
             src: '/projects/auav-ml-results.png', w: 576, h: 542,
@@ -786,6 +782,34 @@ export const EXPERIENCE = [
           },
         ],
       },
+      {
+        tag: 'Designing a flight controller of our own',
+        body: 'Every drone we built flew on a flight controller we bought off the shelf, which means paying for features we never used and living with a shape and a pinout someone else chose. Toward the end of the internship I drew up our own. It is fully designed and routed, and the next step is sending it out to be made.',
+        points: [
+          'One chip runs the flight code, and a motion sensor sitting beside it reports which way the drone is tilting, hundreds of times a second',
+          'It runs off the USB cable at a desk or off the drone in the air, and a pair of diodes keeps the two supplies from pushing current back into each other',
+          'Our radio receiver speaks in a signal the chip reads backwards, so a single transistor flips it the right way round on the way in',
+          'Four layers, corner mounting holes, and a row of pads along two edges for whatever a future build needs to plug into',
+        ],
+        chips: ['Altium Designer', 'STM32F405', 'ICM-20602', '4-Layer Stackup', 'USB-C'],
+        media: [
+          {
+            src: '/projects/auav-fc-schematic.png', w: 1702, h: 1334, full: true,
+            alt: 'Flight controller schematic in Altium, divided into power, microcontroller, gyro, LED and boot blocks',
+            caption: 'The schematic, drawn in blocks so each piece can be read on its own: power in, the processor, the motion sensor, and the small stuff around them.',
+          },
+          {
+            src: '/projects/auav-fc-pcb.png', w: 1176, h: 1176,
+            alt: 'Four-layer flight controller board layout with the processor centred and traces fanning out to the edge pads',
+            caption: 'The layout. Processor in the middle, everything it talks to kept close, and the mounting holes tied into ground at the corners.',
+          },
+          {
+            src: '/projects/auav-fc-3d.png', w: 1166, h: 1160,
+            alt: '3D render of the finished flight controller board with USB-C connector and status LEDs',
+            caption: 'The 3D view, which is the last honest look at whether anything collides before the files go out.',
+          },
+        ],
+      },
     ],
   },
   {
@@ -795,8 +819,8 @@ export const EXPERIENCE = [
     role: 'Automation and Controls Engineering Intern',
     dates: 'May 2026 to June 2026',
     tag: 'Automation & Controls',
-    blurb: 'Supported CHEP’s factory software rollout by validating PLC, HMI, and SCADA communication paths before migration. Completed pre-migration verification across roughly 25 plants per week and automated repeatable checks in Python.',
-    description: "This was my first real exposure to industrial automation: the PLCs, SCADA systems, and operator terminals that keep a factory floor running. I worked on CHEP's global rollout of upgraded Factory Management Systems, doing pre-migration verification across roughly 25 plants a week. At each site I connected to the plant server and baselined every layer beneath it, validating communication paths to about 7 Allen-Bradley PLCs, capturing HMI terminal configs in ThinManager, cross-checking device diagnostics in AVEVA SCADA, and confirming the automated pallet inspection systems were still hitting their timing spec. I wrote the verification runbook myself and automated the repetitive parts in Python. Learning to read a controls stack top to bottom, and to tell a network fault apart from a protocol one, is what I took away from it.",
+    blurb: 'Checked the control systems inside CHEP’s pallet plants before a worldwide software upgrade reached them, at roughly 25 sites a week, and automated the setup around those checks to cut about 20% off each one.',
+    description: "This was my first real look inside industrial automation: the controllers, monitoring software and operator terminals that keep a factory floor running. CHEP was rolling out upgraded factory software across its plants worldwide, and my job was to check each site was healthy before the upgrade touched it, at roughly 25 sites a week. At each one I connected in and worked down the stack: confirming the seven or so controllers on the plant network were reachable and answering, recording how the operator terminals were configured, cross-checking the same equipment in the monitoring software to tell a dead network link apart from a program that had quietly stopped responding, and confirming the automated pallet inspection rigs still reported in on time. The checks came off a runbook the team built together, and I wrote a Python script that handled the repetitive setup around them, which took about 20% off the time each site needed. Learning to read a controls stack top to bottom, and to tell which layer a fault actually lives in, is what I took away from it.",
   },
   {
     id: 'telus-digital',
@@ -805,8 +829,8 @@ export const EXPERIENCE = [
     role: 'Bilingual Data Analyst',
     dates: 'March 2026 to June 2026',
     tag: 'Data & AI',
-    blurb: 'Evaluated English and French mapping data for AI training, assessing search, routing, and place accuracy. Reviewed more than 80 queries each week while maintaining about 90% rubric accuracy.',
-    description: "I evaluated AI-generated geolocation data across English and French, helping train the models behind TELUS's mapping products. That meant assessing 80+ search queries weekly across POI accuracy, search relevance, routing quality, and autocomplete, applying structured rubrics while maintaining a ~90% accuracy rate. The bilingual angle was the differentiator: I caught multilingual discrepancies that monolingual reviewers missed, and those signals fed back into model retraining.",
+    blurb: 'Rated the map results an AI system returns, in both English and French, working through 80+ searches a week so its mistakes could be found and corrected.',
+    description: "I rated the map results an AI system produced, in English and French, so the places it got wrong could be fed back and fixed. That meant working through 80+ searches a week and judging each one: is this the place the search actually meant, does the name and address match reality, and does the pin sit on the right building? Verifying that properly means leaving the tool and checking the business against its own site and the postal listing. Working across both languages is where I added the most, because a French listing that looks fine to an English reviewer often is not, and those are the errors that otherwise ship.",
   },
   {
     id: 'hydroficient',
@@ -815,8 +839,8 @@ export const EXPERIENCE = [
     role: 'IoT Cyber Defense Extern',
     dates: 'April 2026 to June 2026',
     tag: 'Cybersecurity',
-    blurb: 'Built and tested a five-layer security system for connected water sensors in a simulated 500-room hotel. Paired device authentication and attack testing with real-time anomaly monitoring.',
-    description: "I secured an IoT sensor pipeline for a simulated 500-room hotel water management system. I designed and stress-tested a 5-layer defense stack (TLS encryption, mutual TLS device authentication, HMAC message signing, timestamp validation, and sequence counters) against attack classes I built myself: eavesdropping, sensor spoofing, and replay attacks. Per-device certificates brought unauthorized broker access to zero, and I trained an Isolation Forest anomaly detection model wired into a real-time Streamlit dashboard so non-technical staff could monitor security without touching a terminal.",
+    blurb: 'Built five layers of defense around a hotel’s connected water sensors, then attacked the system myself to prove each one held, and added a model that flags readings which look wrong.',
+    description: "This was an eight-project curriculum that ran like a real engagement: secure the water monitoring system of a hotel that only exists on paper. Its sensors report over the network, and left alone that traffic is wide open, so anyone nearby can read it, pretend to be a sensor, or record a genuine message and send it again later. I built five layers against that: encrypting the traffic, issuing every device its own certificate so the system only listens to sensors it knows, and stamping each message with a time, a counter and a signature so a copy gets thrown out. Then I wrote the attacks myself and ran them at it to confirm each layer actually held. Last, because a faulty sensor can send perfectly valid messages, I trained a model to flag readings that look out of character and piped its alerts to a live dashboard someone could watch without touching a terminal.",
   },
   {
     id: 'ubc-sailbot',
@@ -826,7 +850,7 @@ export const EXPERIENCE = [
     dates: 'September 2025 to April 2026',
     tag: 'Business Operations',
     blurb: 'Ran operations for a student team building a fully autonomous sailing robot.',
-    description: "UBC Sailbot builds a fully autonomous sailing robot: no remote control, no crew. I worked on the operations side, connecting electrical, mechanical, and software subteams to keep the project moving. I managed timelines, organized technical documentation for cross-team integration, and owned the outward-facing work: sponsor packages, website content, and video production. A social campaign I planned end-to-end grew average engagement by ~80%, supporting a roster of 18 active sponsors.",
+    description: "UBC Sailbot builds a sailboat that crosses open water on its own: no remote control, no crew. I worked on the operations side, keeping the electrical, mechanical and software subteams in step with each other. I ran timelines, kept the documentation the teams needed to hand work between them, and owned the outward-facing side: sponsor packages, website content and video. A social campaign I planned end to end grew average engagement by around 80%, which matters when 18 active sponsors are deciding whether to stay.",
   },
   {
     id: 'haircutting',
@@ -937,19 +961,19 @@ export const MAIN_PROJECTS = [
     title: 'Smart Alarm',
     year: '2026',
     category: 'Hardware',
-    summary: 'An ESP32 bedside alarm clock that tracks your sleep with an onboard accelerometer and wakes you during light sleep instead of at a fixed time. I designed the whole thing: firmware, sleep-staging model, schematic, and PCB.',
-    detail: 'Everything runs on the ESP32 itself. No phone, no cloud, no app.',
+    summary: 'A bedside alarm clock that tracks your sleep with a motion sensor on the mattress and wakes you during light sleep instead of at a fixed time. I built all of it: the code, the sleep model, and the circuit board it runs on.',
+    detail: 'Everything runs on the clock itself. No phone, no cloud, no app.',
     thumb: '/projects/smart-alarm-thumb.jpg',
     parts: [
       {
         tag: 'Part 1 · Firmware and interface',
-        body: 'A ten-screen menu system covering alarm, smart alarm, sleep data, weather, and settings, all driven by one rotary encoder and one button. The home face pulls NTP time and a 5-day OpenWeatherMap forecast, and repaints only the digits that actually changed, so the display never flickers. Alarm, smart-wake, and snooze settings live in EEPROM and reload on boot.',
+        body: 'Ten screens covering the alarm, the smart alarm, your sleep data, the weather and the settings, all driven by one knob and one button. The clock face sets itself from the internet and pulls a five-day forecast, and it redraws only the digits that actually changed, so nothing on screen ever flickers. Your alarm and snooze settings are written to memory that survives being unplugged, so the clock wakes up exactly as you left it.',
         chips: ['ESP32', 'Arduino', 'TFT_eSPI', 'SPI', 'I2C', 'EEPROM'],
         media: [
           {
             src: '/projects/smart-alarm-main.jpg',
             alt: 'Finished Smart Alarm PCB showing time, date, weather and alarm status',
-            caption: 'The finished board. Home screen: NTP time, date, live weather, and alarm status, all flicker-free.',
+            caption: 'The finished board. Home screen: the time, the date, live weather and the alarm status, all flicker-free.',
           },
           {
             type: 'video',
@@ -962,19 +986,19 @@ export const MAIN_PROJECTS = [
       },
       {
         tag: 'Part 2 · Sleep tracking and on-device ML',
-        body: 'An MPU-6050 clipped to the mattress logs motion to an SD card at 2 Hz. Every 30 seconds the device pulls 21 statistical features off a ring buffer, scores that window as light or deep sleep, and writes it back out, so the morning hypnogram survives a reboot. I trained a Random Forest on eight hand-labelled nights, roughly 420,000 raw samples, and exported it to C to run entirely on-chip.',
+        body: 'A motion sensor sits on the mattress next to the pillow and records how much you move, twice a second, onto a memory card. Every 30 seconds the clock boils that half minute of movement down to 21 numbers, decides whether it reads as light or deep sleep, and saves the verdict, so the chart is still there in the morning even if the power drops overnight. I trained the model on eight nights I labelled by hand, roughly 420,000 readings, then converted it to run on the clock itself rather than on a phone or a server.',
         chips: ['Python', 'scikit-learn', 'micromlgen', 'MPU-6050', 'SD / CSV'],
         media: [
           {
             src: '/projects/smart-alarm-sleep-data.jpg',
-            alt: 'Sleep Data screen with a two-lane hypnogram and light/deep totals',
-            caption: 'The Sleep Data screen: time asleep, a two-lane hypnogram, and light/deep totals, read back off the SD card.',
+            alt: 'Sleep Data screen showing a night charted as light and deep sleep, with totals underneath',
+            caption: 'The Sleep Data screen: how long you slept, the night charted out, and the light and deep totals, read back off the memory card.',
           },
         ],
       },
       {
         tag: 'Part 3 · Schematic and PCB',
-        body: 'The first version lived on two breadboards with the display taped to the front. Once the pinout stopped changing I redrew it in Altium as a two-layer board, with every peripheral broken out to a labelled header so modules stay swappable, and had it fabricated. Same firmware, considerably less wire.',
+        body: 'The first version lived on two breadboards with the display taped to the front. Once I stopped moving wires around I redrew the whole thing as a real circuit board, with every part broken out to a labelled socket so it can still be swapped out, and had it manufactured. Same code, considerably less wire.',
         chips: ['Altium Designer', 'Schematic Capture', 'PCB Layout'],
         media: [
           {
@@ -984,13 +1008,13 @@ export const MAIN_PROJECTS = [
           },
           {
             src: '/projects/smart-alarm-schematic.jpg',
-            alt: 'Altium schematic split into passive, active, and microcontroller blocks',
-            caption: 'The schematic, organised into passive components, active components, and the ESP32 itself.',
+            alt: 'Schematic split into passive components, active components, and the processor',
+            caption: 'The schematic, organised into passive parts, active parts, and the processor itself.',
           },
           {
             src: '/projects/smart-alarm-pcb-layout.jpg',
-            alt: 'Two-layer PCB layout with labelled peripheral headers',
-            caption: 'Two-layer layout. Every peripheral breaks out to a labelled header so modules stay swappable.',
+            alt: 'Circuit board layout with each part broken out to a labelled socket',
+            caption: 'The layout. Every part breaks out to a labelled socket, so any one of them can still be swapped.',
           },
           {
             src: '/projects/smart-alarm-pcb-3d.jpg',
@@ -1002,11 +1026,11 @@ export const MAIN_PROJECTS = [
     ],
     highlights: [
       'Rings early at the first stretch of light sleep inside a window you choose, at one of three sensitivity levels, and falls back to the exact alarm time if that moment never comes',
-      'The Random Forest hit 65% accuracy but only 0.19 recall on deep sleep, so I did not ship it as the displayed stage. Mattress motion alone barely separates deep from light: median peak deviation was 140 versus 142',
-      'Shipped an actigraphy-style sleep-cycle model instead, using ~90 minute cycles where any movement forces light sleep. It produces 20 to 27% deep sleep, in line with published norms, and the Random Forest vote is still logged every window so the comparison stays honest',
-      'Roughly 1,100 lines of firmware plus a 1.4 MB generated classifier, which is why the board needs the 3 MB huge_app partition instead of the default 1.3 MB one',
-      'A 150 ms debounce plus a 400 ms hard lockout on the back button, and an external pull-up on the input-only encoder pin. Both problems surfaced on the breadboard and went straight into the schematic',
-      'SD files open once on entering sleep mode and close once on exit. An earlier version reopened them on every write and corrupted the card, so that rule is now enforced by the architecture',
+      'The model reached 65% accuracy overall but caught only a fifth of the deep sleep, so I did not ship it as the stage the clock displays. Movement on a mattress barely separates the two: a typical deep window measured 140 against light sleep at 142',
+      'Shipped the established approach instead, which leans on the roughly 90 minute cycle sleep runs in and treats any real movement as light. It lands at 20 to 27% deep sleep, matching published norms, and the model I trained still records its own guess every window so the two can be compared',
+      'Roughly 1,100 lines of code plus a 1.4 MB model, which together outgrew the space the chip reserves for a program by default and meant redrawing how its memory is divided up',
+      'One press of the back button used to register as several, and one input pin needed a resistor the chip does not provide internally. Both turned up on the breadboard and went straight into the board design',
+      'The memory card file opens once when sleep tracking starts and closes once when it ends. An earlier version reopened it on every write and corrupted the card, so that rule is now built into how the code is structured',
     ],
     links: [
       { href: 'https://github.com/AustinZhai8/Smart-Alarm', label: 'GitHub', primary: true },
@@ -1020,12 +1044,12 @@ export const MAIN_PROJECTS = [
     year: '2026',
     category: 'Software',
     thumb: '/screenshot.png',
-    summary: 'A full-stack ETF portfolio decomposer that breaks any portfolio down into its true underlying holdings, with live prices, sector and geographic exposure, and saved user accounts.',
-    detail: 'Built first as a Python CLI, then rebuilt entirely as a production web application deployed at portfoliovision.online.',
+    summary: 'A web app that takes a portfolio of funds and shows you the companies you actually own underneath them, with live prices and a breakdown by sector and country.',
+    detail: 'Built first as a command-line tool, then rebuilt as a full web app running at portfoliovision.online.',
     parts: [
       {
-        tag: 'Part 1 · Python CLI',
-        body: 'Full-featured terminal decomposer with recursive ETF unwrapping, mixed USD/CAD currency detection, tabular holdings output with sector and geographic breakdowns, and a captured/untracked coverage summary. Handles circular references and depth capping.',
+        tag: 'Part 1 · Command-line tool',
+        body: 'The first version ran in a terminal. You type in what you hold, and it opens up each fund into the companies inside it, repeating that on any fund it finds along the way, then prints the combined result with sector and country breakdowns and an honest note on how much of the portfolio it could not account for. Two funds that hold each other would send that unwrapping round in circles forever, so it watches for that and stops.',
         chips: ['Python', 'CLI', 'JSON'],
         media: [
           {
@@ -1038,7 +1062,7 @@ export const MAIN_PROJECTS = [
       },
       {
         tag: 'Part 2 · Web App',
-        body: 'Production web application with live stock prices via a Yahoo Finance proxy, Google OAuth and OTP email authentication via Supabase, saved portfolios with per-user row-level security, a USD/CAD display toggle with real-time Frankfurter API conversion, and Logo.dev company logo resolution. Deployed on Vercel with analytics.',
+        body: 'The web version does the same work behind a real interface. You sign in with Google or a code emailed to you, your portfolios save to your account where nobody else can reach them, prices come in live, and the whole thing flips between US and Canadian dollars at the current rate.',
         chips: ['React', 'Vite', 'Tailwind CSS', 'Supabase', 'Google Cloud', 'Vercel'],
         media: [
           {
@@ -1050,12 +1074,12 @@ export const MAIN_PROJECTS = [
       },
     ],
     highlights: [
-      'Recursive ETF decomposition across 750+ tickers with configurable depth cap and circular reference protection',
-      'Live price fetching across US and Canadian exchanges (TSX, NEO, CSE) through a Vercel serverless proxy to Yahoo Finance, removing API key requirements and exchange restrictions',
-      'Google OAuth and OTP email auth via Supabase with row-level security policies per user',
-      'Real-time USD/CAD conversion via Frankfurter API with per-position and display-level currency toggling',
-      '400+ page views in the first week of launch, tracked via Vercel Analytics',
-      'Deployed end-to-end on Vercel with a custom domain and environment-based secrets management',
+      'Opens funds up into what they actually hold across 750+ tickers, following funds inside funds without ever going round in circles',
+      'Live prices across the US and Canadian exchanges, fetched through a small service I wrote rather than a paid data provider, which cut $30+ a month in costs and the request limits that came with them',
+      'Sign in with Google or a one-time emailed code, with rules on the database itself so one account can never read another one’s portfolios',
+      'Switch between US and Canadian dollars at the live rate, either for one holding or across the whole portfolio',
+      '400+ page views in the first week after launch',
+      'Built, deployed and running on my own domain, with every key kept out of the code',
     ],
     links: [
       { href: 'https://www.portfoliovision.online/', label: 'portfoliovision.online', primary: true, external: true },
@@ -1070,12 +1094,12 @@ export const MAIN_PROJECTS = [
     year: '2026',
     category: 'Hardware',
     thumb: '/projects/pocketsense-thumb.jpg',
-    summary: 'A pocket-sized room monitor on a custom PCB I designed from scratch. Temperature, humidity, pressure, UV, and WiFi signal on a small OLED, navigated with three buttons and running off AA batteries.',
-    detail: 'Breadboard, then schematic, then board, then bring-up. I wrote the firmware, drew the schematic, laid out the PCB, and soldered it by hand.',
+    summary: 'A pocket-sized room monitor on a circuit board I designed from scratch. Temperature, humidity, pressure, UV and WiFi signal on a small screen, paged through with three buttons and running off AA batteries.',
+    detail: 'Breadboard, then schematic, then board, then switching it on. I wrote the code, drew the circuit, laid out the board, and soldered every part by hand.',
     parts: [
       {
         tag: 'Part 1 · Breadboard and firmware',
-        body: "Nothing got designed into copper until it worked on a breadboard first. The whole firmware was written and proven on a dev board before a single schematic symbol was placed. The sensor and the display share one I2C bus, which is exactly the kind of conflict you want to rule out while it is still a jumper wire away from fixable, and the UV sensor sits on a pin that stays readable while the WiFi radio is running. The interface itself is deliberately small: five screens, three buttons, and a state machine that fits in a couple of variables.",
+        body: "Nothing got committed to a board until it worked on a breadboard first, so the whole program was written and proven before I drew a single line of the circuit. The sensor and the screen share one set of wires to the processor, which is exactly the sort of clash you want to find while it is still a jumper wire away from being fixed, and the UV sensor sits on a pin that keeps working while the WiFi radio is on. The interface itself is deliberately small: five screens and three buttons.",
         chips: ['ESP32', 'Arduino', 'I2C', 'Adafruit GFX', 'SSD1306', 'BME280'],
         media: [
           {
@@ -1087,29 +1111,29 @@ export const MAIN_PROJECTS = [
       },
       {
         tag: 'Part 2 · Schematic and PCB',
-        body: "Drawn in Altium as four blocks: power, reset, boot, and the programming header. Three AA cells feed a linear regulator through a slide switch that breaks the positive rail, so the board is genuinely dead when it is off. The layout is four layers, with solid ground and power planes inside and a clear keepout around the module antenna. DRC came back clean, and I checked the Gerbers in the fab viewer before ordering.",
+        body: "Drawn as four blocks: power, reset, startup, and the connector I program it through. Three AA cells feed a regulator that steadies them down to the voltage the chip wants, through a switch that cuts the supply itself, so the board is genuinely dead when it is off. The layout is four layers, with solid power and ground spread across the middle two and a deliberate gap left under the antenna so it can still transmit. The design checks came back clean, and I previewed the manufacturing files with the fab house before ordering.",
         chips: ['Altium Designer', 'Schematic Capture', 'PCB Layout', '4-Layer Stackup', 'JLCPCB'],
         media: [
           {
             src: '/projects/pocketsense-schematic.png',
-            alt: 'Altium schematic split into power, EN/reset, boot, and programming header blocks',
-            caption: 'The schematic, in four blocks: power, reset, boot, and the programming header.',
+            alt: 'Schematic split into power, reset, startup, and programming connector blocks',
+            caption: 'The schematic, in four blocks: power, reset, startup, and the connector I program it through.',
           },
           {
             src: '/projects/pocketsense-pcb-layout.png',
-            alt: 'Four-layer PCB layout with the antenna keepout at the top edge',
-            caption: 'Four-layer layout. Signal on the outside, ground and power planes in the middle, and a clear void under the antenna.',
+            alt: 'Four-layer board layout with a clear gap left under the antenna at the top edge',
+            caption: 'Four-layer layout. Wiring on the outside, solid power and ground through the middle, and a clear gap under the antenna.',
           },
           {
             src: '/projects/pocketsense-pcb-3d.png',
-            alt: '3D render of the assembled PocketSense board in Altium',
-            caption: "Altium's 3D view, the last check before export. Mostly: does anything collide, and does the display actually fit.",
+            alt: '3D render of the assembled PocketSense board',
+            caption: 'The 3D view, the last check before the files go out. Mostly: does anything collide, and does the display actually fit.',
           },
         ],
       },
       {
         tag: 'Part 3 · Assembly',
-        body: "Boards came back from JLCPCB and I soldered every part by hand, surface mount first while the board was still flat and nothing tall was in the way. The switch that shipped had the wrong pin count for the footprint, so instead of reordering I probed it with a meter and found the three pins that line up. Before any voltage went near it I checked for a short between power and ground. No beep, safe to power.",
+        body: "The boards came back from the fab house and I soldered every part by hand, starting with the flat ones while nothing tall was in the way. The switch that arrived had more pins than the space I had drawn for it, so rather than reorder I traced it out with a meter and found the three that line up. Before any voltage went near the board I checked that power and ground were not touching anywhere. No beep, safe to switch on.",
         chips: ['SMD Soldering', 'SOT-223', '0603 / 0805', 'Continuity Testing'],
         media: [
           {
@@ -1132,25 +1156,25 @@ export const MAIN_PROJECTS = [
       },
       {
         tag: 'Part 4 · UART bring-up',
-        body: "There is no auto-reset circuit on this board, so getting into the bootloader is manual: hold boot, tap reset, release, all inside the second or so while the uploader is trying to connect. It works. The chip answers, reports its ID, and the flasher starts, which means the reset circuit, the boot circuit, the crossed serial lines, and the regulator are all doing their jobs. Then the transfer dies, and the meter says why. The regulator is putting out about 3.0V instead of 3.3V, so the moment the ESP32 pulls real current the cells sag and the board browns out mid-upload. That is a supply problem, not a layout one.",
+        body: "This board has no circuit to put itself into programming mode, so you do it by hand: hold one button, tap the other, let go, all inside the second or so while the computer is trying to connect. It works. The chip answers, says what it is, and the transfer starts, which means the startup circuit, the reset circuit, the data lines and the power supply are all doing their jobs. Then the transfer dies partway, and the meter explains why. The supply is sitting slightly low, so the moment the chip draws real current the batteries sag and the board cuts out mid-upload. That is a battery and regulator problem, not a layout one.",
         chips: ['FT232R', 'UART', 'esptool', 'Hardware Bring-up'],
         media: [
           {
             src: '/projects/pocketsense-bringup.jpg',
-            alt: 'PocketSense connected to an FT232R converter with esptool output on screen',
+            alt: 'PocketSense wired to a USB adapter with the upload running on screen',
             full: true,
-            caption: 'Bring-up over a USB to serial converter. The chip answers and the flasher starts, right up until the rail gives out.',
+            caption: 'First power-up, over a USB adapter. The chip answers and the upload starts, right up until the supply gives out.',
           },
         ],
       },
     ],
     highlights: [
-      'Five sensor screens on one small OLED, all driven by three buttons. No phone, no app, no cloud',
-      'The bug that almost shipped: two of the buttons were wired to physical pins 17 and 18 on the module symbol, which are internal flash pins, not the GPIOs of the same number. Caught it against the datasheet pin table before the board went out',
-      'The antenna keepout took a second pass. Altium keepouts only block routing on the outer layers, so clearing the internal planes underneath meant placing fills on them directly',
-      'The firmware compiles to about 927 KB, 70% of the default partition, which is a lot of program space for something that draws five screens',
-      'Every stage was mine end to end: firmware on a breadboard, schematic and four-layer layout in Altium, Gerbers out to the fab, and every part on the board soldered by hand',
-      'One step from done. The upload browns out on battery sag, and the fix is fresh cells or a bench supply rather than a respin. The real lesson: a regulator with a 1.3V dropout on a 4.5V pack has almost no headroom, and under a WiFi current burst almost none becomes none',
+      'Five sensor screens on one small display, all driven by three buttons. No phone, no app, no cloud',
+      'The bug that almost shipped: two buttons were wired to the pins numbered 17 and 18 on the part drawing, which are reserved for the chip’s own memory rather than the general-purpose pins of the same number. Caught it against the datasheet before the board went out',
+      'The gap under the antenna took a second pass. Clearing it on the outer layers does not clear the solid copper on the inner ones, which has to be cut away separately',
+      'The program takes about 927 KB, roughly 70% of the space set aside for it, which is a lot for something that draws five screens',
+      'Every stage was mine end to end: the code on a breadboard, the circuit and the four-layer layout, the files sent to the fab house, and every part on the board soldered by hand',
+      'One step from done. The upload cuts out when the batteries sag under load, and the fix is a steadier supply rather than a new board. The lesson: three AA cells leave a regulator almost no headroom to work with, and a burst of WiFi current turns almost none into none',
     ],
     links: [
       { href: 'https://github.com/AustinZhai8/Pocket-Sense', label: 'GitHub', primary: true },
@@ -1172,10 +1196,10 @@ export const MAIN_PROJECTS = [
       { label: 'Tools', chips: ['Git', 'GitHub', 'Vercel', 'Domain Setup'] },
     ],
     highlights: [
-      'End-to-end ownership: design, build, deploy, domain setup',
-      'Sub-100KB JS bundle with under 1s LCP on cold load',
-      'Projects page prints as a clean, resume-style document via dedicated print CSS',
-      'Continuous deployment through a GitHub to Vercel pipeline',
+      'Mine end to end: design, build, deploy, and the domain it sits on',
+      'Under 100 KB of JavaScript, and the page is up in under a second from a cold load',
+      'The projects page prints as a clean resume-style document, laid out separately from the screen version',
+      'Every push to the main branch deploys itself',
     ],
     links: [
       { href: 'https://austinzhai.com', label: 'austinzhai.com', primary: true, external: true },
@@ -1193,7 +1217,7 @@ export const MINOR_HARDWARE = [
     title: 'Servo Sonar Radar',
     summary: 'An ultrasonic sensor on a servo sweeps 180 degrees and plots whatever it finds on a live radar display.',
     year: '2026',
-    description: 'A servo-mounted ultrasonic sensor sweeps 180° to detect objects across three modes: continuous sweep, detection-triggered pause, and manual joystick control. Detected objects are visualized on a real-time radar display rendered in Processing.',
+    description: 'An ultrasonic sensor on a servo sweeps back and forth through 180°, measuring the distance to whatever is in front of it. Anything it finds is drawn on a live radar display on a laptop. Three modes: sweep continuously, stop when something is spotted, or aim it yourself with a joystick.',
     chips: ['Arduino', 'Servo Control', 'Ultrasonic Sensing', 'Serial Communication', 'Processing'],
     links: [{ href: 'https://github.com/AustinZhai8/Sonar-Servo-Radar', label: 'GitHub' }],
     images: [
@@ -1206,7 +1230,7 @@ export const MINOR_HARDWARE = [
     title: 'Smart Gate Access System',
     summary: 'An RFID card or a keypad code opens a servo-driven gate, with status on an LCD and LED and buzzer feedback.',
     year: '2026',
-    description: 'An ESP32-based access control system combining RFID card scanning and keypad password entry to control a servo-actuated gate, with an I2C LCD display for real-time status feedback and LED/buzzer alerts for granted and denied access events.',
+    description: 'A gate that opens either to a tap of an RFID card or a code typed on a keypad, then swings shut behind you. A small screen shows what it is doing, and a light and a buzzer tell you whether you were let in or turned away.',
     chips: ['ESP32', 'RFID', 'SPI', 'I2C', 'Servo Control', 'Embedded Systems'],
     links: [{ href: 'https://github.com/AustinZhai8/Smart-Gate-Access-System', label: 'GitHub' }],
     images: [{ src: '/projects/smart-gate-2.jpg', alt: 'Smart Gate Access System', w: 'auto' }],
