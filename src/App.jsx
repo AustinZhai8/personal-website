@@ -580,13 +580,53 @@ export const EXPERIENCE = [
     role: 'Electronics Engineering Intern',
     dates: 'June 2026 to August 2026',
     tag: 'Hardware Engineering',
-    blurb: 'Built the electronics for a DHL warehouse inspection drone, from the power system to steady indoor flight without GPS, and led the five-person team from prototype to flight testing.',
-    description: "I led a 5-person team building a drone that checks warehouse pallets for damage at DHL sites. A pilot flies it down an aisle filming the shelves, and software the team trained reads that footage back and marks which pallets are damaged. My side of it was the electronics. I sized and built the power system, wired the whole stack onto a 20 inch carbon fiber frame, and tuned it until it could hold still indoors, where there is no GPS to lock onto. I designed and printed the landing legs when nothing off the shelf fit our motors, and toward the end I drew up a flight controller board of our own. I also ran the project day to day and was the point of contact at DHL.",
+    blurb: 'Designed a flight controller board from scratch for the company’s move into recreational drones, and built the electronics for a DHL warehouse inspection drone while leading the five-person team.',
+    description: "Two things came out of this internship. I designed a flight controller board from scratch, aimed at the company's move into recreational drones, and that is the first thing below. The rest of the summer went on a drone that checks warehouse pallets for damage at DHL sites, where I led a team of 5. A pilot flies it down an aisle filming the shelves, and software the team trained reads that footage back and marks which pallets are damaged. My side of that was the electronics: I sized and built the power system, wired the whole stack onto a 20 inch carbon fiber frame, tuned it until it could hold still indoors where there is no GPS to lock onto, and designed and printed landing legs when nothing off the shelf fit our motors. I also ran the project day to day and was the point of contact at DHL.",
     links: [{ href: 'https://github.com/zacharyL16/DroneScan', label: 'DroneScan, the team repo' }],
     parts: [
       {
+        tag: 'Start here · Designing a flight controller from scratch',
+        body: "This is the piece of work I am proudest of, so I have put it first. Advanced UAV Tech has always been a contract shop: a client brings a problem, we build to spec, we deliver. Leadership wanted a second line of business that did not depend on winning contracts, and the direction they chose was recreational drones, the racing and hobby market. That flips the economics. On a contract build the client absorbs the cost of parts, but on a product you make thousands of, every dollar in the parts bill multiplies across the entire run. The flight controller is one of the most expensive parts in a small drone, and buying them in means paying someone else's margin on every single unit. So I designed ours.",
+        points: [
+          'A board you can buy is built to suit everybody, so it carries video transmitters, GPS, altitude and compass sensors, sometimes a spare motion sensor. Someone flying by stick on a weekend needs almost none of that, and pays for all of it',
+          'Mine carries what the job actually needs and nothing else: a processor, one motion sensor to keep the drone level, a regulator, a USB-C port to set it up through, and pads to connect the four motors, the receiver and the battery',
+          'Fewer parts makes for a smaller, simpler, cheaper board, and owning the design means the company is not tied to a supplier’s stock levels or roadmap',
+          'It runs off the USB cable at a desk or off the battery in the air, and a pair of diodes keeps the two supplies from pushing current back into each other',
+          'The reference design I started from uses a motion sensor that has been discontinued. Building a product around a part that is on its way out is a problem you inherit later, so I moved to a current one that is also cheaper and smaller',
+        ],
+        chips: ['Altium Designer', 'STM32F405', 'ICM-20602', '4-Layer Stackup', 'USB-C'],
+        media: [
+          {
+            src: '/projects/auav-fc-schematic.png', w: 1702, h: 1334, full: true,
+            alt: 'Flight controller schematic divided into power, microcontroller, motion sensor, LED and startup blocks',
+            caption: 'The schematic, drawn in blocks so each piece can be read on its own: power coming in, the processor, the motion sensor, and the small stuff around them.',
+          },
+          {
+            src: '/projects/auav-fc-pcb.png', w: 1176, h: 1176,
+            alt: 'Four-layer flight controller layout with the processor centred and traces fanning out to the edge pads',
+            caption: 'The layout. Processor in the middle, everything it talks to kept close, and the connection pads pushed out to the edges where the wires land.',
+          },
+          {
+            src: '/projects/auav-fc-3d.png', w: 1166, h: 1160,
+            alt: '3D render of the finished flight controller board with USB-C connector and status LEDs',
+            caption: 'The 3D view, which is the last honest look at whether anything collides before the files go anywhere.',
+          },
+        ],
+      },
+      {
+        tag: 'Where that board actually stands',
+        body: "It is not built. I finished the design at the end of my internship, so it exists as a schematic and a board layout and nothing more, and it is now with the full-time electrical engineers for review. I fully expect that review to find things: this was the most complex board I had drawn, and some faults only ever show themselves on real hardware, like electrical noise from the power supply reaching the motion sensor. What the work did settle is what a stripped-down in-house board actually looks like, and what it would cost against buying one in, which is the number the decision rests on either way.",
+        points: [
+          'Next: engineering review, corrections, then a small prototype run',
+          'Then bench testing, because a board that looks right and a board that flies are not the same claim',
+          'Then the firmware, which is its own job. A blank processor does nothing until someone maps each pin to the motor, sensor and radio it is wired to',
+        ],
+        chips: [],
+        media: [],
+      },
+      {
         tag: 'The problem',
-        body: "Warehouses check pallets for damage by eye, one at a time, and a large DHL site holds thousands of them. We wanted to fly an aisle once and let software do the looking. I ran the meetings with DHL, so what they needed came back to the team through me.",
+        body: "Everything from here down is the project I spent most of the summer on. Warehouses check pallets for damage by eye, one at a time, and a large DHL site holds thousands of them. We wanted to fly an aisle once and let software do the looking. I ran the meetings with DHL, so what they needed came back to the team through me.",
         points: [
           'Damage gets spotted by whoever happens to walk past it',
           'Pallets are stacked well above head height, so the top rows are the hardest to check',
@@ -779,34 +819,6 @@ export const EXPERIENCE = [
             src: '/projects/auav-app.png', w: 1231, h: 625,
             alt: 'The DroneScan web app showing an upload queue with annotated inspection results',
             caption: 'The inspection queue: batch upload, a verdict per file, and annotated results you can open full screen.',
-          },
-        ],
-      },
-      {
-        tag: 'Designing a flight controller of our own',
-        body: 'Every drone we built flew on a flight controller we bought off the shelf, which means paying for features we never used and living with a shape and a pinout someone else chose. Toward the end of the internship I drew up our own. It is fully designed and routed, and the next step is sending it out to be made.',
-        points: [
-          'One chip runs the flight code, and a motion sensor sitting beside it reports which way the drone is tilting, hundreds of times a second',
-          'It runs off the USB cable at a desk or off the drone in the air, and a pair of diodes keeps the two supplies from pushing current back into each other',
-          'Our radio receiver speaks in a signal the chip reads backwards, so a single transistor flips it the right way round on the way in',
-          'Four layers, corner mounting holes, and a row of pads along two edges for whatever a future build needs to plug into',
-        ],
-        chips: ['Altium Designer', 'STM32F405', 'ICM-20602', '4-Layer Stackup', 'USB-C'],
-        media: [
-          {
-            src: '/projects/auav-fc-schematic.png', w: 1702, h: 1334, full: true,
-            alt: 'Flight controller schematic in Altium, divided into power, microcontroller, gyro, LED and boot blocks',
-            caption: 'The schematic, drawn in blocks so each piece can be read on its own: power in, the processor, the motion sensor, and the small stuff around them.',
-          },
-          {
-            src: '/projects/auav-fc-pcb.png', w: 1176, h: 1176,
-            alt: 'Four-layer flight controller board layout with the processor centred and traces fanning out to the edge pads',
-            caption: 'The layout. Processor in the middle, everything it talks to kept close, and the mounting holes tied into ground at the corners.',
-          },
-          {
-            src: '/projects/auav-fc-3d.png', w: 1166, h: 1160,
-            alt: '3D render of the finished flight controller board with USB-C connector and status LEDs',
-            caption: 'The 3D view, which is the last honest look at whether anything collides before the files go out.',
           },
         ],
       },
