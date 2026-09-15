@@ -580,19 +580,20 @@ export const EXPERIENCE = [
     role: 'Electronics Engineering Intern',
     dates: 'June 2026 to August 2026',
     tag: 'Hardware Engineering',
-    blurb: 'Designed a flight controller board from scratch for the company’s move into recreational drones, and built the electronics for a DHL warehouse inspection drone while leading the five-person team.',
+    blurb: 'Designed a flight controller from scratch for the company’s move into recreational drones, and led a 5-person team building a DHL warehouse inspection drone.',
     description: "Two things came out of this internship. I designed a flight controller board from scratch, aimed at the company's move into recreational drones, and that is the first thing below. The rest of the summer went on a drone that checks warehouse pallets for damage at DHL sites, where I led a team of 5. A pilot flies it down an aisle filming the shelves, and software the team trained reads that footage back and marks which pallets are damaged. My side of that was the electronics: I sized and built the power system, wired the whole stack onto a 20 inch carbon fiber frame, tuned it until it could hold still indoors where there is no GPS to lock onto, and designed and printed landing legs when nothing off the shelf fit our motors. I also ran the project day to day and was the point of contact at DHL.",
     links: [{ href: 'https://github.com/zacharyL16/DroneScan', label: 'DroneScan, the team repo' }],
     parts: [
       {
         tag: 'Start here · Designing a flight controller from scratch',
-        body: "This is the piece of work I am proudest of, so I have put it first. Advanced UAV Tech has always been a contract shop: a client brings a problem, we build to spec, we deliver. Leadership wanted a second line of business that did not depend on winning contracts, and the direction they chose was recreational drones, the racing and hobby market. That flips the economics. On a contract build the client absorbs the cost of parts, but on a product you make thousands of, every dollar in the parts bill multiplies across the entire run. The flight controller is one of the most expensive parts in a small drone, and buying them in means paying someone else's margin on every single unit. So I designed ours.",
+        body: "This is the piece of work I am proudest of. The company has always been a contract shop, and leadership wanted a second line of business that did not depend on winning contracts: recreational drones, sold off a shelf.",
         points: [
-          'A board you can buy is built to suit everybody, so it carries video transmitters, GPS, altitude and compass sensors, sometimes a spare motion sensor. Someone flying by stick on a weekend needs almost none of that, and pays for all of it',
-          'Mine carries what the job actually needs and nothing else: a processor, one motion sensor to keep the drone level, a regulator, a USB-C port to set it up through, and pads to connect the four motors, the receiver and the battery',
-          'Fewer parts makes for a smaller, simpler, cheaper board, and owning the design means the company is not tied to a supplier’s stock levels or roadmap',
-          'It runs off the USB cable at a desk or off the battery in the air, and a pair of diodes keeps the two supplies from pushing current back into each other',
-          'The reference design I started from uses a motion sensor that has been discontinued. Building a product around a part that is on its way out is a problem you inherit later, so I moved to a current one that is also cheaper and smaller',
+          'On a product made by the thousand, every dollar in the parts bill multiplies, and the flight controller is one of the priciest parts in a small drone',
+          'A board you buy is built to suit everybody: video transmitters, GPS, extra sensors. A weekend hobby pilot pays for almost none of it',
+          'Mine carries only what the job needs: a processor, one motion sensor, a regulator, a USB port, and connections for the motors, receiver and battery',
+          'Fewer parts means a smaller, cheaper board, and owning the design means the company is not tied to a supplier’s stock or roadmap',
+          'Runs off USB at a desk or off the battery in the air, with a pair of diodes so the two supplies can never push current into each other',
+          'The reference design used a motion sensor that has since been discontinued, so I moved to a current part that is also cheaper and smaller',
         ],
         chips: ['Altium Designer', 'STM32F405', 'ICM-20602', '4-Layer Stackup', 'USB-C'],
         media: [
@@ -615,11 +616,12 @@ export const EXPERIENCE = [
       },
       {
         tag: 'Where that board actually stands',
-        body: "It is not built. I finished the design at the end of my internship, so it exists as a schematic and a board layout and nothing more, and it is now with the full-time electrical engineers for review. I fully expect that review to find things: this was the most complex board I had drawn, and some faults only ever show themselves on real hardware, like electrical noise from the power supply reaching the motion sensor. What the work did settle is what a stripped-down in-house board actually looks like, and what it would cost against buying one in, which is the number the decision rests on either way.",
+        body: "It is not built. The design finished at the end of my internship, so right now it is a schematic and a board layout, with the full-time electrical engineers reviewing it. I expect that review to find things: it was the most complex board I had drawn, and some faults only show up on real hardware.",
         points: [
-          'Next: engineering review, corrections, then a small prototype run',
+          'Next: engineering review and corrections, then a small prototype run',
           'Then bench testing, because a board that looks right and a board that flies are not the same claim',
-          'Then the firmware, which is its own job. A blank processor does nothing until someone maps each pin to the motor, sensor and radio it is wired to',
+          'Then firmware, its own job: a blank processor does nothing until every pin is mapped to the motor, sensor or radio it connects to',
+          'What it already settled: what a stripped-down in-house board looks like, and what it costs against buying one in',
         ],
         chips: [],
         media: [],
@@ -831,8 +833,42 @@ export const EXPERIENCE = [
     role: 'Automation and Controls Engineering Intern',
     dates: 'May 2026 to June 2026',
     tag: 'Automation & Controls',
-    blurb: 'Checked the control systems inside CHEP’s pallet plants before a worldwide software upgrade reached them, at roughly 25 sites a week, and automated the setup around those checks to cut about 20% off each one.',
-    description: "This was my first real look inside industrial automation: the controllers, monitoring software and operator terminals that keep a factory floor running. CHEP was rolling out upgraded factory software across its plants worldwide, and my job was to check each site was healthy before the upgrade touched it, at roughly 25 sites a week. At each one I connected in and worked down the stack: confirming the seven or so controllers on the plant network were reachable and answering, recording how the operator terminals were configured, cross-checking the same equipment in the monitoring software to tell a dead network link apart from a program that had quietly stopped responding, and confirming the automated pallet inspection rigs still reported in on time. The checks came off a runbook the team built together, and I wrote a Python script that handled the repetitive setup around them, which took about 20% off the time each site needed. Learning to read a controls stack top to bottom, and to tell which layer a fault actually lives in, is what I took away from it.",
+    blurb: 'Verified the health of CHEP’s plant control systems at roughly 25 sites a week, ahead of a worldwide software upgrade, and wrote a Python script that automated the repetitive setup around those checks, cutting the time each site took by about 20%.',
+    description: "This was my first real look inside industrial automation: the controllers, monitoring software and operator terminals that keep a factory floor running. CHEP was rolling out upgraded factory software across its plants worldwide, and my job was to check each site was healthy before the upgrade touched it, at roughly 25 sites a week.",
+    parts: [
+      {
+        tag: 'What checking a site looked like',
+        body: 'At each site I connected in and worked down the stack, from the network up to the software watching the floor.',
+        points: [
+          'Confirmed the seven or so controllers on the plant network were reachable and answering',
+          'Recorded how each operator terminal was configured',
+          'Cross-checked the same equipment in the monitoring software, to tell a dead network link apart from a program that had quietly stopped responding',
+          'Confirmed the automated pallet inspection rigs were still reporting in on time',
+        ],
+        chips: ['RSLinx Classic', 'AVEVA SCADA', 'ThinManager', 'Radmin', 'SQL Server'],
+        media: [],
+      },
+      {
+        tag: 'Automating the boring part',
+        body: 'The checks themselves came off a runbook the team built together. The setup around them, though, was the same repetitive steps every time, so I scripted it.',
+        points: [
+          'Opened remote sessions, navigated to the right files, and filled in the repeated inputs automatically',
+          'Cut about 20% off the time each site needed',
+          'Wired into the company’s automation tool so anyone on the team could run it',
+        ],
+        chips: ['Python', 'Power Automate'],
+        media: [],
+      },
+      {
+        tag: 'What I took from it',
+        body: 'Learning to read a controls stack top to bottom, and to tell which layer a fault actually lives in.',
+        points: [
+          'I reported findings up the chain: fixing them was someone else’s job, which is normal for an intern and worth saying plainly',
+        ],
+        chips: [],
+        media: [],
+      },
+    ],
   },
   {
     id: 'telus-digital',
@@ -842,7 +878,23 @@ export const EXPERIENCE = [
     dates: 'March 2026 to June 2026',
     tag: 'Data & AI',
     blurb: 'Rated the map results an AI system returns, in both English and French, working through 80+ searches a week so its mistakes could be found and corrected.',
-    description: "I rated the map results an AI system produced, in English and French, so the places it got wrong could be fed back and fixed. That meant working through 80+ searches a week and judging each one: is this the place the search actually meant, does the name and address match reality, and does the pin sit on the right building? Verifying that properly means leaving the tool and checking the business against its own site and the postal listing. Working across both languages is where I added the most, because a French listing that looks fine to an English reviewer often is not, and those are the errors that otherwise ship.",
+    description: "I rated the map results an AI system produced, in English and French, so the places it got wrong could be fed back and fixed.",
+    parts: [
+      {
+        tag: 'What rating one result means',
+        body: 'Every search gets checked against reality, not just against the tool itself.',
+        points: [
+          '80+ searches judged a week',
+          'Is this the place the search actually meant?',
+          'Do the name, category and address match reality?',
+          'Does the pin sit on the right building?',
+          'Verifying that means leaving the tool: checking the business’s own site and the postal listing',
+          'Both languages is where I added the most: a French listing that looks fine to an English reviewer often is not',
+        ],
+        chips: ['French', 'English', 'TryRating'],
+        media: [],
+      },
+    ],
   },
   {
     id: 'hydroficient',
@@ -851,8 +903,45 @@ export const EXPERIENCE = [
     role: 'IoT Cyber Defense Extern',
     dates: 'April 2026 to June 2026',
     tag: 'Cybersecurity',
-    blurb: 'Built five layers of defense around a hotel’s connected water sensors, then attacked the system myself to prove each one held, and added a model that flags readings which look wrong.',
-    description: "This was an eight-project curriculum that ran like a real engagement: secure the water monitoring system of a hotel that only exists on paper. Its sensors report over the network, and left alone that traffic is wide open, so anyone nearby can read it, pretend to be a sensor, or record a genuine message and send it again later. I built five layers against that: encrypting the traffic, issuing every device its own certificate so the system only listens to sensors it knows, and stamping each message with a time, a counter and a signature so a copy gets thrown out. Then I wrote the attacks myself and ran them at it to confirm each layer actually held. Last, because a faulty sensor can send perfectly valid messages, I trained a model to flag readings that look out of character and piped its alerts to a live dashboard someone could watch without touching a terminal.",
+    blurb: 'Built five layers of defense around a hotel’s water sensors, attacked the system myself to prove they held, and flagged bad readings with a trained model.',
+    description: "This was an eight-project curriculum that ran like a real engagement: secure the water monitoring system of a hotel that only exists on paper.",
+    parts: [
+      {
+        tag: 'The setup',
+        body: 'The sensors report over the network, and left alone that traffic is wide open.',
+        points: [
+          'Anyone nearby can read it',
+          'Anyone can pretend to be a sensor',
+          'Anyone can record a genuine message and send it again later',
+        ],
+        chips: [],
+        media: [],
+      },
+      {
+        tag: 'Five layers of defense',
+        body: 'I built a layer against each way in, then wrote the attacks myself and ran them at the system to confirm every layer actually held.',
+        points: [
+          'Encrypted all the traffic',
+          'Issued every device its own certificate, so the system only listens to sensors it knows',
+          'Stamped each message with a timestamp',
+          'And a running counter',
+          'And a signature, so a copied or altered message gets thrown out',
+        ],
+        chips: ['Python', 'Mosquitto MQTT', 'TLS', 'mTLS', 'HMAC-SHA256'],
+        media: [],
+      },
+      {
+        tag: 'Catching a sensor that’s lying',
+        body: 'A faulty sensor can still send perfectly valid, signed messages, so the layers above cannot catch it.',
+        points: [
+          'Trained a model on live readings to flag ones that look out of character',
+          'Picked a model type that can score each message as it arrives, not one that needs the whole batch first',
+          'Alerts route to a live dashboard someone can watch without touching a terminal',
+        ],
+        chips: ['Isolation Forest', 'WebSocket'],
+        media: [],
+      },
+    ],
   },
   {
     id: 'ubc-sailbot',
@@ -979,7 +1068,12 @@ export const MAIN_PROJECTS = [
     parts: [
       {
         tag: 'Part 1 · Firmware and interface',
-        body: 'Ten screens covering the alarm, the smart alarm, your sleep data, the weather and the settings, all driven by one knob and one button. The clock face sets itself from the internet and pulls a five-day forecast, and it redraws only the digits that actually changed, so nothing on screen ever flickers. Your alarm and snooze settings are written to memory that survives being unplugged, so the clock wakes up exactly as you left it.',
+        body: 'Ten screens, one knob, one button: the alarm, the smart alarm, your sleep data, the weather and the settings.',
+        points: [
+          'Sets its own time from the internet and pulls a five-day forecast',
+          'Redraws only the digits that changed, so the screen never flickers',
+          'Alarm and snooze settings survive being unplugged, so the clock wakes up exactly as you left it',
+        ],
         chips: ['ESP32', 'Arduino', 'TFT_eSPI', 'SPI', 'I2C', 'EEPROM'],
         media: [
           {
@@ -998,7 +1092,22 @@ export const MAIN_PROJECTS = [
       },
       {
         tag: 'Part 2 · Sleep tracking and on-device ML',
-        body: 'A motion sensor sits on the mattress next to the pillow and records how much you move, twice a second, onto a memory card. Every 30 seconds the clock boils that half minute of movement down to 21 numbers, decides whether it reads as light or deep sleep, and saves the verdict, so the chart is still there in the morning even if the power drops overnight. I trained the model on eight nights I labelled by hand, roughly 420,000 readings, then converted it to run on the clock itself rather than on a phone or a server.',
+        body: 'A motion sensor sits on the mattress next to the pillow and records how much you move, twice a second, onto a memory card.',
+        points: [
+          'Every 30 seconds: half a minute of movement boiled down to 21 numbers, scored as light or deep sleep',
+          'The verdict is saved as it goes, so the chart survives overnight even if the power drops',
+          'Trained on eight nights I labelled by hand, roughly 420,000 readings',
+          'Converted to run on the clock itself, no phone, no server',
+        ],
+        stat: {
+          rows: [
+            { label: 'Overall accuracy', expr: 'right call across every window', result: '65%' },
+            { label: 'Light sleep caught', expr: 'of the windows that were actually light', result: '76%' },
+            { label: 'Deep sleep caught', expr: 'of the windows that were actually deep', result: '19%' },
+            { label: 'Baseline', expr: 'accuracy from just always guessing light', result: '81%' },
+          ],
+          note: 'Below the baseline, and worth saying plainly: mattress movement alone barely separates light sleep from deep.',
+        },
         chips: ['Python', 'scikit-learn', 'micromlgen', 'MPU-6050', 'SD / CSV'],
         media: [
           {
@@ -1010,7 +1119,11 @@ export const MAIN_PROJECTS = [
       },
       {
         tag: 'Part 3 · Schematic and PCB',
-        body: 'The first version lived on two breadboards with the display taped to the front. Once I stopped moving wires around I redrew the whole thing as a real circuit board, with every part broken out to a labelled socket so it can still be swapped out, and had it manufactured. Same code, considerably less wire.',
+        body: 'The first version lived on two breadboards with the display taped to the front. Once I stopped moving wires around, I redrew the whole thing as a real circuit board and had it manufactured.',
+        points: [
+          'Every part breaks out to a labelled socket, so any one of them can still be swapped',
+          'Same code, considerably less wire',
+        ],
         chips: ['Altium Designer', 'Schematic Capture', 'PCB Layout'],
         media: [
           {
@@ -1037,12 +1150,12 @@ export const MAIN_PROJECTS = [
       },
     ],
     highlights: [
-      'Rings early at the first stretch of light sleep inside a window you choose, at one of three sensitivity levels, and falls back to the exact alarm time if that moment never comes',
-      'The model reached 65% accuracy overall but caught only a fifth of the deep sleep, so I did not ship it as the stage the clock displays. Movement on a mattress barely separates the two: a typical deep window measured 140 against light sleep at 142',
-      'Shipped the established approach instead, which leans on the roughly 90 minute cycle sleep runs in and treats any real movement as light. It lands at 20 to 27% deep sleep, matching published norms, and the model I trained still records its own guess every window so the two can be compared',
-      'Roughly 1,100 lines of code plus a 1.4 MB model, which together outgrew the space the chip reserves for a program by default and meant redrawing how its memory is divided up',
-      'One press of the back button used to register as several, and one input pin needed a resistor the chip does not provide internally. Both turned up on the breadboard and went straight into the board design',
-      'The memory card file opens once when sleep tracking starts and closes once when it ends. An earlier version reopened it on every write and corrupted the card, so that rule is now built into how the code is structured',
+      'Rings early at the first stretch of light sleep, at one of three sensitivity levels, and falls back to the exact alarm time if that moment never comes',
+      'The model I trained ended up below a plain always-guess-light baseline, so I did not ship it as the displayed stage: see the numbers above',
+      'Shipped the standard sleep-cycle model instead: 20 to 27% deep sleep, matching published norms, with my model’s guess still logged every window for comparison',
+      'Roughly 1,100 lines of code plus a 1.4 MB model outgrew the chip’s default program space, which meant redrawing how its memory is divided up',
+      'A button that double-registered and a pin needing a resistor the chip doesn’t supply, both caught on the breadboard and fixed in the board design',
+      'The memory card file opens once per sleep session, not on every write. An earlier version corrupted the card doing that, so the rule is now built into the code',
     ],
     links: [
       { href: 'https://github.com/AustinZhai8/Smart-Alarm', label: 'GitHub', primary: true },
@@ -1061,7 +1174,12 @@ export const MAIN_PROJECTS = [
     parts: [
       {
         tag: 'Part 1 · Command-line tool',
-        body: 'The first version ran in a terminal. You type in what you hold, and it opens up each fund into the companies inside it, repeating that on any fund it finds along the way, then prints the combined result with sector and country breakdowns and an honest note on how much of the portfolio it could not account for. Two funds that hold each other would send that unwrapping round in circles forever, so it watches for that and stops.',
+        body: 'The first version ran in a terminal. You type in what you hold, and it opens each fund up into the companies inside it, repeating that on any fund it finds along the way.',
+        points: [
+          'Prints the combined result with sector and country breakdowns',
+          'An honest note on how much of the portfolio it could not account for',
+          'Two funds holding each other would loop forever, so it watches for that and stops',
+        ],
         chips: ['Python', 'CLI', 'JSON'],
         media: [
           {
@@ -1074,7 +1192,12 @@ export const MAIN_PROJECTS = [
       },
       {
         tag: 'Part 2 · Web App',
-        body: 'The web version does the same work behind a real interface. You sign in with Google or a code emailed to you, your portfolios save to your account where nobody else can reach them, prices come in live, and the whole thing flips between US and Canadian dollars at the current rate.',
+        body: 'The web version does the same work behind a real interface, live at portfoliovision.online.',
+        points: [
+          'Sign in with Google or a code emailed to you',
+          'Portfolios save to your account, where nobody else can reach them',
+          'Prices come in live, and the whole thing flips between US and Canadian dollars at the current rate',
+        ],
         chips: ['React', 'Vite', 'Tailwind CSS', 'Supabase', 'Google Cloud', 'Vercel'],
         media: [
           {
@@ -1111,7 +1234,12 @@ export const MAIN_PROJECTS = [
     parts: [
       {
         tag: 'Part 1 · Breadboard and firmware',
-        body: "Nothing got committed to a board until it worked on a breadboard first, so the whole program was written and proven before I drew a single line of the circuit. The sensor and the screen share one set of wires to the processor, which is exactly the sort of clash you want to find while it is still a jumper wire away from being fixed, and the UV sensor sits on a pin that keeps working while the WiFi radio is on. The interface itself is deliberately small: five screens and three buttons.",
+        body: 'Nothing got committed to a board until it worked on a breadboard first: the whole program was written and proven before I drew a single line of the circuit.',
+        points: [
+          'The sensor and the screen share one set of wires to the processor, a clash worth finding while it is still a jumper wire away from fixed',
+          'The UV sensor sits on a pin that keeps working while the WiFi radio is on',
+          'Deliberately small interface: five screens, three buttons',
+        ],
         chips: ['ESP32', 'Arduino', 'I2C', 'Adafruit GFX', 'SSD1306', 'BME280'],
         media: [
           {
@@ -1123,7 +1251,12 @@ export const MAIN_PROJECTS = [
       },
       {
         tag: 'Part 2 · Schematic and PCB',
-        body: "Drawn as four blocks: power, reset, startup, and the connector I program it through. Three AA cells feed a regulator that steadies them down to the voltage the chip wants, through a switch that cuts the supply itself, so the board is genuinely dead when it is off. The layout is four layers, with solid power and ground spread across the middle two and a deliberate gap left under the antenna so it can still transmit. The design checks came back clean, and I previewed the manufacturing files with the fab house before ordering.",
+        body: 'Drawn as four blocks: power, reset, startup, and the connector I program it through.',
+        points: [
+          'Three AA cells feed a regulator through a switch that cuts the supply itself, so the board is genuinely dead when off',
+          'Four layers, with solid power and ground through the middle and a deliberate gap left under the antenna',
+          'Design checks came back clean, and I previewed the manufacturing files with the fab house before ordering',
+        ],
         chips: ['Altium Designer', 'Schematic Capture', 'PCB Layout', '4-Layer Stackup', 'JLCPCB'],
         media: [
           {
@@ -1145,7 +1278,11 @@ export const MAIN_PROJECTS = [
       },
       {
         tag: 'Part 3 · Assembly',
-        body: "The boards came back from the fab house and I soldered every part by hand, starting with the flat ones while nothing tall was in the way. The switch that arrived had more pins than the space I had drawn for it, so rather than reorder I traced it out with a meter and found the three that line up. Before any voltage went near the board I checked that power and ground were not touching anywhere. No beep, safe to switch on.",
+        body: 'The boards came back from the fab house and I soldered every part by hand, flat parts first while nothing tall was in the way.',
+        points: [
+          'The switch that arrived had more pins than the footprint I drew, so I traced it with a meter and found the three that line up, rather than reordering',
+          'Checked power and ground for a short before any voltage went near the board. No beep, safe to switch on',
+        ],
         chips: ['SMD Soldering', 'SOT-223', '0603 / 0805', 'Continuity Testing'],
         media: [
           {
@@ -1168,7 +1305,12 @@ export const MAIN_PROJECTS = [
       },
       {
         tag: 'Part 4 · UART bring-up',
-        body: "This board has no circuit to put itself into programming mode, so you do it by hand: hold one button, tap the other, let go, all inside the second or so while the computer is trying to connect. It works. The chip answers, says what it is, and the transfer starts, which means the startup circuit, the reset circuit, the data lines and the power supply are all doing their jobs. Then the transfer dies partway, and the meter explains why. The supply is sitting slightly low, so the moment the chip draws real current the batteries sag and the board cuts out mid-upload. That is a battery and regulator problem, not a layout one.",
+        body: 'This board has no circuit to put itself into programming mode, so you do it by hand: hold one button, tap the other, let go, all within the second the computer is trying to connect.',
+        points: [
+          'It works: the chip answers and the transfer starts, meaning the reset circuit, data lines and power supply are all doing their jobs',
+          'Then the transfer dies partway, and the meter explains why: the supply sags under real current and the board cuts out mid-upload',
+          'A battery and regulator problem, not a layout one',
+        ],
         chips: ['FT232R', 'UART', 'esptool', 'Hardware Bring-up'],
         media: [
           {
@@ -1182,11 +1324,11 @@ export const MAIN_PROJECTS = [
     ],
     highlights: [
       'Five sensor screens on one small display, all driven by three buttons. No phone, no app, no cloud',
-      'The bug that almost shipped: two buttons were wired to the pins numbered 17 and 18 on the part drawing, which are reserved for the chip’s own memory rather than the general-purpose pins of the same number. Caught it against the datasheet before the board went out',
-      'The gap under the antenna took a second pass. Clearing it on the outer layers does not clear the solid copper on the inner ones, which has to be cut away separately',
-      'The program takes about 927 KB, roughly 70% of the space set aside for it, which is a lot for something that draws five screens',
-      'Every stage was mine end to end: the code on a breadboard, the circuit and the four-layer layout, the files sent to the fab house, and every part on the board soldered by hand',
-      'One step from done. The upload cuts out when the batteries sag under load, and the fix is a steadier supply rather than a new board. The lesson: three AA cells leave a regulator almost no headroom to work with, and a burst of WiFi current turns almost none into none',
+      'The bug that almost shipped: two buttons were wired to pins reserved for the chip’s own memory. Caught it against the datasheet before the board went out',
+      'The antenna gap took a second pass: clearing the outer layers doesn’t clear the solid copper underneath, which has to be cut away separately',
+      'The program runs about 927 KB, roughly 70% of the space set aside for it, a lot for something that draws five screens',
+      'Every stage was mine end to end: code on a breadboard, circuit and layout, files to the fab house, every part soldered by hand',
+      'One step from done: the upload cuts out when the batteries sag, and the fix is a steadier supply, not a new board',
     ],
     links: [
       { href: 'https://github.com/AustinZhai8/Pocket-Sense', label: 'GitHub', primary: true },
