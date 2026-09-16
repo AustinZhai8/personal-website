@@ -589,7 +589,7 @@ export const EXPERIENCE = [
         body: "This is the piece of work I am proudest of. The company has always been a contract shop, and leadership wanted a second line of business that did not depend on winning contracts: recreational drones, sold off a shelf.",
         points: [
           'On a product made by the thousand, every dollar in the parts bill multiplies, and the flight controller is one of the priciest parts in a small drone',
-          'A board you buy is built to suit everybody: video transmitters, GPS, extra sensors. A weekend hobby pilot pays for almost none of it',
+          'A board you buy is built to suit everybody, with extra sensors, ports and features most pilots never use. A weekend hobby pilot pays for all of it anyway',
           'Mine carries only what the job needs: a processor, one motion sensor, a regulator, a USB port, and connections for the motors, receiver and battery',
           'Fewer parts means a smaller, cheaper board, and owning the design means the company is not tied to a supplier’s stock or roadmap',
           'Runs off USB at a desk or off the battery in the air, with a pair of diodes so the two supplies can never push current into each other',
