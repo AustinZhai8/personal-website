@@ -552,7 +552,7 @@ function AboutSection() {
         <Eyebrow style={{ textAlign: 'center', marginBottom: '1.6rem' }}>Quick Facts</Eyebrow>
         <div className="facts-card">
           {[
-            '3.5 languages: English, French, Chinese, and a little Spanish',
+            '3 languages: English, French, Chinese',
             'NewJeans and The Kid LAROI are fire',
             'Lanzhou hand-pulled noodles are my all-time favorite dish',
             'Mavericks and Patriots fan (and the number one fantasy football manager out there)',
