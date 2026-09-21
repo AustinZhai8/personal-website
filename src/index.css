@@ -191,6 +191,9 @@ section[id] { scroll-margin-top: 58px; }
 .detail-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .detail-role { font-size: 16px; color: var(--text3); margin-top: 7px; }
 .detail-lead { margin-bottom: 2rem; }
+.detail-title-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.detail-github { display: inline-flex; color: var(--text3); transition: color 0.2s ease; }
+.detail-github:hover { color: var(--accent); }
 .detail-parts { display: flex; flex-direction: column; gap: 16px; }
 
 /* ─── Home entry points ─────────────────────────────────── */

@@ -1657,6 +1657,7 @@ function ProjectsSection({ onOpen }) {
 }
 
 function ProjectDetail({ p, trail, onBack, onGo }) {
+  const repo = (p.links || []).find((l) => l.href.startsWith('https://github.com/'))
   return (
     <div className="page-pad">
       <div className="page-shell">
@@ -1667,7 +1668,14 @@ function ProjectDetail({ p, trail, onBack, onGo }) {
             {p.category && <span className="proj-cat">{p.category}</span>}
             <span className="proj-year">{p.year}</span>
           </div>
-          <h1 className="page-title">{p.title}</h1>
+          <div className="detail-title-row">
+            <h1 className="page-title">{p.title}</h1>
+            {repo && (
+              <a className="no-print detail-github" href={repo.href} target="_blank" rel="noopener noreferrer" aria-label="View on GitHub">
+                <IconGithub size={18} />
+              </a>
+            )}
+          </div>
           {p.summary && !p.description && <p className="proj-blurb detail-lead">{p.summary}</p>}
         </div>
         <ProjectBody p={p} />
