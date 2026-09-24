@@ -348,7 +348,7 @@ section[id] { scroll-margin-top: 58px; }
   0%   { transform: translateY(0);    opacity: 0; }
   20%  { opacity: 1; }
   70%  { opacity: 1; }
-  100% { transform: translateY(48px); opacity: 0; }
+  100% { transform: translateY(54px); opacity: 0; }
 }
 @keyframes cueIn { to { opacity: 1; } }
 
@@ -360,16 +360,16 @@ section[id] { scroll-margin-top: 58px; }
   animation: cueIn 0.9s ease 1.5s forwards;
 }
 .scroll-cue-label {
-  font-size: 9.5px; letter-spacing: 0.32em; text-transform: uppercase;
-  font-weight: 600; color: var(--text3);
+  font-size: 10.5px; letter-spacing: 0.32em; text-transform: uppercase;
+  font-weight: 600; color: var(--text2);
 }
 .scroll-cue-track {
-  position: relative; width: 1px; height: 44px; overflow: hidden;
-  background: linear-gradient(var(--border2), transparent);
+  position: relative; width: 2px; height: 52px; overflow: hidden;
+  background: linear-gradient(var(--text3), transparent);
 }
 .scroll-cue-dot {
-  position: absolute; top: 0; left: -1.5px;
-  width: 4px; height: 4px; border-radius: 50%; background: var(--accent);
+  position: absolute; top: 0; left: -2px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
   animation: scrollCue 2.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 @media (max-height: 720px) { .scroll-cue { display: none; } }

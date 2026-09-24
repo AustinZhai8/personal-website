@@ -507,7 +507,6 @@ function AboutSection() {
       <div className="reveal" style={{ maxWidth: '780px', margin: '0 auto', textAlign: 'center' }}>
         <p className="bio-line">
           UBC Computer Engineering student who spends way too much time on business student activities.
-          Somewhere along the way that turned into a genuine interest in where hardware meets software.
         </p>
       </div>
 
@@ -519,7 +518,7 @@ function AboutSection() {
           <h3 className="section-title">Investing is the thread that ties everything together.</h3>
           <p className="body-text" style={{ marginBottom: '1.1rem' }}>
             I spend a lot of time on fundamentals research: tracking key metrics, waiting on earnings,
-            pulling apart business models, and building conviction one company at a time.
+            and building conviction one company at a time.
             Every position I hold is a thesis I can defend.
           </p>
           <p className="body-text">
@@ -552,7 +551,7 @@ function AboutSection() {
         <Eyebrow style={{ textAlign: 'center', marginBottom: '1.6rem' }}>Quick Facts</Eyebrow>
         <div className="facts-card">
           {[
-            '3 languages: English, French, Chinese',
+            'Trilingual: English, French, Chinese',
             'NewJeans and The Kid LAROI are fire',
             'Lanzhou hand-pulled noodles are my all-time favorite dish',
             'Mavericks and Patriots fan (and the number one fantasy football manager out there)',
